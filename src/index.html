@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Velocmd</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+  <div id="container">
+    <div class="header" data-tauri-drag-region>
+      <div class="logo-area" data-tauri-drag-region>
+        <img src="assets/logo.svg" alt="Logo" class="app-logo" />
+      </div>
+
+      <!-- <input type="text" id="search-input" placeholder="⚡Velocmd Running..." autofocus autocomplete="off" /> -->
+      <div class="search-wrapper" id="search-wrapper">
+        <div id="chips-area" class="chips-area"></div>
+        <input type="text" id="search-input" placeholder="⚡Velocmd running..." autofocus autocomplete="off" />
+      </div>
+
+      <div class="settings-icon" id="settings-btn">⚙️</div>
+    </div>
+
+    <div id="settings-panel" class="settings-panel hidden">
+      <div class="settings-row">
+        <label class="toggle-switch-container">
+          <input type="checkbox" id="show-recents-toggle" checked>
+          <span class="slider"></span>
+          <span class="label-text">Recents</span>
+        </label>
+        <label class="toggle-switch-container">
+          <input type="checkbox" id="startup-toggle" checked>
+          <span class="slider"></span>
+          <span class="label-text">Run at Startup</span>
+        </label>
+        <button id="clear-recents-btn" class="btn btn-danger btn-sm">Clear Recents</button>
+        <button id="reset-pos-btn" class="btn btn-secondary btn-sm">Reset Position</button>
+      </div>
+
+      <div class="settings-row">
+        <label class="setting-label no-margin">Global Shortcut</label>
+        <div class="relative">
+          <div id="shortcut-display" class="shortcut-display">Loading...</div>
+          <div id="shortcut-dropdown" class="shortcut-dropdown hidden"></div>
+        </div>
+        <div id="shortcut-msg" class="shortcut-msg margin-left-10"></div>
+      </div>
+    </div>
+
+    <div id="results-container">
+      <ul id="results"></ul>
+    </div>
+
+    <div class="footer">
+      <div class="credits">Made with <span style="color: #e25555;">&lt;3</span> - <a
+          href="https://github.com/yashvardhang11" target="_blank">Yashvardhan Gupta</a></div>
+    </div>
+  </div>
+  <script src="main.js" type="module"></script>
+</body>
+
+</html>

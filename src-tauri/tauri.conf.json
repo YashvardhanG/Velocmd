@@ -1,0 +1,48 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "Velocmd Explorer",
+  "version": "0.1.0",
+  "identifier": "com.velocmd.app",
+  "build": {
+    "frontendDist": "../src"
+  },
+  "app": {
+    "withGlobalTauri": true,
+    "windows": [
+      {
+        "title": "Velocmd Explorer",
+        "label": "main",
+        "url": "index.html",
+        "width": 800,
+        "height": 500,
+        "decorations": false,
+        "transparent": true,
+        "resizable": false,
+        "center": true,
+        "visible": false
+      }
+    ],
+    "security": {
+      "csp": null
+    }
+  },
+  "bundle": {
+    "publisher": "Yashvardhan Gupta",
+    "active": true,
+    "targets": "all",
+    "icon": [
+      "icons/icon.svg",
+      "icons/icon.ico",
+      "icons/icon_32x32.png",
+      "icons/icon_64x64.png",
+      "icons/icon_128x128.png",
+      "icons/icon_256x256.png",
+      "icons/icon_1024x1024.png"
+    ]
+  },
+  "plugins": {
+    "autostart": null,
+    "opener": null,
+    "global-shortcut": null
+  }
+}
