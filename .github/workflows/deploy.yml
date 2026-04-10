@@ -34,19 +34,16 @@ jobs:
           echo "# Version History" > docs/changelog.md
           echo "" >> docs/changelog.md
           
-          # Use '|| true' to prevent the script from crashing if no releases exist
-          RELEASES=$(gh release list --limit 10 2>/dev/null || echo "")
+          # Get a clean list of Tag Names only (this will find your "Release" tag)
+          TAGS=$(gh release list --limit 10 --json tagName --template '{{range .}}{{.tagName}}{{"\n"}}{{end}}')
           
-          if [ -z "$RELEASES" ]; then
-            echo "No releases found yet. Check back soon!" >> docs/changelog.md
+          if [ -z "$TAGS" ]; then
+            echo "No releases found yet." >> docs/changelog.md
           else
-            echo "$RELEASES" | while read -r line; do
-              tag=$(echo "$line" | awk '{print $1}')
-              date=$(echo "$line" | awk '{print $3, $4, $5}')
+            echo "$TAGS" | while read -r tag; do
+              [ -z "$tag" ] && continue
               echo "## $tag" >> docs/changelog.md
-              echo "*Released on $date*" >> docs/changelog.md
-              echo "" >> docs/changelog.md
-              gh release view "$tag" --json body --template '{{.body}}' >> docs/changelog.md
+              gh release view "$tag" --json body --template '{{.body}}' >> docs/changelog.md || echo "Release notes not found." >> docs/changelog.md
               echo -e "\n---\n" >> docs/changelog.md
             done
           fi
