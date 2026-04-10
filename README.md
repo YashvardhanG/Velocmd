@@ -2,8 +2,8 @@
 
 <br />
 <p align="center">
-  <a href="https://github.com/YashvardhanG/velocmd">
-    <img src="https://github.com/YashvardhanG/velocmd/docs/assets/logo.png" alt="Logo" width="128" height="128">
+  <a href="https://github.com/YashvardhanG/Velocmd">
+    <img src="docs/assets/logo.png" alt="Logo" width="128" height="128">
   </a>
   <h3 align="center">Velocmd Explorer</h3>
   <p align="center">
