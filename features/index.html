@@ -1,0 +1,1554 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="A blazing fast tool for doing things.">
+      
+      
+        <meta name="author" content="Yashvardhan Gupta">
+      
+      
+      
+        <link rel="prev" href="../getting-started/usage/">
+      
+      
+        <link rel="next" href="../blog/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/logo.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Features - Velocmd Explorer</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat:300,300i,400,400i,700,700i%7CFira+Code:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Montserrat";--md-code-font:"Fira Code"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../stylesheets/custom.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="black" data-md-color-accent="cyan">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#feature-deep-dive" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Velocmd Explorer" class="md-header__button md-logo" aria-label="Velocmd Explorer" data-md-component="logo">
+      
+  <img src="../assets/logo.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Velocmd Explorer
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Features
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="black" data-md-color-accent="cyan"  aria-hidden="true"  type="radio" name="__palette" id="__palette_0">
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/YashvardhanG/Velocmd" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    YashvardhanG/Velocmd
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href=".." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../getting-started/installation/" class="md-tabs__link">
+          
+  
+  
+  Getting Started
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    <li class="md-tabs__item md-tabs__item--active">
+      <a href="./" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Features
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../blog/" class="md-tabs__link">
+          
+  
+  
+  Blog
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../changelog/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Version History
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Velocmd Explorer" class="md-nav__button md-logo" aria-label="Velocmd Explorer" data-md-component="logo">
+      
+  <img src="../assets/logo.png" alt="logo">
+
+    </a>
+    Velocmd Explorer
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/YashvardhanG/Velocmd" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    YashvardhanG/Velocmd
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Getting Started
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../getting-started/installation/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M8 17v-2h8v2zm8-7-4 4-4-4h2.5V7h3v3zM5 3h14a2 2 0 0 1 2 2v14c0 1.11-.89 2-2 2H5a2 2 0 0 1-2-2V5c0-1.1.9-2 2-2m0 2v14h14V5z"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+    Installation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../getting-started/usage/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 5a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2zm0 2h16v10H4zm1 1v2h2V8zm3 0v2h2V8zm3 0v2h2V8zm3 0v2h2V8zm3 0v2h2V8zM5 11v2h2v-2zm3 0v2h2v-2zm3 0v2h2v-2zm3 0v2h2v-2zm3 0v2h2v-2zm-9 3v2h8v-2z"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+    How to Use
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M15.5 2C13 2 11 4 11 6.5s2 4.5 4.5 4.5c.9 0 1.7-.3 2.4-.7l3.1 3.1 1.4-1.4-3.1-3.1c.4-.7.7-1.5.7-2.4C20 4 18 2 15.5 2M4 4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-5l-2-2v7H4V6h5.03c.06-.7.23-1.35.47-2zm11.5 0C16.9 4 18 5.1 18 6.5S16.9 9 15.5 9 13 7.9 13 6.5 14.1 4 15.5 4"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+    Features
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M15.5 2C13 2 11 4 11 6.5s2 4.5 4.5 4.5c.9 0 1.7-.3 2.4-.7l3.1 3.1 1.4-1.4-3.1-3.1c.4-.7.7-1.5.7-2.4C20 4 18 2 15.5 2M4 4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-5l-2-2v7H4V6h5.03c.06-.7.23-1.35.47-2zm11.5 0C16.9 4 18 5.1 18 6.5S16.9 9 15.5 9 13 7.9 13 6.5 14.1 4 15.5 4"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+    Features
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#smart-chips-advanced-filtering" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Smart Chips &amp; Advanced Filtering
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Smart Chips &amp; Advanced Filtering">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#exhaustive-filter-list" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exhaustive Filter List
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#instant-terminal-execution-cmd" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Instant Terminal Execution (/cmd)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#intelligent-web-question-routing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Intelligent Web &amp; Question Routing
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Intelligent Web &amp; Question Routing">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#supported-search-engines" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Supported Search Engines
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#natural-language-detection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Natural Language Detection
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#deep-system-control-panel-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Deep System &amp; Control Panel Integration
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Deep System &amp; Control Panel Integration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#available-system-commands" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Available System Commands
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#keeping-your-index-updated" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Keeping Your Index Updated
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#internal-velo-commands" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Internal Velo Commands
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#power-media-controls" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Power &amp; Media Controls
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Power &amp; Media Controls">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#media-playback" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Media Playback
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#safe-power-states" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Safe Power States
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#system-tray-background-process" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        System Tray Background Process
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-velo-settings-panel" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Velo Settings Panel
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="The Velo Settings Panel">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#customizing-the-global-shortcut" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Customizing the Global Shortcut
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#autostart-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Autostart Management
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Blog
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Blog
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../blog/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The Vision Behind Velocmd
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_2" id="__nav_4_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Categories
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Categories
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../blog/category/releases/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Releases
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../changelog/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Version History
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#smart-chips-advanced-filtering" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Smart Chips &amp; Advanced Filtering
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Smart Chips &amp; Advanced Filtering">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#exhaustive-filter-list" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exhaustive Filter List
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#instant-terminal-execution-cmd" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Instant Terminal Execution (/cmd)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#intelligent-web-question-routing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Intelligent Web &amp; Question Routing
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Intelligent Web &amp; Question Routing">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#supported-search-engines" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Supported Search Engines
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#natural-language-detection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Natural Language Detection
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#deep-system-control-panel-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Deep System &amp; Control Panel Integration
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Deep System &amp; Control Panel Integration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#available-system-commands" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Available System Commands
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#keeping-your-index-updated" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Keeping Your Index Updated
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#internal-velo-commands" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Internal Velo Commands
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#power-media-controls" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Power &amp; Media Controls
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Power &amp; Media Controls">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#media-playback" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Media Playback
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#safe-power-states" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Safe Power States
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#system-tray-background-process" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        System Tray Background Process
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-velo-settings-panel" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Velo Settings Panel
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="The Velo Settings Panel">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#customizing-the-global-shortcut" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Customizing the Global Shortcut
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#autostart-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Autostart Management
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="feature-deep-dive">Feature Deep Dive</h1>
+<p>Velocmd is packed with power-user features that go far beyond a simple search bar. Below is a detailed guide on every feature available to accelerate your workflow.</p>
+<hr />
+<h2 id="smart-chips-advanced-filtering">Smart Chips &amp; Advanced Filtering</h2>
+<p>When querying thousands of files, you need precision. Velocmd uses a "Smart Chip" system to filter your search context instantly. </p>
+<p>Type either <code>/</code> or <code>@</code> followed by a filter keyword. Press <kbd>Space</kbd> to lock the chip in place, then type your search query. You can chain multiple chips together (e.g., <code>/C: /folders work</code>).</p>
+<h3 id="exhaustive-filter-list">Exhaustive Filter List</h3>
+<p>Velocmd supports multiple aliases for the same filter, allowing you to type whatever feels most natural.</p>
+<table>
+<thead>
+<tr>
+<th>Primary Chip</th>
+<th>Supported Aliases</th>
+<th>What it does</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>/apps</code></td>
+<td><code>/app</code>, <code>/application</code>, <code>/exe</code>, <code>/lnk</code></td>
+<td>Restricts search to executable apps</td>
+<td><code>/apps discord</code></td>
+</tr>
+<tr>
+<td><code>/folders</code></td>
+<td><code>/folder</code>, <code>/dir</code>, <code>/directory</code></td>
+<td>Restricts search to directories</td>
+<td><code>/dir projects</code></td>
+</tr>
+<tr>
+<td><code>/files</code></td>
+<td><code>/file</code></td>
+<td>Restricts search to standard files</td>
+<td><code>/files budget</code></td>
+</tr>
+<tr>
+<td><code>/drives</code></td>
+<td><code>/drive</code>, <code>/disk</code></td>
+<td>Filters for top-level mounted drives</td>
+<td><code>/disk</code></td>
+</tr>
+<tr>
+<td><code>/settings</code></td>
+<td><code>/setting</code>, <code>/config</code>, <code>/setup</code></td>
+<td>Searches Windows system settings</td>
+<td><code>/settings display</code></td>
+</tr>
+<tr>
+<td><code>/velo</code></td>
+<td><code>@velo</code></td>
+<td>Exclusively shows internal Velo commands</td>
+<td><code>/velo recents</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Drive Targeting:</strong>
+Velocmd detects all your active drives. Filter directly by typing the letter (e.g., <code>/C:</code>, <code>/D:</code>, <code>/Z:</code>).</p>
+<p><strong>File Extension Filtering:</strong>
+You can filter by <em>any</em> specific file extension natively by typing <code>/</code> followed by the extension (e.g., <code>/pdf</code>, <code>/png</code>, <code>/rs</code>, <code>/js</code>).</p>
+<div class="admonition tip">
+<p class="admonition-title">Keyboard Shortcut</p>
+<p>If you type a chip (like <code>/apps</code>) and it is highlighted as the first result, pressing <kbd>Enter</kbd> will automatically convert it into a Smart Chip and clear the text box for your actual query!</p>
+</div>
+<hr />
+<h2 id="instant-terminal-execution-cmd">Instant Terminal Execution (<code>/cmd</code>)</h2>
+<p>You no longer need to open the Windows Run prompt (<code>Win+R</code>) or manually launch <code>cmd.exe</code>. Simply type <code>/cmd</code> (or <code>@cmd</code>), enter your terminal command, and press <kbd>Enter</kbd>.</p>
+<div class="admonition example">
+<p class="admonition-title">Usage Examples</p>
+<ul>
+<li><code>/cmd ping google.com</code> – Spawns a terminal and pings the server.</li>
+<li><code>/cmd ipconfig /flushdns</code> – Instantly flushes your DNS cache.</li>
+<li><code>/cmd code .</code> – Opens VS Code in your current directory.</li>
+</ul>
+</div>
+<hr />
+<h2 id="intelligent-web-question-routing">Intelligent Web &amp; Question Routing</h2>
+<p>Velocmd acts as a bridge to your default web browser, allowing you to bypass the address bar entirely.</p>
+<h3 id="supported-search-engines">Supported Search Engines</h3>
+<p>Force a search query to a specific engine using these chips:</p>
+<table>
+<thead>
+<tr>
+<th>Chip</th>
+<th>Engine</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>/google</code></td>
+<td>Google Search</td>
+</tr>
+<tr>
+<td><code>/duck</code> or <code>/duckduckgo</code></td>
+<td>DuckDuckGo</td>
+</tr>
+<tr>
+<td><code>/bing</code></td>
+<td>Microsoft Bing</td>
+</tr>
+<tr>
+<td><code>/search</code></td>
+<td>Default System Search Engine</td>
+</tr>
+</tbody>
+</table>
+<h3 id="natural-language-detection">Natural Language Detection</h3>
+<p>Velocmd automatically detects if you are asking a question. If your query starts with any of the following words, it will automatically suggest a Web Search as the top result:
+<strong>how</strong>, <strong>what</strong>, <strong>why</strong>, <strong>when</strong>, or <strong>who</strong>.</p>
+<hr />
+<h2 id="deep-system-control-panel-integration">Deep System &amp; Control Panel Integration</h2>
+<p>Velocmd hardcodes 32 deeply buried Windows settings and legacy tools into its in-memory index. Simply search for what you want to change, and Velocmd will route you directly to the native module.</p>
+<h3 id="available-system-commands">Available System Commands</h3>
+<table>
+<thead>
+<tr>
+<th>Category</th>
+<th>Available Commands</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>System Settings</strong></td>
+<td>Display Settings, Sound Settings, Bluetooth &amp; other devices, Wi-Fi Settings, Personalization, Taskbar Settings, Date &amp; Time Settings, Power &amp; Sleep Settings, Storage Settings, Background Apps, Notifications &amp; actions, Default Apps.</td>
+</tr>
+<tr>
+<td><strong>App Management</strong></td>
+<td>Startup Apps, Uninstall Program, Apps &amp; Features, Installed Apps, Windows Update.</td>
+</tr>
+<tr>
+<td><strong>Legacy OS Tools</strong></td>
+<td>Control Panel, Task Manager, Command Prompt, PowerShell, Registry Editor, Environment Variables, System Properties, Network Connections, Disk Management, Device Manager, Services, Group Policy Editor, Resource Monitor, Event Viewer, System Information.</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="keeping-your-index-updated">Keeping Your Index Updated</h2>
+<p>Because Velocmd runs entirely in memory to maintain its blazing speed, it needs to periodically sync with your hard drive to learn about new files.</p>
+<ul>
+<li><strong>Automatic Refresh:</strong> Velocmd silently rescans your drives and updates its index in the background every <strong>15 minutes</strong>.</li>
+<li><strong>Manual Refresh:</strong> If you just installed a new application or downloaded a file and need it to appear immediately, you can force a resync. Simply type <code>/velo</code> and select <strong>Velo: Refresh Index</strong> (or just search <code>Refresh</code>), then hit <kbd>Enter</kbd>.</li>
+</ul>
+<hr />
+<h2 id="internal-velo-commands">Internal Velo Commands</h2>
+<p>You can control Velocmd's behavior directly from the search bar. Typing <code>/velo</code> (or <code>@velo</code>) will reveal the following internal commands:</p>
+<table>
+<thead>
+<tr>
+<th>Command Name</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Velo Settings</strong></td>
+<td>Opens the inline configuration panel.</td>
+</tr>
+<tr>
+<td><strong>Velo: Toggle Recents</strong></td>
+<td>Turns the intelligent "Recent Files" view on or off.</td>
+</tr>
+<tr>
+<td><strong>Velo: Clear Recents</strong></td>
+<td>Wipes your local history from the interface immediately.</td>
+</tr>
+<tr>
+<td><strong>Velo: Reset Position</strong></td>
+<td>Snaps the search bar back to the top-center of your primary display.</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="power-media-controls">Power &amp; Media Controls</h2>
+<p>Control your environment without leaving your keyboard.</p>
+<h3 id="media-playback">Media Playback</h3>
+<p>Search for these commands to control your background music/video natively via the Windows API:</p>
+<ul>
+<li><code>Media: Play/Pause</code></li>
+<li><code>Media: Next Track</code></li>
+<li><code>Media: Previous Track</code></li>
+</ul>
+<h3 id="safe-power-states">Safe Power States</h3>
+<p>Type <code>Shutdown</code> or <code>Restart</code>. Velocmd provides a built-in safety net: when you hit Enter, it will ask:</p>
+<ul>
+<li><code>✅ Yes, I am sure</code></li>
+<li><code>❌ No, Cancel</code></li>
+</ul>
+<hr />
+<h2 id="system-tray-background-process">System Tray Background Process</h2>
+<p>Velocmd runs silently in the background to ensure instantaneous response times. You will find the Velo monkey icon sitting in your Windows System Tray (bottom right corner).</p>
+<ul>
+<li><strong>Left-Click:</strong> Instantly shows or hides the command palette.</li>
+<li><strong>Right-Click:</strong> Opens the context menu to quit the application entirely.</li>
+</ul>
+<hr />
+<h2 id="the-velo-settings-panel">The Velo Settings Panel</h2>
+<p>Press <kbd>Tab</kbd> while the launcher is open to flip down the inline Settings panel. </p>
+<h3 id="customizing-the-global-shortcut">Customizing the Global Shortcut</h3>
+<p>By default, Velocmd opens with <kbd>Win</kbd> + <kbd>Shift</kbd> + <kbd>.</kbd> (Win+Shift+Period). In the settings panel, you can click the shortcut display to open a dropdown of alternatives. Velocmd will automatically verify if the shortcut is available on your Windows machine before applying it.</p>
+<p><strong>Supported Preset Shortcuts:</strong>
+If your desired shortcut is taken by another app, Velocmd provides these tested fallback options:</p>
+<ul>
+<li><code>Win + Shift + .</code> (Default)</li>
+<li><code>Alt + Space</code></li>
+<li><code>Win + Space</code></li>
+<li><code>Ctrl + Space</code></li>
+<li><code>Ctrl + Shift + Space</code></li>
+<li><code>Win + S</code></li>
+<li><code>Alt + S</code></li>
+<li><code>Win + /</code></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Fallback Logic</p>
+<p>If your chosen shortcut (or the default) is already in use by another application upon startup, Velocmd will automatically test the list above and assign the first available hotkey, ensuring you are never locked out of the launcher.</p>
+</div>
+<h3 id="autostart-management">Autostart Management</h3>
+<p>Toggle "Start with Windows" directly from the panel to ensure Velocmd's in-memory index is always ready the moment you log in.</p>
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.expand", "navigation.top", "search.suggest", "search.highlight", "content.tabs.link", "content.code.copy", "content.code.annotation"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>
