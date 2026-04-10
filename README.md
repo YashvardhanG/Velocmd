@@ -1,56 +1,118 @@
-# Velocmd
+# Velocmd Explorer
 
-Velocmd is a high-performance system launcher and file indexer for Windows, engineered to bring a macOS Spotlight-like experience to the Windows ecosystem. Powered by a Rust backend and a lightweight Tauri frontend, it bypasses the sluggish native Windows indexer by utilizing an aggressive, in-memory indexing strategy.
+<br />
+<p align="center">
+  <a href="https://github.com/YashvardhanG/velocmd">
+    <img src="https://github.com/YashvardhanG/velocmd/docs/assets/logo.png" alt="Logo" width="128" height="128">
+  </a>
+  <h3 align="center">Velocmd Explorer</h3>
+  <p align="center">
+    A blazing fast, native system launcher. Search files, run commands, and navigate your system seamlessly.
+  </p>
+</p>
 
-## Key Features
+<details open="open">
+  <summary>Table of Contents</summary>
+  <ol>
+    <li><a href="#about">About</a></li>
+    <li><a href="#core-capabilities">Core Capabilities</a></li>
+    <li><a href="#usage">Usage</a></li>
+    <li><a href="#installation">Installation</a></li>
+    <li><a href="#development-setup">Development Setup</a></li>
+    <li><a href="#contribute">Contribute</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ol>
+</details>
 
-- **Blazing Fast In-Memory Search**: On startup, Velocmd scans critical system directories (Start Menu, WindowsApps, User Data) and connected drives, loading everything into aggressive memory caching for instant retrieval.
-- **Dynamic Filtering System**: Type `/` or `@` to trigger robust file type filtering with chips. Easily refine queries dynamically to show only `/apps`, `/folders`, `/files`, or even specific drives. 
-- **Universal Windows Platform (UWP) Support**: Specifically engineered to flawlessly find Microsoft Store Apps (like Spotify, Netflix), stripping redundant alias extensions and fetching system icons properly. 
-- **Direct Command Execution**: Start your search with `@cmd` to run processes directly from the launcher without opening a separate shell.
-- **Web Search Integration**: Launch searches straight into your browser via `@google`, `@duckduckgo`, or `@bing`.
-- **System Controls & Media Keys**: Quickly control media playback (play, pause, next track) and system power states directly using built-in `velo:` commands. 
-- **Customizable Global Hotkeys**: Includes a dynamic global hotkey binder equipped with availability checks to ensure no conflicts with other apps. Defaults to `Win+Shift+.`.
-- **Recents History Tracker**: Includes an optionally toggleable "Recents" panel to give you fast access to the last 10 things you successfully opened.
-- **Native OS Execution**: Smart execution parses and runs absolute paths, folder navigation, web URLs, and commands properly through `cmd.exe` or Tauri native handlers depending on context.
+## About
+**Velocmd** is a high-performance system launcher and file indexer designed to bring a unified, instant **command palette** to Windows. Powered by a Rust backend and a lightweight Tauri frontend, it bypasses the sluggish native Windows search by utilizing an optimized, in-memory indexing strategy.
 
-## Technology Stack
+Windows power users have long suffered through a native search experience that is notoriously slow, bloated with web results, and visually cumbersome. Velocmd was built with a single philosophy: **Zero latency, zero bloat, and total keyboard control.**
 
-- **Backend**: Rust utilizing [Tauri](https://tauri.app/). Optimized file system walking via the `jwalk` crate. 
-- **Frontend**: Vanilla HTML / CSS / JS for zero-overhead DOM rendering. No heavy JS frameworks ensuring the absolute lowest latency on-screen possible.
-- **Core Plugins**:
-  - `tauri-plugin-global-shortcut` for binding and checking global keys.
-  - `tauri-plugin-autostart` for launching at boot.
-  - `tauri-plugin-opener` for native protocol processing.
-
-## Installation / Development
-
-1. Ensure you have **Rust**, **Node.js**, and **npm** installed on your system.
-2. Clone the repository.
-3. Install the dependencies:
-   ```bash
-   npm install
-   ```
-4. Start the development server (auto-recompiles on change):
-   ```bash
-   npm run tauri dev
-   ```
-5. To build a highly optimized release executable:
-   ```bash
-   npm run tauri build
-   ```
-
-## Known Commands
-
-Besides standard files and folders, you can type **`/velo `**, **`/settings `**, or specific keywords to find the following built-in integrations:
-- **Velo Settings** - Opens the configuration pane
-- **Velo: Toggle Recents** - Toggles the recent items menu
-- **Velo: Clear Recents** - Wipes history
-- **Velo: Reset Position** - Re-centers the window
-- **Shutdown / Restart** - Safe system power off menus
-- **Media: Play/Pause/Next/Previous** - Media controls
-- **System Configs** - "Windows Updates", "Display Settings", "Sound Settings" etc. route directly to modern ms-settings protocols.
+For a deep dive into every feature, chip alias, and advanced system command, please check out our **[Full Documentation Site](https://yashvardhang.github.io/velocmd/)**.
 
 ---
 
-> Engineered to bring instant accessibility to Windows users who need speed.
+## Core Capabilities
+
+### ⚡ Blazing Fast Search
+Velocmd aggressively scans your Start Menu, AppData, and mounted drives upon startup using multithreaded directory traversal. By storing the index in RAM, it achieves sub-millisecond query responses.
+
+### 🎯 Smart Tag Filtering
+Filter thousands of files instantly using `/` or `@` prefixes:
+* **Types:** `/apps`, `/folders`, `/files`, `/settings`
+* **Drives:** `/C:`, `/D:`
+* **Actions:** `/cmd` (Terminal), `/search` (Web)
+
+### ⚙️ Deep System Integration
+Directly launch Sound Settings, Environment Variables, Registry Editor, Task Manager, or even trigger system power states like **Shutdown** and **Restart** directly from the bar.
+
+---
+
+## Usage
+
+### The Master Shortcut
+To summon the palette from anywhere:
+> <kbd>Win</kbd> + <kbd>Shift</kbd> + <kbd>.</kbd>
+
+*Change this anytime via the <kbd>Tab</kbd> settings menu.*
+
+### Basic Controls
+* **<kbd>↓</kbd> / <kbd>↑</kbd>** : Navigate through search results.
+* **<kbd>Enter</kbd>** : Open the selected file, folder, or application.
+* **<kbd>Esc</kbd>** : Clear the search bar. Pressing it a second time hides the launcher.
+* **<kbd>Tab</kbd>** : Toggle the Settings menu.
+
+---
+
+## Installation
+
+### Download (Recommended)
+1. Go to the [Latest Release](https://github.com/YashvardhanG/velocmd/releases/latest).
+2. Download `Velocmd_Installer.exe`.
+3. Run the installer and launch from your Start Menu.
+
+## Development Setup
+### Prerequisites
+Before you begin, ensure you have the following installed on your Windows machine:
+* **Node.js**: LTS version (v18 or higher recommended).
+* **Rust**: Install via [rustup.rs](https://rustup.rs/).
+* **WebView2**: Standard on Windows 10/11, but ensure it's up to date.
+* **C++ Build Tools**: Required for Rust compilation. You can get these via the [Visual Studio Installer](https://visualstudio.microsoft.com/visual-cpp-build-tools/).
+
+### Local Run
+If you want to run the application in development mode with hot-reloading:
+
+```bash
+# 1. Clone the repository
+git clone [https://github.com/YashvardhanG/velocmd.git](https://github.com/YashvardhanG/velocmd.git)
+cd velocmd
+
+# 2. Install dependencies
+npm install
+
+# 3. Build the application
+npm run tauri build
+```
+
+## Contribute
+
+Every program is ever evolving and, that is possible only with valuable contributions. Any contributions you make are greatly appreciated. 
+<ol>
+  <li>Fork the Project</li>
+  <li>Create your Feature Branch (git checkout -b functionalities/Feature)</li>
+  <li>Commit your Changes (git commit -m 'Add a Feature')</li>
+  <li>Push to the Branch (git push origin functionalities/Feature)</li>
+  <li>Open a Pull Request</li>
+</ol>
+
+<br>If you have any further ideas or comments, go ahead to the next section and feel free to connect! 
+
+<!-- CONTACT -->
+## Contact
+
+<p align="center">
+  <br>
+  <img src="https://github.com/YashvardhanG/YashvardhanG/blob/main/Wolf_1.jpg" alt="Logo" width="150" height="150"><br>
+  <a href = "https://www.yashvardhang.dev/">Connect with me here! ✉️</a>
+</p>
