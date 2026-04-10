@@ -1,0 +1,53 @@
+name: Deploy Documentation
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.x
+
+      - name: Install dependencies
+        run: |
+          pip install mkdocs-material mkdocs-blog-plugin
+
+      - name: Fetch Changelog from GitHub Releases
+        shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          mkdir -p docs
+          
+          echo "---" > docs/changelog.md
+          echo "icon: material/history" >> docs/changelog.md
+          echo "---" >> docs/changelog.md
+          echo "# Version History" >> docs/changelog.md
+          echo "" >> docs/changelog.md
+          
+          gh release list --limit 10 | while read -r line; do
+            tag=$(echo "$line" | awk '{print $1}')
+            date=$(echo "$line" | awk '{print $3, $4, $5}')
+            echo "## $tag" >> docs/changelog.md
+            echo "*Released on $date*" >> docs/changelog.md
+            echo "" >> docs/changelog.md
+            gh release view "$tag" --json body --template '{{.body}}' >> docs/changelog.md
+            echo -e "\n---\n" >> docs/changelog.md
+          done
+
+      - name: Deploy to GitHub Pages
+        run: |
+          mkdocs gh-deploy --force
