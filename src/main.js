@@ -468,6 +468,27 @@ async function openFile(path, kind, name) {
     return;
   }
 
+  if (path === "velo:refresh") {
+    input.disabled = true;
+    input.value = "";
+    input.placeholder = "⌛ Refreshing index...";
+    state.results = [];
+    state.activeFilters = [];
+    renderChips();
+
+    resultsList.innerHTML = `
+      <div class="empty-recents-message">
+        <span class="result-icon" style="animation: spin 2s linear infinite;">⏳</span>
+        <div class="result-content">
+          <span class="result-name">Refreshing File Index...</span>
+          <span class="result-path">This will just take a moment</span>
+        </div>
+      </div>`;
+    resultsContainer.classList.remove("hidden");
+    await invoke("trigger_index_refresh");
+    return;
+  }
+
   if (kind === "filter") {
     // input.value = path;
     // input.focus();
@@ -1045,3 +1066,18 @@ document.addEventListener('contextmenu', (e) => {
 });
 
 input.focus();
+
+listen("index_refreshed", async () => {
+  input.disabled = false;
+  input.value = "";
+  input.placeholder = "⚡Velocmd running...";
+  state.results = [];
+  input.focus();
+
+  if (!state.showRecents) {
+    await invoke("reset_window");
+    lastWindowHeight = 65;
+  }
+
+  render();
+});

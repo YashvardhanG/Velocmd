@@ -1,0 +1,89 @@
+{% extends "main.html" %}
+
+{% block tabs %}
+{{ super() }}
+<style>
+    .md-content__inner h1:first-child {
+        display: none;
+    }
+
+    .hero-container {
+        text-align: center;
+        padding: 5rem 1rem;
+        background-color: var(--md-default-bg-color);
+        border-bottom: 1px solid var(--md-default-fg-color--lightest);
+    }
+
+    .hero-logo {
+        width: 120px;
+        height: auto;
+        margin-bottom: 0.5rem;
+        transition: transform 0.3s ease, filter 0.3s ease;
+        filter: drop-shadow(0 10px 15px rgba(0, 0, 0, 0.1));
+    }
+
+    .hero-container h1 {
+        font-size: 3rem;
+        font-weight: 600;
+        letter-spacing: -0.02em;
+        margin-bottom: 0.5rem;
+        color: white;
+    }
+
+    .hero-container p {
+        font-size: 1rem;
+        color: var(--md-default-fg-color--light);
+        margin-bottom: 2.5rem;
+        max-width: 600px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .hero-buttons {
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
+        flex-wrap: wrap;
+    }
+
+    .hero-buttons .md-button {
+        margin: 0;
+        font-size: 1.1rem;
+        font-weight: 600;
+        padding: 0.75rem 2rem;
+        border-radius: 8px;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .hero-buttons .md-button--primary {
+        background-color: var(--md-primary-fg-color);
+        color: var(--md-primary-bg-color);
+        box-shadow: 0 4px 14px 0 rgba(0, 0, 0, 0.1);
+    }
+
+    .hero-buttons .md-button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+    }
+</style>
+
+<div class="hero-container">
+    <img src="{{ 'assets/logo.png' | url }}" class="hero-logo" alt="Velo Logo">
+
+    <h1>Velocmd</h1>
+    <p>A blazing fast, native system launcher. Search files, run commands, and navigate your system seamlessly.</p>
+
+    <div class="hero-buttons">
+        <a href="https://github.com/yashvardhang/velocmd/releases/latest" class="md-button md-button--primary">
+            Download Latest
+        </a>
+        <a href="getting-started/installation/" class="md-button">
+            Read the Docs
+        </a>
+    </div>
+</div>
+{% endblock %}
+
+{% block content %}
+{{ super() }}
+{% endblock %}

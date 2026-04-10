@@ -304,6 +304,14 @@ async fn search_files(query: String) -> Vec<SearchResult> {
         });
 
         settings_results.push(SearchResult {
+            path: "velo:refresh".to_string(),
+            name: "Velo: Refresh Index".to_string(),
+            kind: "command".to_string(),
+            score: 195,
+            icon_data: None,
+        });
+
+        settings_results.push(SearchResult {
             path: "velo:media_play".to_string(),
             name: "Media: Play/Pause".to_string(),
             kind: "command".to_string(),
@@ -623,7 +631,7 @@ fn run_terminal_command(command: String) {
         .spawn();
 }
 
-fn scan_folder(path: &str, kind_override: Option<&str>) {
+fn scan_folder(path: &str, kind_override: Option<&str>, index: &mut Vec<IndexedItem>) {
     for entry in WalkDir::new(path).skip_hidden(true).min_depth(1) {
         if let Ok(entry) = entry {
             let path_str = entry.path().to_string_lossy().to_string();
@@ -667,12 +675,12 @@ fn scan_folder(path: &str, kind_override: Option<&str>) {
                 kind,
             };
 
-            FILE_INDEX.lock().unwrap().push(item);
+            index.push(item);
         }
     }
 }
 
-fn index_system_settings() {
+fn index_system_settings(index: &mut Vec<IndexedItem>) {
     let settings = vec![
         ("Startup Apps", "ms-settings:startupapps"),
         ("Uninstall Program", "ms-settings:appsfeatures"),
@@ -709,7 +717,6 @@ fn index_system_settings() {
         ("Event Viewer", "cmd:eventvwr.msc"),
     ];
 
-    let mut index = FILE_INDEX.lock().unwrap();
     for (_name, path) in settings {
         index.push(IndexedItem {
             path: path.into(),
@@ -719,63 +726,81 @@ fn index_system_settings() {
     }
 }
 
-fn build_index() {
+#[tauri::command]
+fn trigger_index_refresh(app: tauri::AppHandle) {
+    std::thread::spawn(move || {
+        build_index_internal();
+        let _ = app.emit("index_refreshed", ());
+    });
+}
+
+fn build_index_internal() {
+    let start = Instant::now();
+    println!("Indexing started...");
+
+    let mut new_index = Vec::new();
+    index_system_settings(&mut new_index);
+
+    let app_paths = vec![
+        r"C:\ProgramData\Microsoft\Windows\Start Menu\Programs",
+        r"C:\Users\Default\AppData\Roaming\Microsoft\Windows\Start Menu\Programs",
+    ];
+
+    if let Ok(appdata) = std::env::var("APPDATA") {
+        let user_start = format!(r"{}\Microsoft\Windows\Start Menu\Programs", appdata);
+        if Path::new(&user_start).exists() {
+            scan_folder(&user_start, Some("app"), &mut new_index);
+        }
+    }
+
+    if let Ok(local_appdata) = std::env::var("LOCALAPPDATA") {
+        let local_apps = format!(r"{}\Microsoft\WindowsApps", local_appdata);
+        if Path::new(&local_apps).exists() {
+            scan_folder(&local_apps, Some("app"), &mut new_index);
+        }
+    }
+
+    for path in app_paths {
+        if Path::new(path).exists() {
+            scan_folder(path, Some("app"), &mut new_index);
+        }
+    }
+
+    let drives = get_available_drives();
+    for drive in drives {
+        println!("Scanning drive: {}", drive);
+
+        let drive_root = IndexedItem {
+            path: drive.clone().into_boxed_str(),
+            path_lower: drive.to_lowercase().into_boxed_str(),
+            kind: ItemKind::Drive,
+        };
+        new_index.push(drive_root);
+
+        scan_folder(&drive, None, &mut new_index);
+    }
+
+    let duration = start.elapsed();
+    let count = new_index.len();
+    *FILE_INDEX.lock().unwrap() = new_index;
+    println!(
+        "Indexing complete! Items: {} (Took: {:?})",
+        count,
+        duration
+    );
+}
+
+fn start_periodic_indexing() {
     std::thread::spawn(|| {
-        let start = Instant::now();
-        println!("Indexing started...");
-
-        index_system_settings();
-
-        let app_paths = vec![
-            r"C:\ProgramData\Microsoft\Windows\Start Menu\Programs",
-            r"C:\Users\Default\AppData\Roaming\Microsoft\Windows\Start Menu\Programs",
-        ];
-
-        if let Ok(appdata) = std::env::var("APPDATA") {
-            let user_start = format!(r"{}\Microsoft\Windows\Start Menu\Programs", appdata);
-            if Path::new(&user_start).exists() {
-                scan_folder(&user_start, Some("app"));
-            }
+        loop {
+            build_index_internal();
+            std::thread::sleep(std::time::Duration::from_secs(15 * 60));
         }
-
-        if let Ok(local_appdata) = std::env::var("LOCALAPPDATA") {
-            let local_apps = format!(r"{}\Microsoft\WindowsApps", local_appdata);
-            if Path::new(&local_apps).exists() {
-                scan_folder(&local_apps, Some("app"));
-            }
-        }
-
-        for path in app_paths {
-            if Path::new(path).exists() {
-                scan_folder(path, Some("app"));
-            }
-        }
-
-        let drives = get_available_drives();
-        for drive in drives {
-            println!("Scanning drive: {}", drive);
-
-            let drive_root = IndexedItem {
-                path: drive.clone().into_boxed_str(),
-                path_lower: drive.to_lowercase().into_boxed_str(),
-                kind: ItemKind::Drive,
-            };
-            FILE_INDEX.lock().unwrap().push(drive_root);
-
-            scan_folder(&drive, None);
-        }
-
-        let duration = start.elapsed();
-        println!(
-            "Indexing complete! Items: {} (Took: {:?})",
-            FILE_INDEX.lock().unwrap().len(),
-            duration
-        );
     });
 }
 
 fn main() {
-    build_index();
+    start_periodic_indexing();
 
     tauri::Builder::default()
         .plugin(tauri_plugin_autostart::Builder::new().build())
@@ -805,7 +830,8 @@ fn main() {
             run_terminal_command,
             set_recents_state,
             execute_media_key,
-            check_shortcuts_availability
+            check_shortcuts_availability,
+            trigger_index_refresh
         ])
         .setup(|app| {
             let window = app.get_webview_window("main").unwrap();
