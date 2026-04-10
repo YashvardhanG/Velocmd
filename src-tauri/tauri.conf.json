@@ -41,6 +41,7 @@
     ]
   },
   "plugins": {
+    "single-instance": null,
     "autostart": null,
     "opener": null,
     "global-shortcut": null

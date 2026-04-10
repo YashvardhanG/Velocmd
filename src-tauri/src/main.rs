@@ -5,6 +5,7 @@ use once_cell::sync::Lazy;
 use std::collections::HashSet;
 use std::io::Cursor;
 use std::path::Path;
+use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::Mutex;
 use std::time::Instant;
 use systemicons::get_icon;
@@ -54,6 +55,7 @@ static CURRENT_SHORTCUT: Lazy<Mutex<String>> =
     Lazy::new(|| Mutex::new("Super+Shift+.".to_string()));
 static FILE_INDEX: Lazy<Mutex<Vec<IndexedItem>>> = Lazy::new(|| Mutex::new(Vec::new()));
 static SHOW_RECENTS: Lazy<Mutex<bool>> = Lazy::new(|| Mutex::new(true));
+static REFOCUS_ON_BLUR: AtomicBool = AtomicBool::new(false);
 
 const PRESET_SHORTCUTS: &[&str] = &[
     "Super+Shift+.",
@@ -146,33 +148,42 @@ fn get_file_icon_base64(path: &str) -> Option<String> {
     }
 }
 
+fn show_main_window(app: &AppHandle) {
+    if let Some(window) = app.get_webview_window("main") {
+        let show_recents = *SHOW_RECENTS.lock().unwrap();
+
+        if show_recents {
+            let _ = window.set_size(tauri::Size::Logical(tauri::LogicalSize {
+                width: 800.0,
+                height: 400.0,
+            }));
+        } else {
+            let _ = window.set_size(tauri::Size::Logical(tauri::LogicalSize {
+                width: 800.0,
+                height: 70.0,
+            }));
+        }
+
+        let _ = window.center();
+        let _ = window.set_position(tauri::Position::Physical(tauri::PhysicalPosition {
+            x: window.outer_position().unwrap().x,
+            y: 100,
+        }));
+        let _ = window.unminimize();
+        let _ = window.show();
+        let _ = window.set_focus();
+        let _ = window.emit("reset_state", ());
+
+        REFOCUS_ON_BLUR.store(true, Ordering::SeqCst);
+    }
+}
+
 fn toggle_main_window(app: &AppHandle) {
     if let Some(window) = app.get_webview_window("main") {
-        if window.is_visible().unwrap_or(false) {
+        if window.is_visible().unwrap_or(false) && !window.is_minimized().unwrap_or(false) {
             let _ = window.hide();
         } else {
-            let show_recents = *SHOW_RECENTS.lock().unwrap();
-
-            if show_recents {
-                let _ = window.set_size(tauri::Size::Logical(tauri::LogicalSize {
-                    width: 800.0,
-                    height: 400.0,
-                }));
-            } else {
-                let _ = window.set_size(tauri::Size::Logical(tauri::LogicalSize {
-                    width: 800.0,
-                    height: 70.0,
-                }));
-            }
-
-            let _ = window.center();
-            let _ = window.set_position(tauri::Position::Physical(tauri::PhysicalPosition {
-                x: window.outer_position().unwrap().x,
-                y: 100,
-            }));
-            let _ = window.show();
-            let _ = window.set_focus();
-            let _ = window.emit("reset_state", ());
+            show_main_window(app);
         }
     }
 }
@@ -803,6 +814,9 @@ fn main() {
     start_periodic_indexing();
 
     tauri::Builder::default()
+        .plugin(tauri_plugin_single_instance::init(|app, _argv, _cwd| {
+            show_main_window(app);
+        }))
         .plugin(tauri_plugin_autostart::Builder::new().build())
         .plugin(tauri_plugin_autostart::init(
             tauri_plugin_autostart::MacosLauncher::LaunchAgent,
@@ -839,7 +853,11 @@ fn main() {
 
             window.on_window_event(move |event| {
                 if let tauri::WindowEvent::Focused(false) = event {
-                    let _ = w_clone.hide();
+                    if REFOCUS_ON_BLUR.compare_exchange(true, false, Ordering::SeqCst, Ordering::SeqCst).is_ok() {
+                        let _ = w_clone.set_focus();
+                    } else {
+                        let _ = w_clone.hide();
+                    }
                 }
             });
 
@@ -904,6 +922,8 @@ fn main() {
                     eprintln!("Failed to register any fallback shortcuts");
                 }
             }
+
+            show_main_window(app.handle());
 
             Ok(())
         })
