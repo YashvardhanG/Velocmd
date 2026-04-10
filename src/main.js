@@ -878,7 +878,7 @@ window.addEventListener('focus', () => {
   input.focus();
 });
 
-listen('reset_state', () => {
+listen('reset_state', async () => {
   input.value = "";
   state.activeFilters = [];
   renderChips();
@@ -890,7 +890,14 @@ listen('reset_state', () => {
   shortcutDropdown.classList.add("hidden");
   render();
   input.focus();
-  updateWindowSize();
+
+  if (state.showRecents) {
+    await invoke("resize_window", { height: WINDOW_MAX_HEIGHT });
+    lastWindowHeight = WINDOW_MAX_HEIGHT;
+  } else {
+    await invoke("reset_window");
+    lastWindowHeight = 65;
+  }
 });
 
 let recordedShortcut = "";
@@ -1065,6 +1072,14 @@ if (helpBtn) {
 }
 
 let lastWindowHeight = 0;
+
+if (!state.showRecents) {
+  invoke("reset_window");
+  lastWindowHeight = 65;
+} else {
+  invoke("resize_window", { height: WINDOW_MAX_HEIGHT });
+  lastWindowHeight = WINDOW_MAX_HEIGHT;
+}
 
 function updateWindowSize() {
   let height = container.offsetHeight;
