@@ -461,6 +461,14 @@ async function openFile(path, kind, name) {
     return;
   }
 
+  if (path === "velo:help") {
+    await invoke("open_file", { path: "https://yashvardhang.github.io/Velocmd/" });
+    input.value = "";
+    state.results = [];
+    render();
+    return;
+  }
+
   if (path === "velo:reset_position") {
     await invoke("reset_window");
     input.value = "";
@@ -1047,6 +1055,14 @@ if (startupToggle) {
 }
 
 initAutostart();
+
+const helpBtn = document.getElementById("help-btn");
+if (helpBtn) {
+  helpBtn.onclick = async (e) => {
+    e.stopPropagation();
+    await invoke("open_file", { path: "https://yashvardhang.github.io/Velocmd/" });
+  };
+}
 
 let lastWindowHeight = 0;
 

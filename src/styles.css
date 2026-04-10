@@ -578,3 +578,36 @@ a:active {
   color: white;
   font-weight: 600;
 }
+
+.settings-footer {
+  margin-top: auto;
+  padding-top: 12px;
+  display: flex;
+  align-items: center;
+}
+
+.info-btn {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 1px solid #444;
+  background: #2a2a2a;
+  color: #888;
+  font-size: 15px;
+  font-weight: 700;
+  font-style: italic;
+  font-family: Georgia, 'Times New Roman', serif;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  padding: 0;
+  line-height: 1;
+}
+
+.info-btn:hover {
+  background: var(--accent-color);
+  border-color: var(--accent-color);
+  color: white;
+}

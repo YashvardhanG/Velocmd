@@ -275,6 +275,14 @@ async fn search_files(query: String) -> Vec<SearchResult> {
         let mut settings_results = Vec::new();
 
         settings_results.push(SearchResult {
+            path: "velo:help".to_string(),
+            name: "Velo: Help".to_string(),
+            kind: "command".to_string(),
+            score: 201,
+            icon_data: None,
+        });
+
+        settings_results.push(SearchResult {
             path: "velo:settings".to_string(),
             name: "Velo Settings".to_string(),
             kind: "command".to_string(),
