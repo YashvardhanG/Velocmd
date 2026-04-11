@@ -17,10 +17,8 @@
   <img src="https://img.shields.io/badge/Price-Free-brightgreen?style=flat-square" alt="Price">
 </p>
 
-<p align="center">
-  <video autoplay loop muted playsinline width="750">
-    <source src="https://github.com/YashvardhanG/Velocmd/raw/main/docs/assets/hero-video.mp4" type="video/mp4" alt='hero'>
-  </video>
+<p align="center" style="margin: 0;">
+  <img src="docs/assets/hero-video.gif" alt="Velocmd Hero Demo" width="800" style="display: block;">
 </p>
 
 <details open="open">
@@ -51,7 +49,7 @@ For a deep dive into every feature, chip alias, and advanced system command, ple
 ### ⚡ Blazing Fast Search
 Unlike traditional indexers that constantly read and write to a background database, Velocmd aggressively scans your Start Menu, local AppData, and mounted drives upon startup using multithreaded directory traversal. It stores this index directly in memory, resulting in sub-millisecond query responses.
 
-### 🎯 Smart Tag Filtering
+### 🏷️ Smart Tag Filtering
 Filter thousands of files instantly using `/` or `@` prefixes:
 * **Types:** `/apps`, `/folders`, `/files`, `/settings`
 * **Drives:** `/C:`, `/D:`
