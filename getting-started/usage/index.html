@@ -1033,6 +1033,10 @@
 <p><kbd>Win</kbd> + <kbd>Shift</kbd> + <kbd>.</kbd></p>
 </blockquote>
 <p>If this shortcut conflicts with another app, you can easily change it. Simply hit <kbd>Tab</kbd> to open the settings panel and select a new preset (like <kbd>Alt</kbd> + <kbd>Space</kbd> or <kbd>Ctrl</kbd> + <kbd>Space</kbd>).</p>
+<p align="center">
+  <img src="/assets/launch.png" alt="Terminal Command Execution" width="750">
+</p>
+
 <div class="admonition note">
 <p class="admonition-title">Fallback Shortcuts</p>
 <p>If your chosen shortcut (or the default) is already in use by another application, Velocmd will automatically fallback and assign the next available hotkey from its preset list, ensuring you can always access the launcher.</p>
@@ -1046,6 +1050,10 @@
 <li><strong><kbd>Esc</kbd></strong> : Clear the search bar. Pressing it a second time hides the launcher.</li>
 <li><strong><kbd>Tab</kbd></strong> : Toggle the Settings menu.</li>
 </ul>
+<div class="admonition tip">
+<p class="admonition-title">Click Away</p>
+<p>Velocmd is built to stay out of your way. Clicking anywhere outside the search bar will instantly hide it and return focus to your previous app.</p>
+</div>
 <hr />
 <h2 id="smart-tag-filtering-chips">Smart Tag Filtering (Chips)</h2>
 <p>To narrow down thousands of files instantly, type an <code>/</code> or <code>@</code> followed by a category. This converts your query into a <strong>Smart Chip</strong>, filtering the results underneath.</p>
@@ -1083,23 +1091,53 @@
 <td>Only Windows System Settings</td>
 <td><code>/settings</code> shutdown</td>
 </tr>
+<tr>
+<td><code>/tabs</code></td>
+<td>Currently open windows and browser tabs</td>
+<td><code>/tabs</code> github</td>
+</tr>
 </tbody>
 </table>
+<p align="center">
+  <img src="/assets/file search.png" alt="Terminal Command Execution" width="750">
+</p>
+
 <div class="admonition tip">
 <p class="admonition-title">Chaining Tags</p>
 <p>You can stack tags for precision. Typing "<code>/D: /folders</code> work" will instantly show you all folders named "work" specifically on your D: drive.</p>
+</div>
+<div class="admonition tip">
+<p class="admonition-title">Fast Chip Autocomplete</p>
+<p>If you type the start of a chip (like <code>/ap</code>) and the <code>/apps</code> tag is highlighted as the first result, pressing <kbd>Enter</kbd> will automatically lock it in as a Smart Chip and clear the text box for your actual query!</p>
 </div>
 <hr />
 <h2 id="terminal-web-commands">Terminal &amp; Web Commands</h2>
 <p>Velocmd routes specific tags to external tools, allowing you to bypass your browser's address bar or the Windows Run prompt entirely.</p>
 <h3 id="quick-terminal">Quick Terminal</h3>
-<p>Use the <code>/cmd</code> tag to instantly pass a command to the Windows command prompt.
-* <em>Example:</em> Type <code>/cmd ping google.com</code> and hit Enter. A terminal window will pop up executing the ping.</p>
+<p>Use the <code>!cmd</code> tag to instantly pass a command to the Windows command prompt.
+* <em>Example:</em> Type <code>!cmd ping google.com</code> and hit Enter. A terminal window will pop up executing the ping.</p>
+<p align="center">
+  <img src="/assets/cmd.png" alt="Terminal Command Execution" width="750">
+</p>
+
 <h3 id="quick-web-search">Quick Web Search</h3>
-<p>Skip opening a new tab. Use these tags to push your search query directly to your default browser:
-* <code>/google [query]</code>
-* <code>/duck [query]</code>
-* <code>/bing [query]</code></p>
+<p>Skip opening a new tab. Use these tags to push your search query directly to your default browser:</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>/google [query]</code></td>
+<td><code>/duck [query]</code></td>
+<td><code>/bing [query]</code></td>
+</tr>
+</tbody>
+</table>
 <hr />
 <h2 id="keeping-your-index-updated">Keeping Your Index Updated</h2>
 <p>Because Velocmd runs entirely in memory to maintain its blazing speed, it needs to periodically sync with your hard drive to learn about new files.</p>
@@ -1113,9 +1151,13 @@
 <ul>
 <li><code>Shutdown</code> : Prompts a fast system shutdown.</li>
 <li><code>Restart</code> : Prompts a fast system reboot.</li>
+<li><code>Show Desktop</code> : Instantly minimizes all open windows (like Win+D).</li>
 <li><code>Media: Play/Pause</code> : Toggles your current media player.</li>
 <li><code>Media: Next Track</code> : Skips to the next song.</li>
 </ul>
+<p align="center">
+  <img src="/assets/velo.png" alt="Terminal Command Execution" width="750">
+</p>
 
 
 

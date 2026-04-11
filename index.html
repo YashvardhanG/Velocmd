@@ -513,55 +513,16 @@
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Core Capabilities">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#blazing-fast-in-memory-search" class="md-nav__link">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#indexing-performance" class="md-nav__link">
     <span class="md-ellipsis">
       
-        ⚡ Blazing Fast, In-Memory Search
+        Indexing Performance
       
     </span>
   </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#smart-tag-filtering" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        🎯 Smart Tag Filtering
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#deep-system-integration" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        ⚙️ Deep System Integration
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#instant-web-terminal-routing" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        🌍 Instant Web &amp; Terminal Routing
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -999,55 +960,16 @@
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Core Capabilities">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#blazing-fast-in-memory-search" class="md-nav__link">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#indexing-performance" class="md-nav__link">
     <span class="md-ellipsis">
       
-        ⚡ Blazing Fast, In-Memory Search
+        Indexing Performance
       
     </span>
   </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#smart-tag-filtering" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        🎯 Smart Tag Filtering
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#deep-system-integration" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        ⚙️ Deep System Integration
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#instant-web-terminal-routing" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        🌍 Instant Web &amp; Terminal Routing
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -1096,21 +1018,25 @@
 
   <h1>Home</h1>
 
+<video autoplay loop muted playsinline width="750" style="clip-path: inset(3px 0 1px 0); display: block; margin: 0;">
+  <source src="assets/hero-video.mp4" type="video/mp4">
+</video>
+
 <h2 id="about"><strong>About</strong></h2>
 <p><strong>Velocmd</strong> is a high-performance system launcher and file indexer designed to bring a unified, instant <strong>command palette</strong> to Windows. Powered by a Rust backend and a lightweight Tauri frontend, it bypasses the sluggish native Windows search by utilizing an optimized, in-memory indexing strategy.</p>
 <p>Windows power users have long suffered through a native search experience that is notoriously slow, bloated with web results, and visually cumbersome. Velocmd was built to solve this with a single, uncompromising philosophy: <strong>Zero latency, zero bloat, and total keyboard control.</strong></p>
 <h2 id="core-capabilities"><strong>Core Capabilities</strong></h2>
 <p><strong>Velocmd</strong> is more than just an app launcher. It is a unified command palette for your entire Windows system.</p>
-<h3 id="blazing-fast-in-memory-search">⚡ Blazing Fast, In-Memory Search</h3>
+<p><strong>⚡ Blazing Fast, In-Memory Search</strong></p>
 <p>Unlike traditional indexers that constantly read and write to a background database, Velocmd aggressively scans your Start Menu, local AppData, and mounted drives upon startup using multithreaded directory traversal. It stores this index directly in memory, resulting in sub-millisecond query responses.</p>
-<h3 id="smart-tag-filtering">🎯 Smart Tag Filtering</h3>
+<p><strong>🏷️ Smart Tag Filtering</strong></p>
 <p>Filter through thousands of files instantly without touching your mouse. By typing an / or @ prefix, you can activate smart chips to narrow your search context:</p>
 <ul>
 <li><strong>Types:</strong> <code>/apps</code>, <code>/folders</code>, <code>/files</code>, <code>/settings</code></li>
 <li><strong>Drives:</strong> <code>/C:</code>, <code>/D:</code></li>
 <li><strong>Actions:</strong> <code>/cmd</code> (Terminal execution), <code>/search</code> (Web)</li>
 </ul>
-<h3 id="deep-system-integration">⚙️ Deep System Integration</h3>
+<p><strong>⚙️ Deep System Integration</strong></p>
 <p>Velocmd plugs directly into native Windows settings. Without navigating through menus, you can instantly search for and launch:</p>
 <ul>
 <li><strong>Deep system settings</strong> (e.g., Sound Settings, Apps &amp; Features, Environment Variables)</li>
@@ -1118,12 +1044,39 @@
 <li><strong>Power states</strong> (e.g., Shutdown, Restart)</li>
 <li><strong>Media controls</strong> (Play/Pause, Next/Prev Track)</li>
 </ul>
-<h3 id="instant-web-terminal-routing">🌍 Instant Web &amp; Terminal Routing</h3>
+<p><strong>🕸️ Instant Web &amp; Terminal Routing</strong></p>
 <p>Need to look something up or run a script? Velocmd routes your queries seamlessly.</p>
 <ul>
-<li><strong>Terminal:</strong> Type <code>/cmd ping google.com</code> to instantly spawn a command prompt executing your script.</li>
+<li><strong>Terminal:</strong> Type <code>!cmd ping google.com</code> to instantly spawn a command prompt executing your script.</li>
 <li><strong>Web:</strong> Prefix queries with <code>/google</code>, <code>/duck</code>, or <code>/bing</code> to instantly open your default browser to the search results.</li>
 </ul>
+<h2 id="indexing-performance">Indexing Performance</h2>
+<p>All tests were performed on a cold start, dropping file system caches between runs, and indexing across all connected drives.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Dataset Scope</th>
+<th style="text-align: left;">Item Count</th>
+<th style="text-align: left;">Windows Indexer</th>
+<th style="text-align: left;">Velocmd</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>Full System (All Drives)</strong></td>
+<td style="text-align: left;">1 Million</td>
+<td style="text-align: left;">Hours</td>
+<td style="text-align: left;"><strong>~3.97 seconds</strong></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Re-indexing (Warm)</strong></td>
+<td style="text-align: left;">1 Million</td>
+<td style="text-align: left;">Background</td>
+<td style="text-align: left;"><strong>~4.10 seconds</strong></td>
+</tr>
+</tbody>
+</table>
+<p><em>Note: Velocmd utilizes maximum available threads to build an in-memory index instantly.</em></p>
 <h2 id="under-the-hood"><strong>Under the Hood</strong></h2>
 <p>Velocmd is engineered for performance, keeping its footprint incredibly small while maximizing speed.</p>
 <ul>

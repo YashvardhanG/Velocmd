@@ -598,10 +598,21 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#active-window-tab-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Active Window &amp; Tab Management
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#instant-terminal-execution-cmd" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Instant Terminal Execution (/cmd)
+        Instant Terminal Execution (cmd)
       
     </span>
   </a>
@@ -758,6 +769,17 @@
   
     <nav class="md-nav" aria-label="The Velo Settings Panel">
       <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#interface-sizing-minimalist-mode" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Interface Sizing &amp; Minimalist Mode
+      
+    </span>
+  </a>
+  
+</li>
         
           <li class="md-nav__item">
   <a href="#customizing-the-global-shortcut" class="md-nav__link">
@@ -1059,10 +1081,21 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#active-window-tab-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Active Window &amp; Tab Management
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#instant-terminal-execution-cmd" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Instant Terminal Execution (/cmd)
+        Instant Terminal Execution (cmd)
       
     </span>
   </a>
@@ -1221,6 +1254,17 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#interface-sizing-minimalist-mode" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Interface Sizing &amp; Minimalist Mode
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#customizing-the-global-shortcut" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1269,6 +1313,10 @@
 
 <h1 id="feature-deep-dive">Feature Deep Dive</h1>
 <p>Velocmd is packed with power-user features that go far beyond a simple search bar. Below is a detailed guide on every feature available to accelerate your workflow.</p>
+<p align="center">
+  <img src="/assets/launch.png" alt="Terminal Command Execution" width="750">
+</p>
+
 <hr />
 <h2 id="smart-chips-advanced-filtering">Smart Chips &amp; Advanced Filtering</h2>
 <p>When querying thousands of files, you need precision. Velocmd uses a "Smart Chip" system to filter your search context instantly. </p>
@@ -1323,6 +1371,10 @@
 </tr>
 </tbody>
 </table>
+<p align="center">
+  <img src="/assets/file search.png" alt="Terminal Command Execution" width="750">
+</p>
+
 <p><strong>Drive Targeting:</strong>
 Velocmd detects all your active drives. Filter directly by typing the letter (e.g., <code>/C:</code>, <code>/D:</code>, <code>/Z:</code>).</p>
 <p><strong>File Extension Filtering:</strong>
@@ -1332,14 +1384,26 @@ You can filter by <em>any</em> specific file extension natively by typing <code>
 <p>If you type a chip (like <code>/apps</code>) and it is highlighted as the first result, pressing <kbd>Enter</kbd> will automatically convert it into a Smart Chip and clear the text box for your actual query!</p>
 </div>
 <hr />
-<h2 id="instant-terminal-execution-cmd">Instant Terminal Execution (<code>/cmd</code>)</h2>
-<p>You no longer need to open the Windows Run prompt (<code>Win+R</code>) or manually launch <code>cmd.exe</code>. Simply type <code>/cmd</code> (or <code>@cmd</code>), enter your terminal command, and press <kbd>Enter</kbd>.</p>
+<h2 id="active-window-tab-management">Active Window &amp; Tab Management</h2>
+<p>Velocmd isn't just for launching new programs; it is a powerful window switcher. </p>
+<p>Instead of using <kbd>Alt</kbd> + <kbd>Tab</kbd> to cycle through dozens of open windows, simply type <code>/tabs</code> or <code>/active</code> to search through your currently running applications. Hit <kbd>Enter</kbd> to instantly bring that window to the foreground—even if it is currently minimized.</p>
+<p>Velocmd natively categorizes and identifies specific windows for:
+* <strong>Browsers:</strong> Chrome, Edge, Brave, and Firefox Tabs.
+* <strong>Development:</strong> VS Code instances.
+* <strong>Communication:</strong> Discord and WhatsApp.</p>
+<hr />
+<h2 id="instant-terminal-execution-cmd">Instant Terminal Execution (<code>cmd</code>)</h2>
+<p>You no longer need to open the Windows Run prompt (<code>Win+R</code>) or manually launch <code>cmd.exe</code>. Simply type <code>!cmd</code> or <code>/cmd</code> (or <code>@cmd</code>), enter your terminal command, and press <kbd>Enter</kbd>.</p>
+<p align="center">
+  <img src="/assets/cmd.png" alt="Terminal Command Execution" width="750">
+</p>
+
 <div class="admonition example">
 <p class="admonition-title">Usage Examples</p>
 <ul>
-<li><code>/cmd ping google.com</code> – Spawns a terminal and pings the server.</li>
-<li><code>/cmd ipconfig /flushdns</code> – Instantly flushes your DNS cache.</li>
-<li><code>/cmd code .</code> – Opens VS Code in your current directory.</li>
+<li><code>!cmd ping google.com</code> – Spawns a terminal and pings the server.</li>
+<li><code>!cmd ipconfig /flushdns</code> – Instantly flushes your DNS cache.</li>
+<li><code>!cmd code .</code> – Opens VS Code in your current directory.</li>
 </ul>
 </div>
 <hr />
@@ -1433,11 +1497,23 @@ You can filter by <em>any</em> specific file extension natively by typing <code>
 <td>Wipes your local history from the interface immediately.</td>
 </tr>
 <tr>
-<td><strong>Velo: Reset Position</strong></td>
-<td>Snaps the search bar back to the top-center of your primary display.</td>
+<td><strong>Velo: Reset Settings</strong></td>
+<td>Resets all settings to default.</td>
+</tr>
+<tr>
+<td><strong>Active Tabs</strong></td>
+<td>Lists all currently open applications and windows.</td>
+</tr>
+<tr>
+<td><strong>Show Desktop</strong></td>
+<td>Minimizes all windows to instantly reveal your desktop (equivalent to <code>Win+D</code>).</td>
 </tr>
 </tbody>
 </table>
+<p align="center">
+  <img src="/assets/velo.png" alt="Terminal Command Execution" width="750">
+</p>
+
 <hr />
 <h2 id="power-media-controls">Power &amp; Media Controls</h2>
 <p>Control your environment without leaving your keyboard.</p>
@@ -1463,27 +1539,39 @@ You can filter by <em>any</em> specific file extension natively by typing <code>
 </ul>
 <hr />
 <h2 id="the-velo-settings-panel">The Velo Settings Panel</h2>
-<p>Press <kbd>Tab</kbd> while the launcher is open to flip down the inline Settings panel. </p>
-<h3 id="customizing-the-global-shortcut">Customizing the Global Shortcut</h3>
-<p>By default, Velocmd opens with <kbd>Win</kbd> + <kbd>Shift</kbd> + <kbd>.</kbd> (Win+Shift+Period). In the settings panel, you can click the shortcut display to open a dropdown of alternatives. Velocmd will automatically verify if the shortcut is available on your Windows machine before applying it.</p>
-<p><strong>Supported Preset Shortcuts:</strong>
-If your desired shortcut is taken by another app, Velocmd provides these tested fallback options:</p>
+<p>Press <kbd>Tab</kbd> while the launcher is open to flip down the inline Settings panel. This panel interacts directly with Velocmd's local configuration (<code>settings.json</code> in your AppData) to securely persist your preferences between reboots.</p>
+<p align="center">
+  <img src="/assets/settings.png" alt="Terminal Command Execution" width="750">
+</p>
+
+<h3 id="interface-sizing-minimalist-mode">Interface Sizing &amp; Minimalist Mode</h3>
+<p>By default, Velocmd doesn't display recently accessed items below the search bar. However, you can control the launcher's physical footprint directly from the settings:</p>
 <ul>
-<li><code>Win + Shift + .</code> (Default)</li>
-<li><code>Alt + Space</code></li>
-<li><code>Win + Space</code></li>
-<li><code>Ctrl + Space</code></li>
-<li><code>Ctrl + Shift + Space</code></li>
-<li><code>Win + S</code></li>
-<li><code>Alt + S</code></li>
-<li><code>Win + /</code></li>
+<li><strong>Toggle Recents:</strong> Turning this on instantly expands Velocmd from its standard shrinked view down to a recents-pane search bar. Perfect for accessing recents on-the-go.</li>
 </ul>
+<p align="center">
+  <img src="/assets/recents.png" alt="Terminal Command Execution" width="750">
+</p>
+
+<h3 id="customizing-the-global-shortcut">Customizing the Global Shortcut</h3>
+<p>By default, Velocmd opens with <kbd>Win</kbd> + <kbd>Shift</kbd> + <kbd>.</kbd> (Win+Shift+Period). In the settings panel, you can click the shortcut display to open a dropdown of alternatives. </p>
+<p><strong>Live Availability Checking:</strong>
+Velocmd doesn't just let you pick a broken shortcut. Behind the scenes, it pings the Windows API in real-time to verify if a hotkey is actually available on your machine before letting you assign it.</p>
+<p><strong>Supported Preset Shortcuts:</strong>
+- <code>Win + Shift + .</code> (Default)
+- <code>Alt + Space</code>
+- <code>Win + Space</code>
+- <code>Ctrl + Space</code>
+- <code>Ctrl + Shift + Space</code>
+- <code>Win + S</code>
+- <code>Alt + S</code>
+- <code>Win + /</code></p>
 <div class="admonition note">
-<p class="admonition-title">Fallback Logic</p>
-<p>If your chosen shortcut (or the default) is already in use by another application upon startup, Velocmd will automatically test the list above and assign the first available hotkey, ensuring you are never locked out of the launcher.</p>
+<p class="admonition-title">Automatic Fallback Logic</p>
+<p>If another app updates and steals your preferred shortcut (or the default) while Velocmd is closed, you won't be locked out. Upon startup, Velocmd automatically iterates through its preset list and silently registers the first available fallback hotkey.</p>
 </div>
 <h3 id="autostart-management">Autostart Management</h3>
-<p>Toggle "Start with Windows" directly from the panel to ensure Velocmd's in-memory index is always ready the moment you log in.</p>
+<p>Toggle "Start with Windows" directly from the panel. This registers Velocmd with the native Windows startup agent, ensuring your blazing-fast, in-memory index is already built and waiting the exact second you log into your PC.</p>
 
 
 
