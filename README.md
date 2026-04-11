@@ -11,6 +11,12 @@
   </p>
 </p>
 
+<p align="center">
+  <img src="https://img.shields.io/github/v/release/YashvardhanG/Velocmd?style=flat-square&color=007ec6" alt="Version">
+  <img src="https://img.shields.io/badge/Platform-Windows_10%20%7C%2011-blue?style=flat-square" alt="Platform">
+  <img src="https://img.shields.io/badge/Price-Free-brightgreen?style=flat-square" alt="Price">
+</p>
+
 <details open="open">
   <summary>Table of Contents</summary>
   <ol>
