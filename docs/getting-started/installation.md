@@ -13,7 +13,7 @@ Velocmd is packaged as a lightweight, standalone Windows executable. It is desig
 The easiest way to get Velocmd is by downloading the pre-compiled binary from our official GitHub releases.
 
 1. Navigate to the [Latest Release](https://github.com/yashvardhang/velocmd/releases/latest) page on GitHub.
-2. Download the `Velocmd_Installer.exe` (or standalone `.exe`) from the Assets section.
+2. Download the `Velocmd.Explorer_[version]_x64-setup.exe` (or standalone `.exe`) from the Assets section.
 3. Run the installer and follow the prompts.
 
 !!! warning "Windows SmartScreen"
@@ -26,6 +26,10 @@ The easiest way to get Velocmd is by downloading the pre-compiled binary from ou
 Once installed, simply launch Velocmd from your Start Menu. It will immediately begin indexing your system in the background (this usually takes less than a second).
 
 By default, Velocmd will minimize to your System Tray. 
+
+<p align="center">
+  <img src="/assets/launch.png" alt="Terminal Command Execution" width="750">
+</p>
 
 !!! tip "Run at Startup"
     For the best experience, we highly recommend allowing Velocmd to run on startup so it is always ready when you need it. You can toggle **"Start with Windows"** directly inside the Velocmd settings menu.

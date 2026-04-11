@@ -6,6 +6,11 @@ icon: material/feature-search-outline
 
 Velocmd is packed with power-user features that go far beyond a simple search bar. Below is a detailed guide on every feature available to accelerate your workflow.
 
+<p align="center">
+  <img src="/assets/launch.png" alt="Terminal Command Execution" width="750">
+</p>
+
+
 ---
 
 ## Smart Chips & Advanced Filtering
@@ -27,6 +32,11 @@ Velocmd supports multiple aliases for the same filter, allowing you to type what
 | `/settings` | `/setting`, `/config`, `/setup` | Searches Windows system settings | `/settings display` |
 | `/velo` | `@velo` | Exclusively shows internal Velo commands | `/velo recents` |
 
+<p align="center">
+  <img src="/assets/file search.png" alt="Terminal Command Execution" width="750">
+</p>
+
+
 **Drive Targeting:**
 Velocmd detects all your active drives. Filter directly by typing the letter (e.g., `/C:`, `/D:`, `/Z:`).
 
@@ -38,14 +48,32 @@ You can filter by *any* specific file extension natively by typing `/` followed 
 
 ---
 
-## Instant Terminal Execution (`/cmd`)
+## Active Window & Tab Management
 
-You no longer need to open the Windows Run prompt (`Win+R`) or manually launch `cmd.exe`. Simply type `/cmd` (or `@cmd`), enter your terminal command, and press <kbd>Enter</kbd>.
+Velocmd isn't just for launching new programs; it is a powerful window switcher. 
+
+Instead of using <kbd>Alt</kbd> + <kbd>Tab</kbd> to cycle through dozens of open windows, simply type `/tabs` or `/active` to search through your currently running applications. Hit <kbd>Enter</kbd> to instantly bring that window to the foreground—even if it is currently minimized.
+
+Velocmd natively categorizes and identifies specific windows for:
+* **Browsers:** Chrome, Edge, Brave, and Firefox Tabs.
+* **Development:** VS Code instances.
+* **Communication:** Discord and WhatsApp.
+
+---
+
+## Instant Terminal Execution (`cmd`)
+
+You no longer need to open the Windows Run prompt (`Win+R`) or manually launch `cmd.exe`. Simply type `!cmd` or `/cmd` (or `@cmd`), enter your terminal command, and press <kbd>Enter</kbd>.
+
+<p align="center">
+  <img src="/assets/cmd.png" alt="Terminal Command Execution" width="750">
+</p>
+
 
 !!! example "Usage Examples"
-    * `/cmd ping google.com` – Spawns a terminal and pings the server.
-    * `/cmd ipconfig /flushdns` – Instantly flushes your DNS cache.
-    * `/cmd code .` – Opens VS Code in your current directory.
+    * `!cmd ping google.com` – Spawns a terminal and pings the server.
+    * `!cmd ipconfig /flushdns` – Instantly flushes your DNS cache.
+    * `!cmd code .` – Opens VS Code in your current directory.
 
 ---
 
@@ -101,7 +129,13 @@ You can control Velocmd's behavior directly from the search bar. Typing `/velo` 
 | **Velo Settings** | Opens the inline configuration panel. |
 | **Velo: Toggle Recents** | Turns the intelligent "Recent Files" view on or off. |
 | **Velo: Clear Recents** | Wipes your local history from the interface immediately. |
-| **Velo: Reset Position** | Snaps the search bar back to the top-center of your primary display. |
+| **Velo: Reset Settings** | Resets all settings to default. |
+| **Active Tabs** | Lists all currently open applications and windows. |
+| **Show Desktop** | Minimizes all windows to instantly reveal your desktop (equivalent to `Win+D`). |
+
+<p align="center">
+  <img src="/assets/velo.png" alt="Terminal Command Execution" width="750">
+</p>
 
 ---
 
@@ -135,14 +169,30 @@ Velocmd runs silently in the background to ensure instantaneous response times. 
 
 ## The Velo Settings Panel
 
-Press <kbd>Tab</kbd> while the launcher is open to flip down the inline Settings panel. 
+Press <kbd>Tab</kbd> while the launcher is open to flip down the inline Settings panel. This panel interacts directly with Velocmd's local configuration (`settings.json` in your AppData) to securely persist your preferences between reboots.
+
+<p align="center">
+  <img src="/assets/settings.png" alt="Terminal Command Execution" width="750">
+</p>
+
+
+### Interface Sizing & Minimalist Mode
+By default, Velocmd doesn't display recently accessed items below the search bar. However, you can control the launcher's physical footprint directly from the settings:
+
+* **Toggle Recents:** Turning this on instantly expands Velocmd from its standard shrinked view down to a recents-pane search bar. Perfect for accessing recents on-the-go.
+
+<p align="center">
+  <img src="/assets/recents.png" alt="Terminal Command Execution" width="750">
+</p>
+
 
 ### Customizing the Global Shortcut
-By default, Velocmd opens with <kbd>Win</kbd> + <kbd>Shift</kbd> + <kbd>.</kbd> (Win+Shift+Period). In the settings panel, you can click the shortcut display to open a dropdown of alternatives. Velocmd will automatically verify if the shortcut is available on your Windows machine before applying it.
+By default, Velocmd opens with <kbd>Win</kbd> + <kbd>Shift</kbd> + <kbd>.</kbd> (Win+Shift+Period). In the settings panel, you can click the shortcut display to open a dropdown of alternatives. 
+
+**Live Availability Checking:**
+Velocmd doesn't just let you pick a broken shortcut. Behind the scenes, it pings the Windows API in real-time to verify if a hotkey is actually available on your machine before letting you assign it.
 
 **Supported Preset Shortcuts:**
-If your desired shortcut is taken by another app, Velocmd provides these tested fallback options:
-
 - `Win + Shift + .` (Default)
 - `Alt + Space`
 - `Win + Space`
@@ -152,8 +202,8 @@ If your desired shortcut is taken by another app, Velocmd provides these tested 
 - `Alt + S`
 - `Win + /`
 
-!!! note "Fallback Logic"
-    If your chosen shortcut (or the default) is already in use by another application upon startup, Velocmd will automatically test the list above and assign the first available hotkey, ensuring you are never locked out of the launcher.
+!!! note "Automatic Fallback Logic"
+    If another app updates and steals your preferred shortcut (or the default) while Velocmd is closed, you won't be locked out. Upon startup, Velocmd automatically iterates through its preset list and silently registers the first available fallback hotkey.
 
 ### Autostart Management
-Toggle "Start with Windows" directly from the panel to ensure Velocmd's in-memory index is always ready the moment you log in.
+Toggle "Start with Windows" directly from the panel. This registers Velocmd with the native Windows startup agent, ensuring your blazing-fast, in-memory index is already built and waiting the exact second you log into your PC.

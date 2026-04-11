@@ -267,140 +267,73 @@ async fn search_files(query: String) -> Vec<SearchResult> {
 
     let search_text = search_terms.join(" ").to_lowercase();
 
-    if query_trim.to_lowercase().starts_with("@settings")
+    let has_tabs_filter = filters.iter().any(|f| {
+        let content = &f[1..];
+        content == "tabs" || content == "active" || content == "window" || content == "windows"
+    });
+
+    if has_tabs_filter
+        || query_trim.to_lowercase().starts_with("@tabs")
+        || query_trim.to_lowercase().starts_with("/tabs")
+        || query_trim.to_lowercase().starts_with("@active")
+        || query_trim.to_lowercase().starts_with("/active")
+    {
+        let mut active = get_active_windows();
+        if !search_text.is_empty() {
+            active.retain(|res| res.name.to_lowercase().contains(&search_text));
+        }
+        return active;
+    }
+
+    let has_velo_filter = filters.iter().any(|f| {
+        let content = &f[1..];
+        content == "velo" || content == "settings"
+    });
+
+    if has_velo_filter
+        || query_trim.to_lowercase().starts_with("@settings")
         || query_trim.to_lowercase().starts_with("/settings")
         || query_trim.to_lowercase().starts_with("@velo")
         || query_trim.to_lowercase().starts_with("/velo")
     {
-        let mut settings_results = Vec::new();
+        let all_velo_commands = vec![
+            ("velo:help", "Velo: Help", 201u16),
+            ("velo:settings", "Velo Settings", 200),
+            ("velo:toggle_recents", "Velo: Toggle Recents", 199),
+            ("velo:clear_recents", "Velo: Clear Recents", 198),
+            ("velo:reset_position", "Velo: Reset Position", 197),
+            ("velo:refresh", "Velo: Refresh Index", 195),
+            ("velo:show_desktop", "Show Desktop", 194),
+            ("velo:active_tabs", "Active Tabs", 193),
+            ("velo:request_shutdown", "Shutdown", 190),
+            ("velo:media_play", "Media: Play/Pause", 189),
+            ("velo:media_next", "Media: Next Track", 188),
+            ("velo:media_prev", "Media: Previous Track", 187),
+            ("velo:request_restart", "Restart", 180),
+            ("ms-settings:startupapps", "Startup Apps", 175),
+            ("ms-settings:appsfeatures", "Apps & Features (Uninstall)", 174),
+            ("ms-settings:sound", "Sound Settings (Volume)", 170),
+            ("ms-settings:display", "Display Settings (Brightness)", 160),
+            ("ms-settings:windowsupdate", "Windows Update", 150),
+        ];
 
-        settings_results.push(SearchResult {
-            path: "velo:help".to_string(),
-            name: "Velo: Help".to_string(),
-            kind: "command".to_string(),
-            score: 201,
-            icon_data: None,
-        });
-
-        settings_results.push(SearchResult {
-            path: "velo:settings".to_string(),
-            name: "Velo Settings".to_string(),
-            kind: "command".to_string(),
-            score: 200,
-            icon_data: None,
-        });
-
-        settings_results.push(SearchResult {
-            path: "velo:toggle_recents".to_string(),
-            name: "Velo: Toggle Recents".to_string(),
-            kind: "command".to_string(),
-            score: 199,
-            icon_data: None,
-        });
-
-        settings_results.push(SearchResult {
-            path: "velo:clear_recents".to_string(),
-            name: "Velo: Clear Recents".to_string(),
-            kind: "command".to_string(),
-            score: 198,
-            icon_data: None,
-        });
-
-        settings_results.push(SearchResult {
-            path: "velo:reset_position".to_string(),
-            name: "Velo: Reset Position".to_string(),
-            kind: "command".to_string(),
-            score: 197,
-            icon_data: None,
-        });
-
-        settings_results.push(SearchResult {
-            path: "velo:request_shutdown".to_string(),
-            name: "Shutdown".to_string(),
-            kind: "command".to_string(),
-            score: 190,
-            icon_data: None,
-        });
-
-        settings_results.push(SearchResult {
-            path: "velo:refresh".to_string(),
-            name: "Velo: Refresh Index".to_string(),
-            kind: "command".to_string(),
-            score: 195,
-            icon_data: None,
-        });
-
-        settings_results.push(SearchResult {
-            path: "velo:media_play".to_string(),
-            name: "Media: Play/Pause".to_string(),
-            kind: "command".to_string(),
-            score: 189,
-            icon_data: None,
-        });
-
-        settings_results.push(SearchResult {
-            path: "velo:media_next".to_string(),
-            name: "Media: Next Track".to_string(),
-            kind: "command".to_string(),
-            score: 188,
-            icon_data: None,
-        });
-
-        settings_results.push(SearchResult {
-            path: "velo:media_prev".to_string(),
-            name: "Media: Previous Track".to_string(),
-            kind: "command".to_string(),
-            score: 187,
-            icon_data: None,
-        });
-
-        settings_results.push(SearchResult {
-            path: "velo:request_restart".to_string(),
-            name: "Restart".to_string(),
-            kind: "command".to_string(),
-            score: 180,
-            icon_data: None,
-        });
-
-        settings_results.push(SearchResult {
-            path: "ms-settings:startupapps".to_string(),
-            name: "Startup Apps".to_string(),
-            kind: "command".to_string(),
-            score: 175,
-            icon_data: None,
-        });
-
-        settings_results.push(SearchResult {
-            path: "ms-settings:appsfeatures".to_string(),
-            name: "Apps & Features (Uninstall)".to_string(),
-            kind: "command".to_string(),
-            score: 174,
-            icon_data: None,
-        });
-
-        settings_results.push(SearchResult {
-            path: "ms-settings:sound".to_string(),
-            name: "Sound Settings (Volume)".to_string(),
-            kind: "command".to_string(),
-            score: 170,
-            icon_data: None,
-        });
-
-        settings_results.push(SearchResult {
-            path: "ms-settings:display".to_string(),
-            name: "Display Settings (Brightness)".to_string(),
-            kind: "command".to_string(),
-            score: 160,
-            icon_data: None,
-        });
-
-        settings_results.push(SearchResult {
-            path: "ms-settings:windowsupdate".to_string(),
-            name: "Windows Update".to_string(),
-            kind: "command".to_string(),
-            score: 150,
-            icon_data: None,
-        });
+        let settings_results: Vec<SearchResult> = all_velo_commands
+            .into_iter()
+            .filter(|(_, name, _)| {
+                if search_text.is_empty() {
+                    true
+                } else {
+                    name.to_lowercase().contains(&search_text)
+                }
+            })
+            .map(|(path, name, score)| SearchResult {
+                path: path.to_string(),
+                name: name.to_string(),
+                kind: "command".to_string(),
+                score,
+                icon_data: None,
+            })
+            .collect();
 
         return settings_results;
     }
@@ -644,6 +577,120 @@ fn execute_media_key(action: String) {
 }
 
 #[tauri::command]
+fn show_desktop(app: tauri::AppHandle) {
+    #[cfg(target_os = "windows")]
+    {
+        use windows::Win32::UI::Input::KeyboardAndMouse::{
+            keybd_event, KEYEVENTF_EXTENDEDKEY, KEYEVENTF_KEYUP,
+        };
+        // Simulate Win+D to show desktop
+        unsafe {
+            keybd_event(0x5B, 0, KEYEVENTF_EXTENDEDKEY, 0); // Win key down
+            keybd_event(0x44, 0, KEYEVENTF_EXTENDEDKEY, 0); // D key down
+            keybd_event(0x44, 0, KEYEVENTF_EXTENDEDKEY | KEYEVENTF_KEYUP, 0); // D key up
+            keybd_event(0x5B, 0, KEYEVENTF_EXTENDEDKEY | KEYEVENTF_KEYUP, 0); // Win key up
+        }
+    }
+
+    if let Some(window) = app.get_webview_window("main") {
+        let _ = window.hide();
+    }
+}
+
+#[tauri::command]
+fn get_active_windows() -> Vec<SearchResult> {
+    let mut windows_list: Vec<SearchResult> = Vec::new();
+
+    #[cfg(target_os = "windows")]
+    {
+        use windows::Win32::Foundation::{BOOL, HWND, LPARAM};
+        use windows::Win32::UI::WindowsAndMessaging::{
+            EnumWindows, GetWindowTextLengthW, GetWindowTextW, IsWindowVisible,
+        };
+
+        unsafe extern "system" fn enum_callback(hwnd: HWND, lparam: LPARAM) -> BOOL {
+            if IsWindowVisible(hwnd).as_bool() {
+                let len = GetWindowTextLengthW(hwnd);
+                if len > 0 {
+                    let mut buf = vec![0u16; (len + 1) as usize];
+                    GetWindowTextW(hwnd, &mut buf);
+                    let title = String::from_utf16_lossy(&buf[..len as usize]);
+                    let title_trimmed = title.trim().to_string();
+
+                    if !title_trimmed.is_empty() && title_trimmed != "Velocmd" {
+                        let list = &mut *(lparam.0 as *mut Vec<(String, isize)>);
+                        list.push((title_trimmed, hwnd.0 as isize));
+                    }
+                }
+            }
+            BOOL(1)
+        }
+
+        let mut raw_list: Vec<(String, isize)> = Vec::new();
+        unsafe {
+            let _ = EnumWindows(
+                Some(enum_callback),
+                LPARAM(&mut raw_list as *mut Vec<(String, isize)> as isize),
+            );
+        }
+
+        for (i, (title, hwnd_val)) in raw_list.into_iter().enumerate() {
+            let t_lower = title.to_lowercase();
+            let mut app_type = "Application";
+
+            if t_lower.ends_with("- google chrome") {
+                app_type = "Chrome Tab";
+            } else if t_lower.ends_with("- brave") {
+                app_type = "Brave Tab";
+            } else if t_lower.ends_with("- microsoft edge") || t_lower.ends_with("- microsoft\u{200b} edge") {
+                app_type = "Edge Tab";
+            } else if t_lower.ends_with("- mozilla firefox") {
+                app_type = "Firefox Tab";
+            } else if t_lower.ends_with("- visual studio code") {
+                app_type = "VS Code";
+            } else if t_lower.contains("discord") {
+                app_type = "Discord";
+            } else if t_lower.contains("whatsapp") {
+                app_type = "WhatsApp";
+            }
+
+            windows_list.push(SearchResult {
+                path: format!("hwnd:{}|{}", hwnd_val, app_type),
+                name: title,
+                kind: "active_tab".to_string(),
+                score: (200 - i as u16).max(1),
+                icon_data: None,
+            });
+        }
+    }
+
+    windows_list
+}
+
+#[tauri::command]
+fn focus_window(app: tauri::AppHandle, hwnd_val: isize) {
+    #[cfg(target_os = "windows")]
+    {
+        use windows::Win32::Foundation::HWND;
+        use windows::Win32::UI::WindowsAndMessaging::{
+            IsIconic, SetForegroundWindow, ShowWindow, SW_RESTORE,
+        };
+
+        unsafe {
+            let hwnd = HWND(hwnd_val);
+            if IsIconic(hwnd).as_bool() {
+                let _ = ShowWindow(hwnd, SW_RESTORE);
+            }
+            let _ = SetForegroundWindow(hwnd);
+        }
+    }
+
+    if let Some(window) = app.get_webview_window("main") {
+        let _ = window.hide();
+    }
+}
+
+#[tauri::command]
 fn run_terminal_command(command: String) {
     let _ = std::process::Command::new("cmd")
         .args(["/C", "start", "cmd", "/K", &command])
@@ -853,7 +900,10 @@ fn main() {
             set_recents_state,
             execute_media_key,
             check_shortcuts_availability,
-            trigger_index_refresh
+            trigger_index_refresh,
+            show_desktop,
+            get_active_windows,
+            focus_window
         ])
         .setup(|app| {
             let window = app.get_webview_window("main").unwrap();

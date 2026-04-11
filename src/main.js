@@ -24,7 +24,7 @@ let state = {
   results: [],
   recentFiles: [],
   selectedIndex: 0,
-  showRecents: true,
+  showRecents: false,
   activeFilters: []
 };
 
@@ -141,11 +141,35 @@ recentsToggle.onchange = (e) => {
 clearRecentsBtn.onclick = () => {
   state.recentFiles = [];
   localStorage.setItem("recentFiles", JSON.stringify([]));
+
+  clearRecentsBtn.textContent = "Recents Cleared!";
+  clearRecentsBtn.style.backgroundColor = "#4caf50";
+  setTimeout(() => {
+    clearRecentsBtn.textContent = "Clear Recents";
+    clearRecentsBtn.style.backgroundColor = "";
+  }, 1000);
+
   render();
 };
 
 resetPosBtn.onclick = async () => {
-  await invoke("reset_window");
+  state.showRecents = false;
+  recentsToggle.checked = false;
+  localStorage.setItem("showRecentsSetting", false);
+  invoke("set_recents_state", { show: false });
+
+  try {
+    await invoke("plugin:autostart|enable");
+    if (startupToggle) startupToggle.checked = true;
+  } catch (err) {
+    console.error("Reset autostart error:", err);
+  }
+
+  const defaultShortcut = PRESET_SHORTCUTS[0];
+  await applyShortcut(defaultShortcut);
+
+  await invoke("resize_window", { height: WINDOW_MAX_HEIGHT });
+  lastWindowHeight = WINDOW_MAX_HEIGHT;
 };
 
 function getFileIcon(path, kind) {
@@ -269,7 +293,8 @@ async function render() {
     resultsContainer.classList.remove("hidden");
   }
 
-  let isCmdIntent = fullQuery.trim().toLowerCase().startsWith("@cmd") || fullQuery.trim().toLowerCase().startsWith("/cmd");
+  const fullQ = fullQuery.trim().toLowerCase();
+  let isCmdIntent = fullQ.startsWith("@cmd") || fullQ.startsWith("/cmd") || fullQ.startsWith("!cmd");
 
   if (isCmdIntent && !isInputEmpty) {
     const command = fullQuery.substring(4).trim();
@@ -337,7 +362,15 @@ async function render() {
       iconHtml = `<span class="result-icon">${getFileIcon(path, kind)}</span>`;
     }
 
-    const displayPath = kind === 'app' ? "Application" : path;
+    let displayPath = path;
+    if (kind === 'app') {
+      displayPath = "Application";
+    } else if (kind === 'active_tab') {
+      const parts = path.split('|');
+      if (parts.length > 1) {
+        displayPath = `${parts[1]} (${parts[0]})`;
+      }
+    }
 
     li.innerHTML = `
       ${iconHtml}
@@ -476,6 +509,30 @@ async function openFile(path, kind, name) {
     return;
   }
 
+  if (path === "velo:show_desktop") {
+    await invoke("show_desktop");
+    input.value = "";
+    render();
+    return;
+  }
+
+  if (path === "velo:active_tabs") {
+    state.activeFilters.push("/tabs");
+    renderChips();
+    input.value = "";
+    input.focus();
+    input.dispatchEvent(new Event('input'));
+    return;
+  }
+
+  if (path.startsWith("hwnd:")) {
+    const hwndVal = parseInt(path.split(":")[1].split("|")[0]);
+    await invoke("focus_window", { hwndVal });
+    input.value = "";
+    render();
+    return;
+  }
+
   if (path === "velo:refresh") {
     input.disabled = true;
     input.value = "";
@@ -546,7 +603,7 @@ input.addEventListener("input", async (e) => {
     const words = val.split(" ");
     const lastWord = words[words.length - 2];
 
-    if (lastWord.startsWith("@") || lastWord.startsWith("/")) {
+    if (lastWord.startsWith("@") || lastWord.startsWith("/") || lastWord.startsWith("!")) {
       state.activeFilters.push(lastWord);
       renderChips();
 
@@ -587,7 +644,7 @@ input.addEventListener("input", async (e) => {
       return;
     }
 
-    if (query.trim() === "@" || query.trim() === "/") {
+    if (query.trim() === "@" || query.trim() === "/" || query.trim() === "!") {
       const drives = await invoke("get_available_drives");
       const prefix = query.trim();
       const driveItems = drives.map(d => ({
@@ -836,7 +893,7 @@ document.addEventListener('keydown', async (e) => {
     e.preventDefault();
 
     const val = input.value.trim();
-    if ((val.startsWith("@") || val.startsWith("/")) && val.length > 1 && state.selectedIndex === 0) {
+    if ((val.startsWith("@") || val.startsWith("/") || val.startsWith("!")) && val.length > 1 && state.selectedIndex === 0) {
       state.activeFilters.push(val);
       renderChips();
       input.value = "";
@@ -860,7 +917,7 @@ document.addEventListener('keydown', async (e) => {
   } else if (e.key === "Tab") {
     e.preventDefault();
     const val = input.value.trim();
-    if ((val.startsWith("@") || val.startsWith("/")) && val.length > 1 && state.selectedIndex === 0) {
+    if ((val.startsWith("@") || val.startsWith("/") || val.startsWith("!")) && val.length > 1 && state.selectedIndex === 0) {
       state.activeFilters.push(val);
       renderChips();
 
