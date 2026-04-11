@@ -27,9 +27,9 @@ Once installed, simply launch Velocmd from your Start Menu. It will immediately 
 
 By default, Velocmd will minimize to your System Tray. 
 
-<p align="center">
-  <img src="../assets/launch.png" alt="Terminal Command Execution" width="750">
-</p>
+<div align="center" markdown>
+![Terminal Command Execution](../assets/launch.png){ width="750" }
+</div>
 
 !!! tip "Run at Startup"
     For the best experience, we highly recommend allowing Velocmd to run on startup so it is always ready when you need it. You can toggle **"Start with Windows"** directly inside the Velocmd settings menu.

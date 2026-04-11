@@ -16,9 +16,9 @@ To summon the Velocmd palette from anywhere in Windows, use the global shortcut:
 
 If this shortcut conflicts with another app, you can easily change it. Simply hit <kbd>Tab</kbd> to open the settings panel and select a new preset (like <kbd>Alt</kbd> + <kbd>Space</kbd> or <kbd>Ctrl</kbd> + <kbd>Space</kbd>).
 
-<p align="center">
-  <img src="../assets/launch.png" alt="Terminal Command Execution" width="750">
-</p>
+<div align="center" markdown>
+![Terminal Command Execution](../assets/launch.png){ width="750" }
+</div>
 
 !!! note "Fallback Shortcuts"
     If your chosen shortcut (or the default) is already in use by another application, Velocmd will automatically fallback and assign the next available hotkey from its preset list, ensuring you can always access the launcher.
@@ -52,9 +52,9 @@ To narrow down thousands of files instantly, type an `/` or `@` followed by a ca
 | `/settings` | Only Windows System Settings | `/settings` shutdown |
 | `/tabs` | Currently open windows and browser tabs | `/tabs` github |
 
-<p align="center">
-  <img src="../assets/file search.png" alt="Terminal Command Execution" width="750">
-</p>
+<div align="center" markdown>
+![Terminal Command Execution](../assets/file%20search.png){ width="750" }
+</div>
 
 
 !!! tip "Chaining Tags"
@@ -73,9 +73,9 @@ Velocmd routes specific tags to external tools, allowing you to bypass your brow
 Use the `!cmd` tag to instantly pass a command to the Windows command prompt.
 * *Example:* Type `!cmd ping google.com` and hit Enter. A terminal window will pop up executing the ping.
 
-<p align="center">
-  <img src="../assets/cmd.png" alt="Terminal Command Execution" width="750">
-</p>
+<div align="center" markdown>
+![Terminal Command Execution](../assets/cmd.png){ width="750" }
+</div>
 
 
 ### Quick Web Search
@@ -106,6 +106,6 @@ Velocmd integrates directly with Windows, giving you instant access to system-le
 * `Media: Play/Pause` : Toggles your current media player.
 * `Media: Next Track` : Skips to the next song.
 
-<p align="center">
-  <img src="../assets/velo.png" alt="Terminal Command Execution" width="750">
-</p>
+<div align="center" markdown>
+![Terminal Command Execution](../assets/velo.png){ width="750" }
+</div>

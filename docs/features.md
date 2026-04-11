@@ -6,9 +6,9 @@ icon: material/feature-search-outline
 
 Velocmd is packed with power-user features that go far beyond a simple search bar. Below is a detailed guide on every feature available to accelerate your workflow.
 
-<p align="center">
-  <img src="assets/launch.png" alt="Terminal Command Execution" width="750">
-</p>
+<div align="center" markdown>
+![Terminal Command Execution](assets/launch.png){ width="750" }
+</div>
 
 
 ---
@@ -32,9 +32,9 @@ Velocmd supports multiple aliases for the same filter, allowing you to type what
 | `/settings` | `/setting`, `/config`, `/setup` | Searches Windows system settings | `/settings display` |
 | `/velo` | `@velo` | Exclusively shows internal Velo commands | `/velo recents` |
 
-<p align="center">
-  <img src="assets/file search.png" alt="Terminal Command Execution" width="750">
-</p>
+<div align="center" markdown>
+![Terminal Command Execution](assets/file%20search.png){ width="750" }
+</div>
 
 
 **Drive Targeting:**
@@ -65,9 +65,9 @@ Velocmd natively categorizes and identifies specific windows for:
 
 You no longer need to open the Windows Run prompt (`Win+R`) or manually launch `cmd.exe`. Simply type `!cmd` or `/cmd` (or `@cmd`), enter your terminal command, and press <kbd>Enter</kbd>.
 
-<p align="center">
-  <img src="assets/cmd.png" alt="Terminal Command Execution" width="750">
-</p>
+<div align="center" markdown>
+![Terminal Command Execution](assets/cmd.png){ width="750" }
+</div>
 
 
 !!! example "Usage Examples"
@@ -133,9 +133,9 @@ You can control Velocmd's behavior directly from the search bar. Typing `/velo` 
 | **Active Tabs** | Lists all currently open applications and windows. |
 | **Show Desktop** | Minimizes all windows to instantly reveal your desktop (equivalent to `Win+D`). |
 
-<p align="center">
-  <img src="assets/velo.png" alt="Terminal Command Execution" width="750">
-</p>
+<div align="center" markdown>
+![Terminal Command Execution](assets/velo.png){ width="750" }
+</div>
 
 ---
 
@@ -171,9 +171,9 @@ Velocmd runs silently in the background to ensure instantaneous response times. 
 
 Press <kbd>Tab</kbd> while the launcher is open to flip down the inline Settings panel. This panel interacts directly with Velocmd's local configuration (`settings.json` in your AppData) to securely persist your preferences between reboots.
 
-<p align="center">
-  <img src="assets/settings.png" alt="Terminal Command Execution" width="750">
-</p>
+<div align="center" markdown>
+![Terminal Command Execution](assets/settings.png){ width="750" }
+</div>
 
 
 ### Interface Sizing & Minimalist Mode
@@ -181,9 +181,9 @@ By default, Velocmd doesn't display recently accessed items below the search bar
 
 * **Toggle Recents:** Turning this on instantly expands Velocmd from its standard shrinked view down to a recents-pane search bar. Perfect for accessing recents on-the-go.
 
-<p align="center">
-  <img src="assets/recents.png" alt="Terminal Command Execution" width="750">
-</p>
+<div align="center" markdown>
+![Terminal Command Execution](assets/recents.png){ width="750" }
+</div>
 
 
 ### Customizing the Global Shortcut
