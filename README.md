@@ -16,7 +16,7 @@
   <ol>
     <li><a href="#about">About</a></li>
     <li><a href="#core-capabilities">Core Capabilities</a></li>
-    <li><a href="#indexing-performance">Core Capabilities</a></li>
+    <li><a href="#indexing-performance">Indexing Performance</a></li>
     <li><a href="#usage">Usage</a></li>
     <li><a href="#installation">Installation</a></li>
     <li><a href="#development-setup">Development Setup</a></li>
