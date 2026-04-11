@@ -17,6 +17,12 @@
   <img src="https://img.shields.io/badge/Price-Free-brightgreen?style=flat-square" alt="Price">
 </p>
 
+<p align="center">
+  <video autoplay loop muted playsinline width="750">
+    <source src="https://github.com/YashvardhanG/Velocmd/raw/main/docs/assets/hero-video.mp4" type="video/mp4" alt='hero'>
+  </video>
+</p>
+
 <details open="open">
   <summary>Table of Contents</summary>
   <ol>
