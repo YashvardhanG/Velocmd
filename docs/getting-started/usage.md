@@ -17,7 +17,7 @@ To summon the Velocmd palette from anywhere in Windows, use the global shortcut:
 If this shortcut conflicts with another app, you can easily change it. Simply hit <kbd>Tab</kbd> to open the settings panel and select a new preset (like <kbd>Alt</kbd> + <kbd>Space</kbd> or <kbd>Ctrl</kbd> + <kbd>Space</kbd>).
 
 <p align="center">
-  <img src="/assets/launch.png" alt="Terminal Command Execution" width="750">
+  <img src="../assets/launch.png" alt="Terminal Command Execution" width="750">
 </p>
 
 !!! note "Fallback Shortcuts"
@@ -53,7 +53,7 @@ To narrow down thousands of files instantly, type an `/` or `@` followed by a ca
 | `/tabs` | Currently open windows and browser tabs | `/tabs` github |
 
 <p align="center">
-  <img src="/assets/file search.png" alt="Terminal Command Execution" width="750">
+  <img src="../assets/file search.png" alt="Terminal Command Execution" width="750">
 </p>
 
 
@@ -74,7 +74,7 @@ Use the `!cmd` tag to instantly pass a command to the Windows command prompt.
 * *Example:* Type `!cmd ping google.com` and hit Enter. A terminal window will pop up executing the ping.
 
 <p align="center">
-  <img src="/assets/cmd.png" alt="Terminal Command Execution" width="750">
+  <img src="../assets/cmd.png" alt="Terminal Command Execution" width="750">
 </p>
 
 
@@ -107,5 +107,5 @@ Velocmd integrates directly with Windows, giving you instant access to system-le
 * `Media: Next Track` : Skips to the next song.
 
 <p align="center">
-  <img src="/assets/velo.png" alt="Terminal Command Execution" width="750">
+  <img src="../assets/velo.png" alt="Terminal Command Execution" width="750">
 </p>
