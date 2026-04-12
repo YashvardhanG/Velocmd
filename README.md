@@ -42,7 +42,10 @@
 
 Windows power users have long suffered through a native search experience that is notoriously slow, bloated with web results, and visually cumbersome. Velocmd was built with a single philosophy: **Zero latency, zero bloat, and total keyboard control.**
 
-For a deep dive into every feature, chip alias, and advanced system command, please check out our **[Full Documentation Site](https://yashvardhang.github.io/Velocmd/)**.
+For a deep dive into every feature, chip alias, and advanced system command, please check out our: 
+
+🔗 **[Full Documentation Site](https://yashvardhang.github.io/Velocmd/)** | **[Medium Article](https://medium.com/@yashvardhang11/meet-velocmd-the-blazing-fast-command-palette-windows-always-needed-2ab63a910960)**
+
 
 <p align="left" style="margin: 0;">
   <img src="docs/assets/launch.png" alt="Velocmd" style="display: block;">
