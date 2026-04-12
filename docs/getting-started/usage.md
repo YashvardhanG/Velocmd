@@ -71,6 +71,7 @@ Velocmd routes specific tags to external tools, allowing you to bypass your brow
 
 ### Quick Terminal
 Use the `!cmd` tag to instantly pass a command to the Windows command prompt.
+
 * *Example:* Type `!cmd ping google.com` and hit Enter. A terminal window will pop up executing the ping.
 
 <div align="center" markdown>
@@ -81,9 +82,11 @@ Use the `!cmd` tag to instantly pass a command to the Windows command prompt.
 ### Quick Web Search
 Skip opening a new tab. Use these tags to push your search query directly to your default browser:
 
-| | | |
-|---|---|---|
-| `/google [query]` | `/duck [query]`| `/bing [query]` |
+| Search Engine | Tag |
+|---|---|
+| Google Search | `/google [query]` |
+| DuckDuckGo | `/duck [query]` or `/duckduckgo [query]` |
+| Microsoft Bing | `/bing [query]` |
 
 ---
 

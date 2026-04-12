@@ -55,6 +55,7 @@ Velocmd isn't just for launching new programs; it is a powerful window switcher.
 Instead of using <kbd>Alt</kbd> + <kbd>Tab</kbd> to cycle through dozens of open windows, simply type `/tabs` or `/active` to search through your currently running applications. Hit <kbd>Enter</kbd> to instantly bring that window to the foreground—even if it is currently minimized.
 
 Velocmd natively categorizes and identifies specific windows for:
+
 * **Browsers:** Chrome, Edge, Brave, and Firefox Tabs.
 * **Development:** VS Code instances.
 * **Communication:** Discord and WhatsApp.
@@ -193,14 +194,17 @@ By default, Velocmd opens with <kbd>Win</kbd> + <kbd>Shift</kbd> + <kbd>.</kbd> 
 Velocmd doesn't just let you pick a broken shortcut. Behind the scenes, it pings the Windows API in real-time to verify if a hotkey is actually available on your machine before letting you assign it.
 
 **Supported Preset Shortcuts:**
-- `Win + Shift + .` (Default)
-- `Alt + Space`
-- `Win + Space`
-- `Ctrl + Space`
-- `Ctrl + Shift + Space`
-- `Win + S`
-- `Alt + S`
-- `Win + /`
+
+| Shortcuts |
+|----------|
+| `Win + Shift + .` *(Default)* |
+| `Alt + Space` |
+| `Win + Space` |
+| `Ctrl + Space` |
+| `Ctrl + Shift + Space` |
+| `Win + S` |
+| `Alt + S` |
+| `Win + /` |
 
 !!! note "Automatic Fallback Logic"
     If another app updates and steals your preferred shortcut (or the default) while Velocmd is closed, you won't be locked out. Upon startup, Velocmd automatically iterates through its preset list and silently registers the first available fallback hotkey.
