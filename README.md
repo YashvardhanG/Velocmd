@@ -72,8 +72,8 @@ All tests were performed on a cold start, dropping file system caches between ru
 
 | Dataset Scope | Item Count | Windows Indexer | Velocmd |
 | :--- | :--- | :--- | :--- |
-| **Full System (All Drives)** | 1 Million | Hours | **~3.97 seconds** |
-| **Re-indexing (Warm)** | 1 Million | Background | **~4.10 seconds** |
+| **Full System (All Drives)** | ~1 Million Items | Hours | **~3.97 seconds** |
+| **Re-indexing (Warm)** | ~1 Million Items | Background | **~4.10 seconds** |
 
 *Note: Velocmd utilizes maximum available threads to build an in-memory index instantly.*
 
