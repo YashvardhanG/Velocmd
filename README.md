@@ -17,6 +17,12 @@
   <img src="https://img.shields.io/badge/Price-Free-brightgreen?style=flat-square" alt="Price">
 </p>
 
+<p align="center">
+  <a href="https://ko-fi.com/I3I31XL6SJ" target="_blank">
+    <img src="https://img.shields.io/badge/Buy%20me%20a%20coffee!-%235e8bde?style=flat&logo=ko-fi&logoColor=white" alt="Buy me a coffee!">
+  </a>
+</p>
+
 </br>
 
 <p align="center" style="margin: 0;">
@@ -147,5 +153,8 @@ Every program is ever evolving and, that is possible only with valuable contribu
 <p align="center">
   <br>
   <img src="https://github.com/YashvardhanG/YashvardhanG/blob/main/Wolf_1.jpg" alt="Logo" width="150" height="150"><br>
-  <a href = "https://www.yashvardhang.dev/">Connect with me here! ✉️</a>
+  <a href = "https://www.yashvardhang.dev/">Connect with me! | Yashvardhan Gupta</a><br><br>
+  <a href='https://ko-fi.com/I3I31XL6SJ' target='_blank'>
+    <img height='40' style='border:0px; height:40px;' src='https://storage.ko-fi.com/cdn/kofi5.png?v=6' border='0' alt='Buy Me a Coffee!' />
+  </a>
 </p>
