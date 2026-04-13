@@ -17,6 +17,12 @@
   <img src="https://img.shields.io/badge/Price-Free-brightgreen?style=flat-square" alt="Price">
 </p>
 
+<p align="center">
+  <a href="https://ko-fi.com/I3I31XL6SJ" target="_blank">
+    <img src="https://img.shields.io/badge/Buy%20me%20a%20coffee!-%235e8bde?style=flat&logo=ko-fi&logoColor=white" alt="Buy me a coffee!">
+  </a>
+</p>
+
 </br>
 
 <p align="center" style="margin: 0;">
@@ -42,7 +48,10 @@
 
 Windows power users have long suffered through a native search experience that is notoriously slow, bloated with web results, and visually cumbersome. Velocmd was built with a single philosophy: **Zero latency, zero bloat, and total keyboard control.**
 
-For a deep dive into every feature, chip alias, and advanced system command, please check out our **[Full Documentation Site](https://yashvardhang.github.io/Velocmd/)**.
+For a deep dive into every feature, chip alias, and advanced system command, please check out our: 
+
+🔗 **[Full Documentation Site](https://yashvardhang.github.io/Velocmd/)** | **[Medium Article](https://medium.com/@yashvardhang11/meet-velocmd-the-blazing-fast-command-palette-windows-always-needed-2ab63a910960)**
+
 
 <p align="left" style="margin: 0;">
   <img src="docs/assets/launch.png" alt="Velocmd" style="display: block;">
@@ -72,8 +81,8 @@ All tests were performed on a cold start, dropping file system caches between ru
 
 | Dataset Scope | Item Count | Windows Indexer | Velocmd |
 | :--- | :--- | :--- | :--- |
-| **Full System (All Drives)** | 1 Million | Hours | **~3.97 seconds** |
-| **Re-indexing (Warm)** | 1 Million | Background | **~4.10 seconds** |
+| **Full System (All Drives)** | ~1 Million Items | Hours | **~3.97 seconds** |
+| **Re-indexing (Warm)** | ~1 Million Items | Background | **~4.10 seconds** |
 
 *Note: Velocmd utilizes maximum available threads to build an in-memory index instantly.*
 
@@ -144,5 +153,8 @@ Every program is ever evolving and, that is possible only with valuable contribu
 <p align="center">
   <br>
   <img src="https://github.com/YashvardhanG/YashvardhanG/blob/main/Wolf_1.jpg" alt="Logo" width="150" height="150"><br>
-  <a href = "https://www.yashvardhang.dev/">Connect with me here! ✉️</a>
+  <a href = "https://www.yashvardhang.dev/">Connect with me! | Yashvardhan Gupta</a><br><br>
+  <a href='https://ko-fi.com/I3I31XL6SJ' target='_blank'>
+    <img height='40' style='border:0px; height:40px;' src='https://storage.ko-fi.com/cdn/kofi5.png?v=6' border='0' alt='Buy Me a Coffee!' />
+  </a>
 </p>
