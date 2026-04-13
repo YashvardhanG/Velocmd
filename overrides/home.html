@@ -52,18 +52,29 @@
         font-weight: 600;
         padding: 0.75rem 2rem;
         border-radius: 8px;
-        transition: transform 0.2s ease, box-shadow 0.2s ease;
+        transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+    }
+
+    .hero-buttons .md-button:not(.md-button--primary) {
+        background-color: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.01);
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     }
 
     .hero-buttons .md-button--primary {
         background-color: var(--md-primary-fg-color);
         color: var(--md-primary-bg-color);
         box-shadow: 0 4px 14px 0 rgba(0, 0, 0, 0.1);
+        border: 1px solid transparent;
     }
 
     .hero-buttons .md-button:hover {
         transform: translateY(-2px);
         box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+    }
+
+    .hero-buttons .md-button:not(.md-button--primary):hover {
+        background-color: rgba(255, 255, 255, 0.08);
     }
 </style>
 
@@ -80,6 +91,12 @@
         <a href="getting-started/installation/" class="md-button">
             Read the Docs
         </a>
+    </div>
+
+    <div style="margin-top: 1.5rem; display: inline-block;" title="Liked it? Buy me a coffee">
+        <script type='text/javascript' src='https://storage.ko-fi.com/cdn/widget/Widget_2.js'></script>
+        <script
+            type='text/javascript'>kofiwidget2.init('Buy me a coffee!', '#547bd1', 'I3I31XL6SJ'); kofiwidget2.draw();</script>
     </div>
 </div>
 {% endblock %}

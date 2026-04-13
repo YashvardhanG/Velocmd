@@ -583,12 +583,11 @@ fn show_desktop(app: tauri::AppHandle) {
         use windows::Win32::UI::Input::KeyboardAndMouse::{
             keybd_event, KEYEVENTF_EXTENDEDKEY, KEYEVENTF_KEYUP,
         };
-        // Simulate Win+D to show desktop
         unsafe {
-            keybd_event(0x5B, 0, KEYEVENTF_EXTENDEDKEY, 0); // Win key down
-            keybd_event(0x44, 0, KEYEVENTF_EXTENDEDKEY, 0); // D key down
-            keybd_event(0x44, 0, KEYEVENTF_EXTENDEDKEY | KEYEVENTF_KEYUP, 0); // D key up
-            keybd_event(0x5B, 0, KEYEVENTF_EXTENDEDKEY | KEYEVENTF_KEYUP, 0); // Win key up
+            keybd_event(0x5B, 0, KEYEVENTF_EXTENDEDKEY, 0); 
+            keybd_event(0x44, 0, KEYEVENTF_EXTENDEDKEY, 0);
+            keybd_event(0x44, 0, KEYEVENTF_EXTENDEDKEY | KEYEVENTF_KEYUP, 0);
+            keybd_event(0x5B, 0, KEYEVENTF_EXTENDEDKEY | KEYEVENTF_KEYUP, 0);
         }
     }
 
