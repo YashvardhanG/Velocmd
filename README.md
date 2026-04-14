@@ -7,7 +7,7 @@
   </a>
   <h3 align="center">Velocmd Explorer</h3>
   <p align="center">
-    A blazing fast, native system launcher. Search files, run commands, and navigate your system seamlessly.
+    A lightning fast, native system launcher. Search files, run commands, and navigate your system seamlessly.
   </p>
 </p>
 
@@ -50,7 +50,7 @@ Windows power users have long suffered through a native search experience that i
 
 For a deep dive into every feature, chip alias, and advanced system command, please check out our: 
 
-🔗 **[Full Documentation Site](https://yashvardhang.github.io/Velocmd/)** | **[Medium Article](https://medium.com/@yashvardhang11/meet-velocmd-the-blazing-fast-command-palette-windows-always-needed-2ab63a910960)**
+🔗 **[Full Documentation Site](https://yashvardhang.github.io/Velocmd/)** | **[Medium Article](https://medium.com/@yashvardhang11/meet-velocmd-the-lightning-fast-command-palette-windows-always-needed-2ab63a910960)**
 
 
 <p align="left" style="margin: 0;">
@@ -61,7 +61,7 @@ For a deep dive into every feature, chip alias, and advanced system command, ple
 
 ## Core Capabilities
 
-### ⚡ Blazing Fast Search
+### ⚡ Lightning Fast Search
 Unlike traditional indexers that constantly read and write to a background database, Velocmd aggressively scans your Start Menu, local AppData, and mounted drives upon startup using multithreaded directory traversal. It stores this index directly in memory, resulting in sub-millisecond query responses.
 
 ### 🏷️ Smart Tag Filtering

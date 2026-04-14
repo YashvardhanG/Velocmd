@@ -92,7 +92,7 @@ Skip opening a new tab. Use these tags to push your search query directly to you
 
 ## Keeping Your Index Updated
 
-Because Velocmd runs entirely in memory to maintain its blazing speed, it needs to periodically sync with your hard drive to learn about new files.
+Because Velocmd runs entirely in memory to maintain its lightning speed, it needs to periodically sync with your hard drive to learn about new files.
 
 * **Automatic Refresh:** Velocmd silently rescans your drives and updates its index in the background every **15 minutes**.
 * **Manual Refresh:** If you just installed a new application or downloaded a file and need it to appear immediately, you can force a resync. Simply type `/velo` and select **Velo: Refresh Index** (or just search `Refresh`), then hit <kbd>Enter</kbd>.

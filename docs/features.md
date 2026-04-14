@@ -114,7 +114,7 @@ Velocmd hardcodes 32 deeply buried Windows settings and legacy tools into its in
 
 ## Keeping Your Index Updated
 
-Because Velocmd runs entirely in memory to maintain its blazing speed, it needs to periodically sync with your hard drive to learn about new files.
+Because Velocmd runs entirely in memory to maintain its lightning speed, it needs to periodically sync with your hard drive to learn about new files.
 
 * **Automatic Refresh:** Velocmd silently rescans your drives and updates its index in the background every **15 minutes**.
 * **Manual Refresh:** If you just installed a new application or downloaded a file and need it to appear immediately, you can force a resync. Simply type `/velo` and select **Velo: Refresh Index** (or just search `Refresh`), then hit <kbd>Enter</kbd>.
@@ -210,4 +210,4 @@ Velocmd doesn't just let you pick a broken shortcut. Behind the scenes, it pings
     If another app updates and steals your preferred shortcut (or the default) while Velocmd is closed, you won't be locked out. Upon startup, Velocmd automatically iterates through its preset list and silently registers the first available fallback hotkey.
 
 ### Autostart Management
-Toggle "Start with Windows" directly from the panel. This registers Velocmd with the native Windows startup agent, ensuring your blazing-fast, in-memory index is already built and waiting the exact second you log into your PC.
+Toggle "Start with Windows" directly from the panel. This registers Velocmd with the native Windows startup agent, ensuring your lightning-fast, in-memory index is already built and waiting the exact second you log into your PC.

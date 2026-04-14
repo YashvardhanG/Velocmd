@@ -10,7 +10,7 @@ categories:
 
 After extensive development and optimization, I am incredibly excited to announce that **Velocmd** is officially out of beta and available for download! 
 
-This release brings the blazing-fast, in-memory indexer to its most stable form yet, alongside a suite of deep system integrations.
+This release brings the lightning-fast, in-memory indexer to its most stable form yet, alongside a suite of deep system integrations.
 
 Whether you are navigating thousands of local files or executing rapid-fire terminal scripts, v0.1.1 acts as the ultimate Windows power tool. Here is a look at what is packed into this release:
 

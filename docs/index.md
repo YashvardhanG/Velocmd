@@ -14,7 +14,7 @@ Windows power users have long suffered through a native search experience that i
 ## **Core Capabilities**
 **Velocmd** is more than just an app launcher. It is a unified command palette for your entire Windows system.
 
-**⚡ Blazing Fast, In-Memory Search**
+**⚡ Lightning Fast, In-Memory Search**
 
 Unlike traditional indexers that constantly read and write to a background database, Velocmd aggressively scans your Start Menu, local AppData, and mounted drives upon startup using multithreaded directory traversal. It stores this index directly in memory, resulting in sub-millisecond query responses.
 
