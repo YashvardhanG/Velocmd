@@ -112,3 +112,6 @@ Velocmd integrates directly with Windows, giving you instant access to system-le
 <div align="center" markdown>
 ![Terminal Command Execution](../assets/velo.png){ width="750" }
 </div>
+
+## Check for Updates
+Velocmd automatically checks for updates on startup - with an added button to `check for updates` manually from the settings panel.

@@ -66,3 +66,5 @@ Velocmd isn't just built for speed, **it's built on trust**.
 - **Absolutely Free & Open Source**: There are no paywalls, no premium tiers, and no subscriptions. The entire codebase is open-source and community-driven.
 - **Strictly Local**: Your data is yours. The index is built locally, stored entirely in your RAM, and wiped the moment you close the application.
 - **Zero Telemetry**: Velocmd is absolutely private by design. There is no background tracking, no cloud syncing, and no analytics. What happens on your machine stays on your machine.
+
+If you do want to support this project - please [star ✨](https://github.com/YashvardhanG/Velocmd) the repository. And, if you really liked the app, you can always [buy me a coffee! ☕](https://ko-fi.com/I3I31XL6SJ)

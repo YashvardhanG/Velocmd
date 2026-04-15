@@ -15,10 +15,26 @@ const shortcutDisplay = document.getElementById("shortcut-display");
 const shortcutDropdown = document.getElementById("shortcut-dropdown");
 const shortcutMsg = document.getElementById("shortcut-msg");
 const startupToggle = document.getElementById("startup-toggle");
+const updateBtn = document.getElementById("update-btn");
+const searchWrapper = document.querySelector(".search-wrapper");
+const loaderHtml = `
+  <div id="search-loader" class="loader-dots hidden">
+    <div class="loader-dot"></div>
+    <div class="loader-dot"></div>
+    <div class="loader-dot"></div>
+  </div>`;
+searchWrapper.insertAdjacentHTML('beforeend', loaderHtml);
+const searchLoader = document.getElementById("search-loader");
+const CURRENT_VERSION = "0.1.2";
+let isUpdateAvailable = false;
+let latestReleaseUrl = "https://github.com/YashvardhanG/Velocmd/releases/latest";
 
 let settingsIndex = -1;
 let dropdownIndex = -1;
 let isAllSelected = false;
+let currentSearchId = 0;
+let lastRenderedSearchId = 0;
+let hasCheckedStartupUpdate = false;
 
 let state = {
   results: [],
@@ -54,6 +70,7 @@ function getSettingsFocusables() {
     startupToggle,
     clearRecentsBtn,
     resetPosBtn,
+    updateBtn,
     shortcutDisplay
   ];
 }
@@ -115,6 +132,7 @@ async function toggleSettings() {
         await invoke("resize_window", { height: WINDOW_MAX_HEIGHT });
         lastWindowHeight = WINDOW_MAX_HEIGHT;
       } else {
+        state.results = [];
         resultsContainer.classList.add("hidden");
         await invoke("reset_window");
         lastWindowHeight = 65;
@@ -123,7 +141,7 @@ async function toggleSettings() {
   }
 
   render();
-  input.focus();
+  setTimeout(() => input.focus(), 10);
 }
 
 settingsBtn.onclick = (e) => {
@@ -171,6 +189,71 @@ resetPosBtn.onclick = async () => {
   await invoke("resize_window", { height: WINDOW_MAX_HEIGHT });
   lastWindowHeight = WINDOW_MAX_HEIGHT;
 };
+
+async function checkUpdates(isAuto = false) {
+  try {
+    if (!isAuto && updateBtn) {
+      updateBtn.textContent = "Checking...";
+      updateBtn.classList.remove("btn-success", "btn-update-available");
+      updateBtn.classList.add("btn-secondary");
+    }
+
+    const response = await fetch("https://api.github.com/repos/YashvardhanG/Velocmd/releases/latest");
+    const data = await response.json();
+
+    if (!data.tag_name) return;
+
+    latestReleaseUrl = data.html_url;
+
+    const latestVersion = data.tag_name.replace("v", "");
+
+    if (latestVersion !== CURRENT_VERSION) {
+      isUpdateAvailable = true;
+      if (isAuto) {
+        input.placeholder = "⚡A Newer version is available, download now!";
+        setTimeout(() => {
+          input.placeholder = "⚡Velocmd running...";
+        }, 2000);
+      }
+
+      if (updateBtn) {
+        updateBtn.textContent = "Download Update";
+        updateBtn.classList.remove("btn-secondary", "btn-success");
+        updateBtn.classList.add("btn-update-available");
+      }
+    } else {
+      if (!isAuto && updateBtn) {
+        updateBtn.textContent = "Up to Date!";
+        updateBtn.classList.remove("btn-secondary");
+        updateBtn.classList.add("btn-success");
+        setTimeout(() => {
+          updateBtn.textContent = "Check for Updates";
+          updateBtn.classList.remove("btn-success");
+          updateBtn.classList.add("btn-secondary");
+        }, 3000);
+      }
+    }
+  } catch (err) {
+    console.error("Update check failed:", err);
+    if (!isAuto && updateBtn) {
+      updateBtn.textContent = "Check Failed";
+      setTimeout(() => {
+        updateBtn.textContent = "Check for Updates";
+      }, 3000);
+    }
+  }
+}
+
+if (updateBtn) {
+  updateBtn.onclick = async (e) => {
+    e.stopPropagation();
+    if (isUpdateAvailable) {
+      await invoke("open_file", { path: latestReleaseUrl });
+    } else {
+      checkUpdates(false);
+    }
+  };
+}
 
 function getFileIcon(path, kind) {
   if (kind === "app") return "🚀";
@@ -263,7 +346,9 @@ async function render() {
   const questionWords = ["how", "what", "why", "when", "who"];
 
   let matchedTrigger = webTriggers.find(t => fullQuery.toLowerCase().startsWith(t));
-  let isWebIntent = matchedTrigger !== undefined || questionWords.some(w => fullQuery.toLowerCase().startsWith(w));
+  let lowQuery = fullQuery.toLowerCase().trim();
+  let isWebIntent = matchedTrigger !== undefined ||
+    questionWords.some(w => lowQuery === w || lowQuery.startsWith(w + " "));
 
   let webQuery = fullQuery;
   let activeEngine = "@search";
@@ -280,7 +365,7 @@ async function render() {
   if (!settingsPanel.classList.contains("hidden")) {
     resultsContainer.classList.add("hidden");
     items = [];
-  } else if (isInputEmpty && !hasChips) {
+  } else if (isInputEmpty && !hasChips && state.results.length === 0) {
     if (state.showRecents) {
       items = state.recentFiles;
       resultsContainer.classList.remove("hidden");
@@ -339,6 +424,12 @@ async function render() {
   }
 
   if (items.length === 0 && !isWebIntent && !isCmdIntent && !isInputEmpty) {
+    const noResults = document.createElement("div");
+    noResults.className = "empty-state";
+    noResults.innerHTML = `
+      <span>No results found for "${rawInput}"</span>
+    `;
+    resultsList.appendChild(noResults);
     return;
   }
 
@@ -372,6 +463,10 @@ async function render() {
       }
     }
 
+    // if (kind !== 'app' && (displayPath === "Application" || path.startsWith("shell:AppsFolder") || path.toLowerCase().endsWith(".exe") || path.toLowerCase().endsWith(".lnk"))) {
+    //   kind = 'app';
+    // }
+
     li.innerHTML = `
       ${iconHtml}
       <div class="result-content">
@@ -387,6 +482,9 @@ async function render() {
     resultsList.appendChild(li);
   });
 
+  const renderedAnyItems = items.length > 0;
+  let showedEmptyRecentMessage = false;
+
   if (isInputEmpty && state.showRecents && items.length === 0 && !hasChips) {
     const emptyMessage = document.createElement("div");
     emptyMessage.className = "empty-recents-message";
@@ -397,6 +495,28 @@ async function render() {
         <span class="result-path">Toggle on/off from settings</span>
       </div>`;
     resultsList.appendChild(emptyMessage);
+    showedEmptyRecentMessage = true;
+  }
+
+  const hasContent = renderedAnyItems || isWebIntent || isCmdIntent || showedEmptyRecentMessage || (items.length === 0 && !isWebIntent && !isCmdIntent && !isInputEmpty);
+
+  if (hasContent && settingsPanel.classList.contains("hidden")) {
+    resultsContainer.classList.remove("hidden");
+  } else {
+    resultsContainer.classList.add("hidden");
+  }
+
+  updateContainerMinimalState();
+}
+
+function updateContainerMinimalState() {
+  const isSettingsHidden = settingsPanel.classList.contains("hidden");
+  const isResultsHidden = resultsContainer.classList.contains("hidden");
+
+  if (isSettingsHidden && isResultsHidden) {
+    container.classList.add("minimal-state");
+  } else {
+    container.classList.remove("minimal-state");
   }
 }
 
@@ -595,7 +715,7 @@ async function openFile(path, kind, name) {
   render();
 }
 
-let debounceTimeout;
+// let debounceTimeout;
 input.addEventListener("input", async (e) => {
   let val = input.value;
 
@@ -618,70 +738,86 @@ input.addEventListener("input", async (e) => {
     await toggleSettings();
   }
 
-  clearTimeout(debounceTimeout);
+  // clearTimeout(debounceTimeout);
 
-  debounceTimeout = setTimeout(async () => {
-    const query = [...state.activeFilters, val].join(" ").trim();
+  // debounceTimeout = setTimeout(async () => {
+  const query = [...state.activeFilters, val].join(" ").trim();
 
-    if (query.trim().length > 0) {
-      if (lastWindowHeight !== WINDOW_MAX_HEIGHT) {
-        await invoke("resize_window", { height: WINDOW_MAX_HEIGHT });
-        lastWindowHeight = WINDOW_MAX_HEIGHT;
-      }
-      resultsContainer.classList.remove("hidden");
-    } else {
-      if (!state.showRecents) {
-        await invoke("reset_window");
-        lastWindowHeight = 65;
-      }
-    }
+  currentSearchId++;
+  const thisSearchId = currentSearchId;
 
-    state.selectedIndex = 0;
-
-    if (query.trim().length === 0) {
-      state.results = [];
-      render();
-      return;
-    }
-
-    if (query.trim() === "@" || query.trim() === "/" || query.trim() === "!") {
-      const drives = await invoke("get_available_drives");
-      const prefix = query.trim();
-      const driveItems = drives.map(d => ({
-        name: `Drive ${d}`,
-        path: `${prefix}${d[0].toLowerCase()}:`,
-        kind: "filter",
-        score: 97
-      }));
-
-      state.results = [
-        { name: "Applications", path: `${prefix}apps `, kind: "filter", score: 100 },
-        { name: "Folders", path: `${prefix}folders `, kind: "filter", score: 99 },
-        { name: "Files", path: `${prefix}files `, kind: "filter", score: 98 },
-        ...driveItems,
-        { name: "Velo Commands", path: `${prefix}velo `, kind: "filter", score: 95 },
-        { name: "Settings", path: `${prefix}settings`, kind: "filter", score: 94 },
-        { name: "Run Command", path: `${prefix}cmd `, kind: "filter", score: 94 },
-        { name: "Web Search", path: `${prefix}google `, kind: "filter", score: 93 }
-      ];
-      render();
-      return;
-    }
-
-    if (resultsContainer.classList.contains("hidden") || (!state.showRecents && state.results.length === 0)) {
-      invoke("resize_window", { height: WINDOW_MAX_HEIGHT });
+  if (query.trim().length > 0) {
+    if (lastWindowHeight !== WINDOW_MAX_HEIGHT) {
+      await invoke("resize_window", { height: WINDOW_MAX_HEIGHT });
       lastWindowHeight = WINDOW_MAX_HEIGHT;
-      resultsContainer.classList.remove("hidden");
     }
-
-    state.results = await invoke("search_files", { query });
-
-    if (!settingsPanel.classList.contains("hidden")) {
-      toggleSettings();
+    resultsContainer.classList.remove("hidden");
+  } else {
+    if (!state.showRecents) {
+      await invoke("reset_window");
+      lastWindowHeight = 65;
     }
+  }
 
+  state.selectedIndex = 0;
+
+  if (query.trim().length === 0) {
+    state.results = [];
     render();
-  }, 150);
+    return;
+  }
+
+  if (query.trim() === "@" || query.trim() === "/" || query.trim() === "!") {
+    const drives = await invoke("get_available_drives");
+    const prefix = query.trim();
+    const driveItems = drives.map(d => ({
+      name: `Drive ${d}`,
+      path: `${prefix}${d[0].toLowerCase()}:`,
+      kind: "filter",
+      score: 97
+    }));
+
+    state.results = [
+      { name: "Applications", path: `${prefix}apps `, kind: "filter", score: 100 },
+      { name: "Folders", path: `${prefix}folders `, kind: "filter", score: 99 },
+      { name: "Files", path: `${prefix}files `, kind: "filter", score: 98 },
+      ...driveItems,
+      { name: "Velo Commands", path: `${prefix}velo `, kind: "filter", score: 95 },
+      { name: "Settings", path: `${prefix}settings`, kind: "filter", score: 94 },
+      { name: "Run Command", path: `${prefix}cmd `, kind: "filter", score: 94 },
+      { name: "Web Search", path: `${prefix}google `, kind: "filter", score: 93 }
+    ];
+    render();
+    return;
+  }
+
+  if (resultsContainer.classList.contains("hidden") || (!state.showRecents && state.results.length === 0)) {
+    invoke("resize_window", { height: WINDOW_MAX_HEIGHT });
+    lastWindowHeight = WINDOW_MAX_HEIGHT;
+    resultsContainer.classList.remove("hidden");
+  }
+
+  searchLoader.classList.remove("hidden");
+  const results = await invoke("search_files", { query });
+
+  if (thisSearchId < lastRenderedSearchId) {
+    return;
+  }
+
+  lastRenderedSearchId = thisSearchId;
+
+  if (thisSearchId === currentSearchId) {
+    searchLoader.classList.add("hidden");
+  }
+
+  state.results = results;
+
+  if (!settingsPanel.classList.contains("hidden")) {
+    toggleSettings();
+  }
+
+  render();
+  // }, 150);
 });
 
 document.addEventListener('keydown', async (e) => {
@@ -761,31 +897,38 @@ document.addEventListener('keydown', async (e) => {
       renderChips();
       deselectChips();
 
-      state.results = [];
-      if (!state.showRecents) {
-        await invoke("reset_window");
-        lastWindowHeight = 65;
-      }
-      render();
+      input.dispatchEvent(new Event('input'));
       return;
+
+      // state.results = [];
+      // if (!state.showRecents) {
+      //   await invoke("reset_window");
+      //   lastWindowHeight = 65;
+      // }
+      // render();
+      // return;
     }
 
     if (input.value === "") {
       if (state.activeFilters.length > 0) {
         state.activeFilters.pop();
         renderChips();
-        const fullQuery = state.activeFilters.join(" ");
-        if (fullQuery.length === 0) {
-          state.results = [];
-          if (!state.showRecents) {
-            await invoke("reset_window");
-            lastWindowHeight = 65;
-          }
-        } else {
-          state.results = await invoke("search_files", { query: fullQuery });
-        }
-        render();
+
+        input.dispatchEvent(new Event('input'));
         return;
+        // const fullQuery = state.activeFilters.join(" ");
+        // if (fullQuery.length === 0) {
+        //   state.results = [];
+        //   if (!state.showRecents) {
+        //     await invoke("reset_window");
+        //     lastWindowHeight = 65;
+        //   }
+        // } else {
+        //   const results = await invoke("search_files", { query: fullQuery });
+        //   state.results = results;
+        // }
+        // render();
+        // return;
       }
     }
   }
@@ -1163,9 +1306,63 @@ listen("index_refreshed", async () => {
   input.focus();
 
   if (!state.showRecents) {
+    resultsContainer.classList.add("hidden");
     await invoke("reset_window");
     lastWindowHeight = 65;
+  } else {
+    await invoke("resize_window", { height: WINDOW_MAX_HEIGHT });
+    lastWindowHeight = WINDOW_MAX_HEIGHT;
   }
 
   render();
+
+  if (!hasCheckedStartupUpdate) {
+    hasCheckedStartupUpdate = true;
+    setTimeout(() => {
+      checkUpdates(true);
+    }, 500);
+  }
+});
+
+async function checkInitialIndexing() {
+  const isIndexing = await invoke("get_indexing_state");
+
+  if (isIndexing) {
+    input.disabled = true;
+    input.value = "";
+    input.placeholder = "⌛ Building initial file index...";
+    state.results = [];
+    state.activeFilters = [];
+    renderChips();
+
+    if (state.showRecents) {
+      resultsList.innerHTML = `
+        <div class="empty-recents-message">
+          <span class="result-icon" style="animation: spin 2s linear infinite;">⏳</span>
+          <div class="result-content">
+            <span class="result-name">Building File Index...</span>
+            <span class="result-path">This will just take a moment on startup</span>
+          </div>
+        </div>`;
+      resultsContainer.classList.remove("hidden");
+      await invoke("resize_window", { height: WINDOW_MAX_HEIGHT });
+      lastWindowHeight = WINDOW_MAX_HEIGHT;
+    } else {
+      resultsContainer.classList.add("hidden");
+      await invoke("reset_window");
+      lastWindowHeight = 65;
+    }
+    updateContainerMinimalState();
+
+    return true;
+  }
+
+  return false;
+}
+
+checkInitialIndexing().then((isIndexing) => {
+  if (!isIndexing) {
+    hasCheckedStartupUpdate = true;
+    checkUpdates(true);
+  }
 });

@@ -1,7 +1,7 @@
 [package]
 name = "velocmd-explorer"
-version = "0.1.1"
-description = "New and Imporved Windows File Explorer"
+version = "0.1.2"
+description = "⚡ A lightning fast, native system launcher"
 authors = ["Yashvardhan Gupta"]
 edition = "2021"
 

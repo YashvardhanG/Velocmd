@@ -30,7 +30,7 @@ Velocmd supports multiple aliases for the same filter, allowing you to type what
 | `/files` | `/file` | Restricts search to standard files | `/files budget` |
 | `/drives` | `/drive`, `/disk` | Filters for top-level mounted drives | `/disk` |
 | `/settings` | `/setting`, `/config`, `/setup` | Searches Windows system settings | `/settings display` |
-| `/velo` | `@velo` | Exclusively shows internal Velo commands | `/velo recents` |
+| `/velo` | `@velo` | Exclusively shows internal Velocmd commands | `/velo recents` |
 
 <div align="center" markdown>
 ![Terminal Command Execution](assets/file%20search.png){ width="750" }
@@ -121,7 +121,7 @@ Because Velocmd runs entirely in memory to maintain its lightning speed, it need
 
 ---
 
-## Internal Velo Commands
+## Internal Velocmd Commands
 
 You can control Velocmd's behavior directly from the search bar. Typing `/velo` (or `@velo`) will reveal the following internal commands:
 
@@ -161,14 +161,14 @@ Type `Shutdown` or `Restart`. Velocmd provides a built-in safety net: when you h
 
 ## System Tray Background Process
 
-Velocmd runs silently in the background to ensure instantaneous response times. You will find the Velo monkey icon sitting in your Windows System Tray (bottom right corner).
+Velocmd runs silently in the background to ensure instantaneous response times. You will find the Velocmd monkey icon sitting in your Windows System Tray (bottom right corner).
 
 * **Left-Click:** Instantly shows or hides the command palette.
 * **Right-Click:** Opens the context menu to quit the application entirely.
 
 ---
 
-## The Velo Settings Panel
+## The Velocmd Settings Panel
 
 Press <kbd>Tab</kbd> while the launcher is open to flip down the inline Settings panel. This panel interacts directly with Velocmd's local configuration (`settings.json` in your AppData) to securely persist your preferences between reboots.
 
@@ -211,3 +211,6 @@ Velocmd doesn't just let you pick a broken shortcut. Behind the scenes, it pings
 
 ### Autostart Management
 Toggle "Start with Windows" directly from the panel. This registers Velocmd with the native Windows startup agent, ensuring your lightning-fast, in-memory index is already built and waiting the exact second you log into your PC.
+
+### Check for Updates
+Velocmd automatically checks for updates on startup - with an added button to `check for updates` manually from the settings panel.

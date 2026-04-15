@@ -321,6 +321,22 @@ input:checked+.slider:before {
   background: #e53935;
 }
 
+.btn-success {
+  background: #2e7d32;
+}
+
+.btn-success:hover {
+  background: #388e3c;
+}
+
+.btn-update-available {
+  background: #075ccc9f;
+}
+
+.btn-update-available:hover {
+  background: rgba(32, 112, 218, 0.624);
+}
+
 
 #results-container {
   flex: 1;
@@ -432,8 +448,14 @@ input:checked+.slider:before {
 }
 
 .result-icon {
+  width: 32px;
+  height: 32px;
   margin-right: 10px;
   font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
 }
 
 .app-icon {
@@ -441,6 +463,7 @@ input:checked+.slider:before {
   height: 32px;
   margin-right: 10px;
   object-fit: contain;
+  flex-shrink: 0;
 }
 
 .section-title {
@@ -542,19 +565,21 @@ input:checked+.slider:before {
   margin-left: 10px;
 }
 
-.hidden {
+.margin-left-auto {
+  margin-left: auto;
+}
+
+.hidden,
+#results-container.hidden,
+.settings-panel.hidden {
   display: none !important;
 }
 
-#results-container.hidden {
-  display: none !important;
-}
-
-#container:has(.settings-panel.hidden):has(#results-container.hidden) .header {
+#container.minimal-state .header {
   border-bottom: none;
 }
 
-#container:has(.settings-panel.hidden):has(#results-container.hidden) .footer {
+#container.minimal-state .footer {
   border-top: none;
 }
 
@@ -610,4 +635,60 @@ a:active {
   background: var(--accent-color);
   border-color: var(--accent-color);
   color: white;
+}
+
+.empty-state {
+  padding: 30px;
+  text-align: center;
+  color: #666;
+  font-size: 14px;
+  font-weight: 500;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.empty-state::before {
+  content: "🔍";
+  font-size: 24px;
+  opacity: 0.5;
+}
+
+.loader-dots {
+  display: flex;
+  gap: 4px;
+  margin-left: 10px;
+  align-items: center;
+}
+
+.loader-dot {
+  width: 5px;
+  height: 5px;
+  background-color: var(--accent-color);
+  border-radius: 50%;
+  animation: dot-pulse 1.4s infinite ease-in-out both;
+}
+
+.loader-dot:nth-child(1) {
+  animation-delay: -0.32s;
+}
+
+.loader-dot:nth-child(2) {
+  animation-delay: -0.16s;
+}
+
+@keyframes dot-pulse {
+
+  0%,
+  80%,
+  100% {
+    transform: scale(0);
+    opacity: 0;
+  }
+
+  40% {
+    transform: scale(1.0);
+    opacity: 1;
+  }
 }

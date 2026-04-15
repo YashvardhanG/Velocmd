@@ -7,12 +7,19 @@ use std::io::Cursor;
 use std::path::Path;
 use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::Mutex;
+use std::sync::RwLock;
 use std::time::Instant;
 use systemicons::get_icon;
 use tauri::menu::{Menu, MenuItem};
 use tauri::tray::{MouseButton, TrayIconBuilder, TrayIconEvent};
 use tauri::{AppHandle, Emitter, Manager};
 use tauri_plugin_global_shortcut::{GlobalShortcutExt, ShortcutState};
+
+#[cfg(windows)]
+use std::os::windows::process::CommandExt;
+
+#[cfg(windows)]
+const CREATE_NO_WINDOW: u32 = 0x08000000;
 
 #[derive(Clone, serde::Serialize)]
 struct SearchResult {
@@ -47,15 +54,19 @@ impl ItemKind {
 
 struct IndexedItem {
     path: Box<str>,
-    path_lower: Box<str>,
+    // path_lower: Box<str>,
+    name: Box<str>,
+    name_lower: Box<str>,
     kind: ItemKind,
 }
 
 static CURRENT_SHORTCUT: Lazy<Mutex<String>> =
     Lazy::new(|| Mutex::new("Super+Shift+.".to_string()));
-static FILE_INDEX: Lazy<Mutex<Vec<IndexedItem>>> = Lazy::new(|| Mutex::new(Vec::new()));
+// static FILE_INDEX: Lazy<Mutex<Vec<IndexedItem>>> = Lazy::new(|| Mutex::new(Vec::new()));
+static FILE_INDEX: Lazy<RwLock<Vec<IndexedItem>>> = Lazy::new(|| RwLock::new(Vec::new()));
 static SHOW_RECENTS: Lazy<Mutex<bool>> = Lazy::new(|| Mutex::new(true));
 static REFOCUS_ON_BLUR: AtomicBool = AtomicBool::new(false);
+static IS_INDEXING: AtomicBool = AtomicBool::new(false);
 
 const PRESET_SHORTCUTS: &[&str] = &[
     "Super+Shift+.",
@@ -246,7 +257,8 @@ fn check_shortcuts_availability(app: AppHandle, shortcuts: Vec<String>) -> Vec<b
 
 #[tauri::command]
 async fn search_files(query: String) -> Vec<SearchResult> {
-    let index = FILE_INDEX.lock().unwrap();
+    // let index = FILE_INDEX.lock().unwrap();
+    let index = FILE_INDEX.read().unwrap();
     let query_trim = query.trim();
 
     if query_trim.is_empty() {
@@ -345,8 +357,8 @@ async fn search_files(query: String) -> Vec<SearchResult> {
                 let f_content = &filter[1..];
                 match f_content {
                     "app" | "apps" | "application" | "applications" | "exe" | "lnk" => {
-                        let is_exe =
-                            item.path_lower.ends_with(".exe") || item.path_lower.ends_with(".lnk");
+                        let path_lower = item.path.to_ascii_lowercase();
+                        let is_exe = path_lower.ends_with(".exe") || path_lower.ends_with(".lnk");
                         if item.kind != ItemKind::App && !is_exe {
                             return None;
                         }
@@ -369,9 +381,9 @@ async fn search_files(query: String) -> Vec<SearchResult> {
                     d if (d.len() == 1 && d.chars().next().unwrap().is_alphabetic())
                         || (d.len() == 2 && d.ends_with(':')) =>
                     {
-                        let letter = d.chars().next().unwrap();
+                        let letter = d.chars().next().unwrap().to_ascii_uppercase();
                         let drive_prefix = format!("{}:", letter);
-                        if !item.path_lower.starts_with(&drive_prefix) {
+                        if !item.path.to_ascii_uppercase().starts_with(&drive_prefix) {
                             return None;
                         }
                     }
@@ -381,40 +393,39 @@ async fn search_files(query: String) -> Vec<SearchResult> {
                         }
                     }
                     ext => {
-                        if !item.path_lower.ends_with(&format!(".{}", ext)) {
+                        if !item.path.to_ascii_lowercase().ends_with(&format!(".{}", ext)) {
                             return None;
                         }
                     }
                 }
             }
 
-            let mut name = Path::new(item.path.as_ref())
-                .file_name()
-                .map(|s| s.to_string_lossy().to_string())
-                .unwrap_or_else(|| item.path.to_string());
-
-            if name.to_lowercase().ends_with(".lnk") || name.to_lowercase().ends_with(".exe") {
-                name = name[..name.len() - 4].to_string();
-            }
-
-            let name_lower = name.to_lowercase();
+            let name = &item.name;
+            let name_lower = &item.name_lower;
 
             if !search_text.is_empty() {
-                if !name_lower.contains(&search_text) && !item.path_lower.contains(&search_text) {
+                if !name_lower.contains(&search_text) && !item.path.to_ascii_lowercase().contains(&search_text) {
                     return None;
                 }
             }
 
             let mut score: u16 = 1;
 
-            if item.kind == ItemKind::App || item.kind == ItemKind::Command {
-                score += 100;
+            if item.kind == ItemKind::Command {
+                score += 500;
+            } else if item.kind == ItemKind::App {
+                score += 250;
             }
+
+            if item.path.starts_with("shell:") {
+                score -= 10;
+            }
+
             if item.kind == ItemKind::Drive {
                 score += 80;
             }
 
-            if name_lower == search_text {
+            if name_lower.as_ref() == search_text {
                 score += 50;
             } else if name_lower.starts_with(&search_text) {
                 score += 20;
@@ -428,7 +439,7 @@ async fn search_files(query: String) -> Vec<SearchResult> {
 
             Some(SearchResult {
                 path: item.path.to_string(),
-                name,
+                name: name.to_string(),
                 kind: item.kind.as_str().to_string(),
                 score,
                 icon_data: None,
@@ -477,8 +488,8 @@ fn open_file(app: tauri::AppHandle, path: String) {
     {
         #[cfg(target_os = "windows")]
         {
-            if std::process::Command::new("cmd.exe")
-                .args(["/C", "start", "", &path])
+            if std::process::Command::new("explorer.exe")
+                .args([&path])
                 .spawn()
                 .is_ok()
             {
@@ -495,10 +506,11 @@ fn open_file(app: tauri::AppHandle, path: String) {
         let cmd = &path[4..];
         #[cfg(target_os = "windows")]
         {
-            if let Err(e) = std::process::Command::new("cmd.exe")
-                .args(["/C", cmd])
-                .spawn()
-            {
+            let mut command = std::process::Command::new("cmd.exe");
+            command.args(["/C", cmd])
+                .creation_flags(CREATE_NO_WINDOW);
+
+            if let Err(e) = command.spawn() {
                 eprintln!("Failed to execute command '{}': {}", cmd, e);
             } else {
                 success = true;
@@ -697,7 +709,24 @@ fn run_terminal_command(command: String) {
 }
 
 fn scan_folder(path: &str, kind_override: Option<&str>, index: &mut Vec<IndexedItem>) {
-    for entry in WalkDir::new(path).skip_hidden(true).min_depth(1) {
+    let walker = WalkDir::new(path)
+        .skip_hidden(true)
+        .min_depth(1)
+        .process_read_dir(|_, _, _, children| {
+            children.retain(|result| {
+                if let Ok(entry) = result {
+                    let name = entry.file_name().to_string_lossy().to_ascii_lowercase();
+                    
+                    if name == "$recycle.bin" || name == "system volume information"
+                    {
+                        return false; 
+                    }
+                }
+                true
+            });
+    });
+        
+    for entry in walker {
         if let Ok(entry) = entry {
             let path_str = entry.path().to_string_lossy().to_string();
             let is_dir = entry.file_type().is_dir();
@@ -717,6 +746,58 @@ fn scan_folder(path: &str, kind_override: Option<&str>, index: &mut Vec<IndexedI
                     .to_lowercase();
 
                 if ["exe", "lnk", "url"].contains(&ext.as_str()) {
+                    let file_name = entry.file_name().to_string_lossy().to_lowercase();
+
+                    let is_unwanted = file_name.contains("uninstall")
+                        || file_name.starts_with("unins")
+                        || file_name.contains("updater")
+                        || file_name.contains("reporter")
+                        || file_name.contains("setup")
+                        || file_name.contains("install")
+                        || file_name.contains("helper")
+                        || file_name.contains("bug")
+                        
+                        // Telemetry, Crash, & Maintenance
+                        || file_name.contains("crash")
+                        || file_name.contains("telemetry")
+                        || file_name.contains("bugreport")
+                        || file_name.contains("dump")
+                        || file_name.contains("maintenance")
+                        
+                        // Background Services & Windows Cruft
+                        || file_name.contains("service")
+                        || file_name.contains("host")
+                        || file_name.contains("daemon")
+                        || file_name.contains("agent")
+                        || file_name.contains("broker")
+                        
+                        // Privilege Elevation
+                        || file_name.contains("elevate")
+                        || file_name.contains("uac")
+                        
+                        // Dev Tools, LSPs, & Environments
+                        || file_name.contains("language_server")
+                        || file_name.contains("lsp")
+                        || file_name.contains("esbuild")
+                        || file_name.contains("protoc")
+                        || file_name.contains("prettier")
+                        || file_name.contains("eslint")
+                        || file_name.contains("pylint")
+                        || file_name.contains("chromedriver")
+                        || file_name.contains("geckodriver")
+                        
+                        // Specific Files
+                        || file_name.ends_with("cli.exe")
+                        || file_name == "buf.exe"
+                        || file_name == "tsc.exe"
+                        || file_name == "npm.cmd"
+                        || file_name == "yarn.cmd"
+                        || file_name == "pip.exe";
+
+                    if is_unwanted {
+                        continue;
+                    }
+
                     kind = ItemKind::App;
                 } else {
                     continue;
@@ -729,14 +810,28 @@ fn scan_folder(path: &str, kind_override: Option<&str>, index: &mut Vec<IndexedI
                 }
             }
 
-            if path_str.contains("$Recycle.Bin") || path_str.contains("System Volume Information") {
-                continue;
+            // if path_str.contains("$Recycle.Bin") || path_str.contains("System Volume Information") {
+            //     continue;
+            // }
+
+            // let path_lower = path_str.to_ascii_lowercase();
+            
+            let mut name = Path::new(&path_str)
+                .file_name()
+                .map(|s| s.to_string_lossy().to_string())
+                .unwrap_or_else(|| path_str.clone());
+
+            if name.to_lowercase().ends_with(".lnk") || name.to_lowercase().ends_with(".exe") {
+                if name.len() > 4 {
+                    name = name[..name.len() - 4].to_string();
+                }
             }
 
-            let path_lower = path_str.to_lowercase();
             let item = IndexedItem {
                 path: path_str.into_boxed_str(),
-                path_lower: path_lower.into_boxed_str(),
+                // path_lower: path_lower.into_boxed_str(),
+                name: name.clone().into_boxed_str(),
+                name_lower: name.to_lowercase().into_boxed_str(),
                 kind,
             };
 
@@ -782,10 +877,88 @@ fn index_system_settings(index: &mut Vec<IndexedItem>) {
         ("Event Viewer", "cmd:eventvwr.msc"),
     ];
 
-    for (_name, path) in settings {
+    for (name, path) in settings {
         index.push(IndexedItem {
             path: path.into(),
-            path_lower: path.to_lowercase().into_boxed_str(),
+            // path_lower: path.to_lowercase().into_boxed_str(),
+            name: name.into(),
+            name_lower: name.to_lowercase().into_boxed_str(),
+            kind: ItemKind::Command,
+        });
+    }
+}
+
+fn index_windows_apps(index: &mut Vec<IndexedItem>) {
+    let mut command = std::process::Command::new("powershell");
+    command.args([
+            "-NoProfile",
+            "-Command",
+            "[Console]::OutputEncoding = [System.Text.Encoding]::UTF8; Get-StartApps | Select-Object Name, AppID | ConvertTo-Json -Compress",
+        ]); 
+
+    #[cfg(target_os = "windows")]
+    command.creation_flags(CREATE_NO_WINDOW);
+
+    let output = command.output();
+
+    if let Ok(output) = output {
+        let json_str = String::from_utf8_lossy(&output.stdout);
+        
+        if let Ok(apps) = serde_json::from_str::<serde_json::Value>(&json_str) {
+            let app_list = if let Some(arr) = apps.as_array() {
+                arr.to_vec()
+            } else if apps.is_object() {
+                vec![apps]
+            } else {
+                vec![]
+            };
+
+            for app in app_list {
+                let name = app.get("Name").or(app.get("name")).and_then(|v| v.as_str()).unwrap_or("");
+                let app_id = app.get("AppID").or(app.get("AppId")).or(app.get("appid")).and_then(|v| v.as_str()).unwrap_or("");
+
+                if !name.is_empty() && !app_id.is_empty() {
+                    let path = if app_id.contains(':') || app_id.contains('\\') {
+                        app_id.to_string()
+                    } else {
+                        format!("shell:AppsFolder\\{}", app_id)
+                    };
+                    index.push(IndexedItem {
+                        path: path.clone().into_boxed_str(),
+                        // path_lower: path.to_lowercase().into_boxed_str(),
+                        name: name.into(),
+                        name_lower: name.to_lowercase().into_boxed_str(),
+                        kind: ItemKind::App,
+                    });
+                }
+            }
+        }
+    }
+}
+
+fn index_velo_commands(index: &mut Vec<IndexedItem>) {
+    let velo_commands = vec![
+        ("Velo: Help", "velo:help"),
+        ("Velo Settings", "velo:settings"),
+        ("Velo: Toggle Recents", "velo:toggle_recents"),
+        ("Velo: Clear Recents", "velo:clear_recents"),
+        ("Velo: Reset Position", "velo:reset_position"),
+        ("Velo: Refresh Index", "velo:refresh"),
+        ("Show Desktop", "velo:show_desktop"),
+        ("Active Tabs", "velo:active_tabs"),
+        ("Shutdown", "velo:request_shutdown"),
+        ("Media: Play/Pause", "velo:media_play"),
+        ("Media: Next Track", "velo:media_next"),
+        ("Media: Previous Track", "velo:media_prev"),
+        ("Restart", "velo:request_restart"),
+    ];
+
+    for (name, path) in velo_commands {
+        index.push(IndexedItem {
+            path: path.into(),
+            // path_lower: path.to_lowercase().into_boxed_str(),
+            name: name.into(),
+            name_lower: name.to_lowercase().into_boxed_str(),
             kind: ItemKind::Command,
         });
     }
@@ -800,11 +973,15 @@ fn trigger_index_refresh(app: tauri::AppHandle) {
 }
 
 fn build_index_internal() {
+    IS_INDEXING.store(true, Ordering::SeqCst);
+
     let start = Instant::now();
     println!("Indexing started...");
 
     let mut new_index = Vec::new();
     index_system_settings(&mut new_index);
+    index_velo_commands(&mut new_index);
+    index_windows_apps(&mut new_index);
 
     let app_paths = vec![
         r"C:\ProgramData\Microsoft\Windows\Start Menu\Programs",
@@ -819,9 +996,20 @@ fn build_index_internal() {
     }
 
     if let Ok(local_appdata) = std::env::var("LOCALAPPDATA") {
+        // Common store apps launcher
         let local_apps = format!(r"{}\Microsoft\WindowsApps", local_appdata);
         if Path::new(&local_apps).exists() {
             scan_folder(&local_apps, Some("app"), &mut new_index);
+        }
+        // Local start menu
+        let local_start = format!(r"{}\Microsoft\Windows\Start Menu\Programs", local_appdata);
+        if Path::new(&local_start).exists() {
+            scan_folder(&local_start, Some("app"), &mut new_index);
+        }
+        // User programs (VS Code, Discord, etc.)
+        let user_progs = format!(r"{}\Programs", local_appdata);
+        if Path::new(&user_progs).exists() {
+            scan_folder(&user_progs, Some("app"), &mut new_index);
         }
     }
 
@@ -837,7 +1025,9 @@ fn build_index_internal() {
 
         let drive_root = IndexedItem {
             path: drive.clone().into_boxed_str(),
-            path_lower: drive.to_lowercase().into_boxed_str(),
+            // path_lower: drive.to_lowercase().into_boxed_str(),
+            name: drive.clone().into_boxed_str(),
+            name_lower: drive.to_lowercase().into_boxed_str(),
             kind: ItemKind::Drive,
         };
         new_index.push(drive_root);
@@ -847,25 +1037,34 @@ fn build_index_internal() {
 
     let duration = start.elapsed();
     let count = new_index.len();
-    *FILE_INDEX.lock().unwrap() = new_index;
+    // *FILE_INDEX.lock().unwrap() = new_index;
+    *FILE_INDEX.write().unwrap() = new_index;
     println!(
         "Indexing complete! Items: {} (Took: {:?})",
         count,
         duration
     );
+
+    IS_INDEXING.store(false, Ordering::SeqCst);
 }
 
-fn start_periodic_indexing() {
-    std::thread::spawn(|| {
+fn start_periodic_indexing(app: tauri::AppHandle) {
+    std::thread::spawn(move || {
         loop {
             build_index_internal();
+            let _ = app.emit("index_refreshed", ());
             std::thread::sleep(std::time::Duration::from_secs(15 * 60));
         }
     });
 }
 
+#[tauri::command]
+fn get_indexing_state() -> bool {
+    IS_INDEXING.load(Ordering::SeqCst)
+}
+
 fn main() {
-    start_periodic_indexing();
+    // start_periodic_indexing();
 
     tauri::Builder::default()
         .plugin(tauri_plugin_single_instance::init(|app, _argv, _cwd| {
@@ -902,9 +1101,12 @@ fn main() {
             trigger_index_refresh,
             show_desktop,
             get_active_windows,
-            focus_window
+            focus_window,
+            get_indexing_state
         ])
         .setup(|app| {
+            start_periodic_indexing(app.handle().clone());
+
             let window = app.get_webview_window("main").unwrap();
             let w_clone = window.clone();
 

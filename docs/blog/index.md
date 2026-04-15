@@ -3,7 +3,7 @@ date: 2026-04-10
 authors:
   - YashvardhanG
 categories:
-  - Inside Velo
+  - Inside Velocmd
 ---
 
 # The Vision Behind Velocmd
