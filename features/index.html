@@ -301,6 +301,25 @@
   
 
       
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../about/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  About
+
+      </a>
+    </li>
+  
+
+      
     </ul>
   </div>
 </nav>
@@ -698,10 +717,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#internal-velo-commands" class="md-nav__link">
+  <a href="#internal-velocmd-commands" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Internal Velo Commands
+        Internal Velocmd Commands
       
     </span>
   </a>
@@ -759,15 +778,15 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#the-velo-settings-panel" class="md-nav__link">
+  <a href="#the-velocmd-settings-panel" class="md-nav__link">
     <span class="md-ellipsis">
       
-        The Velo Settings Panel
+        The Velocmd Settings Panel
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="The Velo Settings Panel">
+    <nav class="md-nav" aria-label="The Velocmd Settings Panel">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -797,6 +816,17 @@
     <span class="md-ellipsis">
       
         Autostart Management
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#check-for-updates" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Check for Updates
       
     </span>
   </a>
@@ -1026,6 +1056,33 @@
   
 
     
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../about/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    About
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
   </ul>
 </nav>
                   </div>
@@ -1181,10 +1238,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#internal-velo-commands" class="md-nav__link">
+  <a href="#internal-velocmd-commands" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Internal Velo Commands
+        Internal Velocmd Commands
       
     </span>
   </a>
@@ -1242,15 +1299,15 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#the-velo-settings-panel" class="md-nav__link">
+  <a href="#the-velocmd-settings-panel" class="md-nav__link">
     <span class="md-ellipsis">
       
-        The Velo Settings Panel
+        The Velocmd Settings Panel
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="The Velo Settings Panel">
+    <nav class="md-nav" aria-label="The Velocmd Settings Panel">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -1280,6 +1337,17 @@
     <span class="md-ellipsis">
       
         Autostart Management
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#check-for-updates" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Check for Updates
       
     </span>
   </a>
@@ -1365,7 +1433,7 @@
 <tr>
 <td><code>/velo</code></td>
 <td><code>@velo</code></td>
-<td>Exclusively shows internal Velo commands</td>
+<td>Exclusively shows internal Velocmd commands</td>
 <td><code>/velo recents</code></td>
 </tr>
 </tbody>
@@ -1473,7 +1541,7 @@ You can filter by <em>any</em> specific file extension natively by typing <code>
 <li><strong>Manual Refresh:</strong> If you just installed a new application or downloaded a file and need it to appear immediately, you can force a resync. Simply type <code>/velo</code> and select <strong>Velo: Refresh Index</strong> (or just search <code>Refresh</code>), then hit <kbd>Enter</kbd>.</li>
 </ul>
 <hr />
-<h2 id="internal-velo-commands">Internal Velo Commands</h2>
+<h2 id="internal-velocmd-commands">Internal Velocmd Commands</h2>
 <p>You can control Velocmd's behavior directly from the search bar. Typing <code>/velo</code> (or <code>@velo</code>) will reveal the following internal commands:</p>
 <table>
 <thead>
@@ -1530,13 +1598,13 @@ You can filter by <em>any</em> specific file extension natively by typing <code>
 </ul>
 <hr />
 <h2 id="system-tray-background-process">System Tray Background Process</h2>
-<p>Velocmd runs silently in the background to ensure instantaneous response times. You will find the Velo monkey icon sitting in your Windows System Tray (bottom right corner).</p>
+<p>Velocmd runs silently in the background to ensure instantaneous response times. You will find the Velocmd monkey icon sitting in your Windows System Tray (bottom right corner).</p>
 <ul>
 <li><strong>Left-Click:</strong> Instantly shows or hides the command palette.</li>
 <li><strong>Right-Click:</strong> Opens the context menu to quit the application entirely.</li>
 </ul>
 <hr />
-<h2 id="the-velo-settings-panel">The Velo Settings Panel</h2>
+<h2 id="the-velocmd-settings-panel">The Velocmd Settings Panel</h2>
 <p>Press <kbd>Tab</kbd> while the launcher is open to flip down the inline Settings panel. This panel interacts directly with Velocmd's local configuration (<code>settings.json</code> in your AppData) to securely persist your preferences between reboots.</p>
 <div align="center">
 <p><img alt="Terminal Command Execution" src="../assets/settings.png" width="750" /></p>
@@ -1593,6 +1661,8 @@ Velocmd doesn't just let you pick a broken shortcut. Behind the scenes, it pings
 </div>
 <h3 id="autostart-management">Autostart Management</h3>
 <p>Toggle "Start with Windows" directly from the panel. This registers Velocmd with the native Windows startup agent, ensuring your lightning-fast, in-memory index is already built and waiting the exact second you log into your PC.</p>
+<h3 id="check-for-updates">Check for Updates</h3>
+<p>Velocmd automatically checks for updates on startup - with an added button to <code>check for updates</code> manually from the settings panel.</p>
 
 
 
