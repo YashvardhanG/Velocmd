@@ -73,6 +73,9 @@ Filter thousands of files instantly using `/` or `@` prefixes:
 ### ⚙️ Deep System Integration
 Directly launch Sound Settings, Environment Variables, Registry Editor, Task Manager, or even trigger system power states like **Shutdown** and **Restart** directly from the bar.
 
+### 🔄️ Automatic updates and refresh
+Velocmd automatically refreshes the index after 15-mins intervals, and also checks if there are any updates to the app. There are manual options to refresh via `velo:refresh-index` command, or check for updates in the settings panel.
+
 ---
 
 ## Indexing Performance
