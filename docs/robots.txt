@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://yashvardhang.github.io/Velocmd/sitemap.xml
