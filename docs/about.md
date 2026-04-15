@@ -23,7 +23,7 @@ This site serves as the complete technical manual and engineering hub for **Velo
 
 To get the launcher running immediately, head to the [Installation & Setup guide](../getting-started/installation/) to grab the latest release and learn the master shortcuts. For power users looking to extract maximum efficiency, jump into the [Feature Deep Dive](../features/). There, you will find the complete breakdown of Smart Tag filtering, direct terminal execution, and how to control native system states entirely from your keyboard.
 
-Beyond the core documentation, the project is constantly evolving. I actively log Velocmd's development process, patch notes, and technical deep-dives in the [Blog](../blog/) and the [Changelog](../changelog/). Check there for the latest updates and behind-the-scenes looks at the memory-safe optimizations that keep Velocmd running with zero latency and zero bloat.
+Beyond the core documentation, the project is constantly evolving. I actively log Velocmd's development process, patch notes, and technical deep-dives in the [Blog](../blog/) and the [Changelog](../changelog/). Check there for the latest updates and behind-the-scenes looks at the memory-safe optimizations that keep Velocmd running with zero latency and zero bloat. You can also checkout some frequently asked questions in the [FAQ](../faq/) section.
 
 Read More about Velocmd [here](https://medium.com/@yashvardhang11/meet-velocmd-the-blazing-fast-command-palette-windows-always-needed-2ab63a910960).
 

@@ -53,6 +53,7 @@ nav:
       - blog/index.md
   - Version History: changelog.md
   - About: about.md
+  - FAQ: faq.md
 
 extra_css:
   - stylesheets/custom.css
