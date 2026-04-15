@@ -25,6 +25,8 @@ To get the launcher running immediately, head to the [Installation & Setup guide
 
 Beyond the core documentation, the project is constantly evolving. I actively log Velocmd's development process, patch notes, and technical deep-dives in the [Blog](../blog/) and the [Changelog](../changelog/). Check there for the latest updates and behind-the-scenes looks at the memory-safe optimizations that keep Velocmd running with zero latency and zero bloat.
 
+Read More about Velocmd [here](https://medium.com/@yashvardhang11/meet-velocmd-the-blazing-fast-command-palette-windows-always-needed-2ab63a910960).
+
 ---
 
 ## Connect with me!
