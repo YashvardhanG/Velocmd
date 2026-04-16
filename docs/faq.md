@@ -73,6 +73,11 @@ Yes, While Voidtools' "Everything" is a powerful search utility, it functions as
 ### Is Velocmd a Mac Spotlight or Raycast alternative for Windows?
 Yes, Velocmd is explicitly designed to bring the sleek, keyboard-centric productivity of Mac Spotlight and Raycast to the Windows ecosystem. While native Windows search feels clunky and traditional file explorers slow you down, Velocmd acts as an unobtrusive, instant command palette. It gives you the same premium, zero-friction experience—allowing you to launch apps, find files, and control your system without your hands ever leaving the keyboard.
 
+### How does Velocmd compare to Flow Launcher?
+Flow Launcher is a fantastic, highly customizable tool with a massive ecosystem of third-party plugins. However, that reliance on external plugins and a heavier .NET/C# runtime can occasionally lead to micro-stutters or higher background resource consumption.
+
+Velocmd takes a fundamentally different approach. Instead of focusing on a plugin ecosystem, Velocmd is a strictly native, systems-level utility written in Rust. It utilizes a highly optimized, zero-allocation memory arena to index your files directly into RAM. If you want endless third-party extensions, Flow Launcher is a great choice. If you want absolute, zero-latency speed and a minimal CPU footprint straight out of the box, Velocmd is built for you.
+
 ### Can I remap Caps Lock to open Velocmd?
 A popular workflow for Mac Spotlight and Raycast users is mapping the launcher to the ```Caps Lock key```. While Velocmd allows you to set any standard global hotkey combination (like ```Alt + Space``` or ```Win + Shift + .```), remapping a single hardware key like Caps Lock requires a lightweight routing utility like PowerToys Keyboard Manager or AutoHotkey to trigger your chosen Velocmd shortcut.
 
@@ -227,6 +232,14 @@ Yes, Velocmd is completely free and open-source. You can view the source code on
       "acceptedAnswer": {
         "@type": "Answer",
         "text": "Yes, Velocmd is explicitly designed to bring the sleek, keyboard-centric productivity of Mac Spotlight and Raycast to the Windows ecosystem."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How does Velocmd compare to Flow Launcher?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Velocmd takes a fundamentally different approach. If you want endless third-party extensions, Flow Launcher is a great choice. If you want absolute, zero-latency speed and a minimal CPU footprint straight out of the box, Velocmd is built for you."
       }
     },
     {

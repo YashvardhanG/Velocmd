@@ -1,6 +1,6 @@
 [package]
 name = "velocmd-explorer"
-version = "0.1.2"
+version = "0.1.3"
 description = "⚡ A lightning fast, native system launcher"
 authors = ["Yashvardhan Gupta"]
 edition = "2021"
@@ -24,10 +24,18 @@ once_cell = "1.18"
 systemicons = "0.9" 
 image = "0.24"
 base64 = "0.21"
-windows = { version = "0.52", features = ["Win32_UI_Input_KeyboardAndMouse", "Win32_UI_WindowsAndMessaging", "Win32_Foundation"] }
+bincode = "1.3"
+windows = { version = "0.52", features = ["Win32_UI_Input_KeyboardAndMouse", "Win32_UI_WindowsAndMessaging", "Win32_Foundation", "Win32_System_ProcessStatus", "Win32_System_Threading"] }
 
 [target.'cfg(not(any(target_os = "android", target_os = "ios")))'.dependencies]
 tauri-plugin-autostart = "2"
 
 [target."cfg(windows)".dependencies]
 tauri-plugin-single-instance = "2.4.1"
+
+[profile.release]
+opt-level = 3
+lto = true
+codegen-units = 1
+panic = "abort"
+strip = true

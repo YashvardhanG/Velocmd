@@ -131,6 +131,8 @@ You can control Velocmd's behavior directly from the search bar. Typing `/velo` 
 | **Velo: Toggle Recents** | Turns the intelligent "Recent Files" view on or off. |
 | **Velo: Clear Recents** | Wipes your local history from the interface immediately. |
 | **Velo: Reset Settings** | Resets all settings to default. |
+| **Velo: Quit** | Quits Velocmd |
+| **Velo: Close Window** | Closes the active window |
 | **Active Tabs** | Lists all currently open applications and windows. |
 | **Show Desktop** | Minimizes all windows to instantly reveal your desktop (equivalent to `Win+D`). |
 
@@ -214,3 +216,9 @@ Toggle "Start with Windows" directly from the panel. This registers Velocmd with
 
 ### Check for Updates
 Velocmd automatically checks for updates on startup - with an added button to `check for updates` manually from the settings panel.
+
+### Real-Time Analytics (Stat Mode)
+Toggle the new **Stat Mode** to display a live footprint footer across your launcher. It displays Velocmd's real-time physical memory (RAM) allocation underneath the search bar to help you monitor performance at a glance.
+
+!!! tip "Stat Mode"
+    **Stat Mode** is a lightweight, opt-in feature that displays Velocmd's current physical memory (RAM) usage in the footer of the launcher. Go to settings, click on "Stat Mode" and toggle it on to see it in action.

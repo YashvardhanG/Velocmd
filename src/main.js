@@ -15,7 +15,10 @@ const shortcutDisplay = document.getElementById("shortcut-display");
 const shortcutDropdown = document.getElementById("shortcut-dropdown");
 const shortcutMsg = document.getElementById("shortcut-msg");
 const startupToggle = document.getElementById("startup-toggle");
+const analyticsToggle = document.getElementById("analytics-toggle");
 const updateBtn = document.getElementById("update-btn");
+const memoryDisplay = document.getElementById("memory-usage");
+const helpBtn = document.getElementById("help-btn");
 const searchWrapper = document.querySelector(".search-wrapper");
 const loaderHtml = `
   <div id="search-loader" class="loader-dots hidden">
@@ -25,7 +28,7 @@ const loaderHtml = `
   </div>`;
 searchWrapper.insertAdjacentHTML('beforeend', loaderHtml);
 const searchLoader = document.getElementById("search-loader");
-const CURRENT_VERSION = "0.1.2";
+const CURRENT_VERSION = "0.1.3";
 let isUpdateAvailable = false;
 let latestReleaseUrl = "https://github.com/YashvardhanG/Velocmd/releases/latest";
 
@@ -64,15 +67,38 @@ if (savedShowRecents !== null) {
   recentsToggle.checked = state.showRecents;
 }
 
+const savedAnalytics = localStorage.getItem("analyticsSetting");
+let showAnalytics = savedAnalytics === "true";
+if (analyticsToggle) {
+  analyticsToggle.checked = showAnalytics;
+  if (showAnalytics) memoryDisplay.classList.remove("hidden");
+}
+
+async function updateMemoryUsage() {
+  if (!showAnalytics) return;
+  try {
+    const bytes = await invoke("get_memory_usage");
+    const mb = (bytes / (1024 * 1024)).toFixed(1);
+    memoryDisplay.textContent = `RAM: ${mb}MB`;
+  } catch (e) {
+    console.error("Failed to get memory usage:", e);
+  }
+}
+
+setInterval(updateMemoryUsage, 2000);
+
 function getSettingsFocusables() {
-  return [
-    document.querySelector(".toggle-switch-container"),
-    startupToggle,
+  const base = [
+    recentsToggle.parentElement,
+    startupToggle.parentElement,
     clearRecentsBtn,
     resetPosBtn,
+    shortcutDisplay,
     updateBtn,
-    shortcutDisplay
+    helpBtn,
+    analyticsToggle.parentElement
   ];
+  return base.filter(el => el !== null);
 }
 
 function renderSettingsFocus() {
@@ -115,10 +141,18 @@ async function toggleSettings() {
     settingsPanel.classList.remove("hidden");
     settingsBtn.classList.add("active");
     resultsContainer.classList.add("hidden");
+
+    if (!state.activeFilters.includes("/settings")) {
+      state.activeFilters.push("/settings");
+      renderChips();
+    }
   } else {
     settingsPanel.classList.add("hidden");
     getSettingsFocusables().forEach(el => el.classList.remove("selected"));
     settingsBtn.classList.remove("active");
+
+    state.activeFilters = state.activeFilters.filter(f => f !== "/settings");
+    renderChips();
 
     const hasInput = input.value.trim().length > 0;
 
@@ -127,7 +161,7 @@ async function toggleSettings() {
       await invoke("resize_window", { height: WINDOW_MAX_HEIGHT });
       lastWindowHeight = WINDOW_MAX_HEIGHT;
     } else {
-      if (hasInput) {
+      if (hasInput || state.activeFilters.length > 0) {
         resultsContainer.classList.remove("hidden");
         await invoke("resize_window", { height: WINDOW_MAX_HEIGHT });
         lastWindowHeight = WINDOW_MAX_HEIGHT;
@@ -156,6 +190,19 @@ recentsToggle.onchange = (e) => {
   render();
 };
 
+if (analyticsToggle) {
+  analyticsToggle.onchange = (e) => {
+    showAnalytics = e.target.checked;
+    localStorage.setItem("analyticsSetting", showAnalytics);
+    if (showAnalytics) {
+      memoryDisplay.classList.remove("hidden");
+      updateMemoryUsage();
+    } else {
+      memoryDisplay.classList.add("hidden");
+    }
+  };
+}
+
 clearRecentsBtn.onclick = () => {
   state.recentFiles = [];
   localStorage.setItem("recentFiles", JSON.stringify([]));
@@ -175,6 +222,11 @@ resetPosBtn.onclick = async () => {
   recentsToggle.checked = false;
   localStorage.setItem("showRecentsSetting", false);
   invoke("set_recents_state", { show: false });
+
+  showAnalytics = false;
+  localStorage.setItem("analyticsSetting", false);
+  if (analyticsToggle) analyticsToggle.checked = false;
+  if (memoryDisplay) memoryDisplay.classList.add("hidden");
 
   try {
     await invoke("plugin:autostart|enable");
@@ -248,7 +300,30 @@ if (updateBtn) {
   updateBtn.onclick = async (e) => {
     e.stopPropagation();
     if (isUpdateAvailable) {
-      await invoke("open_file", { path: latestReleaseUrl });
+      updateBtn.textContent = "Verifying...";
+      try {
+        const response = await fetch("https://api.github.com/repos/YashvardhanG/Velocmd/releases/latest");
+        const data = await response.json();
+        const latestVersion = data.tag_name?.replace("v", "");
+
+        if (latestVersion && latestVersion !== CURRENT_VERSION) {
+          updateBtn.textContent = "Download Update";
+          await invoke("open_file", { path: data.html_url });
+        } else {
+          isUpdateAvailable = false;
+          updateBtn.textContent = "Up to Date!";
+          updateBtn.classList.remove("btn-update-available");
+          updateBtn.classList.add("btn-success");
+          setTimeout(() => {
+            updateBtn.textContent = "Check for Updates";
+            updateBtn.classList.remove("btn-success");
+            updateBtn.classList.add("btn-secondary");
+          }, 3000);
+        }
+      } catch (err) {
+        updateBtn.textContent = "Download Update";
+        await invoke("open_file", { path: latestReleaseUrl });
+      }
     } else {
       checkUpdates(false);
     }
@@ -339,6 +414,14 @@ async function render() {
   const hasChips = state.activeFilters.length > 0;
   const isInputEmpty = rawInput.length === 0;
 
+  if (isInputEmpty && !hasChips && !state.showRecents) {
+    resultsContainer.classList.add("hidden");
+    searchLoader.classList.add("hidden");
+    resultsList.innerHTML = "";
+    updateContainerMinimalState();
+    return;
+  }
+
   resultsList.innerHTML = "";
   let items = [];
 
@@ -363,19 +446,15 @@ async function render() {
   }
 
   if (!settingsPanel.classList.contains("hidden")) {
-    resultsContainer.classList.add("hidden");
     items = [];
   } else if (isInputEmpty && !hasChips && state.results.length === 0) {
     if (state.showRecents) {
       items = state.recentFiles;
-      resultsContainer.classList.remove("hidden");
     } else {
       items = [];
-      resultsContainer.classList.add("hidden");
     }
   } else {
     items = state.results;
-    resultsContainer.classList.remove("hidden");
   }
 
   const fullQ = fullQuery.trim().toLowerCase();
@@ -398,6 +477,7 @@ async function render() {
     cmdItem.onmouseenter = () => { state.selectedIndex = 0; renderStyles(); };
     resultsList.appendChild(cmdItem);
 
+    updateContainerMinimalState();
     return;
   }
 
@@ -430,6 +510,7 @@ async function render() {
       <span>No results found for "${rawInput}"</span>
     `;
     resultsList.appendChild(noResults);
+    updateContainerMinimalState();
     return;
   }
 
@@ -579,8 +660,7 @@ async function openFile(path, kind, name) {
   }
 
   if (path === "velo:settings") {
-    settingsPanel.classList.toggle("hidden");
-    settingsBtn.classList.toggle("active");
+    await toggleSettings();
     input.value = "";
     state.results = [];
     render();
@@ -624,6 +704,18 @@ async function openFile(path, kind, name) {
 
   if (path === "velo:reset_position") {
     await invoke("reset_window");
+    input.value = "";
+    render();
+    return;
+  }
+
+  if (path === "velo:quit") {
+    await invoke("quit_app");
+    return;
+  }
+
+  if (path === "velo:close_window") {
+    await invoke("close_active_window");
     input.value = "";
     render();
     return;
@@ -734,7 +826,9 @@ input.addEventListener("input", async (e) => {
 
   deselectChips();
 
-  if (!settingsPanel.classList.contains("hidden")) {
+  const isSettingsOpen = !settingsPanel.classList.contains("hidden");
+  const hasSettingsFilter = state.activeFilters.includes("/settings");
+  if (isSettingsOpen && (val.trim().length > 0 || !hasSettingsFilter)) {
     await toggleSettings();
   }
 
@@ -745,6 +839,20 @@ input.addEventListener("input", async (e) => {
 
   currentSearchId++;
   const thisSearchId = currentSearchId;
+  state.selectedIndex = 0;
+
+  if (query.trim().length === 0) {
+    state.results = [];
+    lastRenderedSearchId = thisSearchId;
+    searchLoader.classList.add("hidden");
+    resultsContainer.classList.add("hidden");
+    if (!state.showRecents && settingsPanel.classList.contains("hidden")) {
+      await invoke("reset_window");
+      lastWindowHeight = 65;
+    }
+    render();
+    return;
+  }
 
   if (query.trim().length > 0) {
     if (lastWindowHeight !== WINDOW_MAX_HEIGHT) {
@@ -752,19 +860,6 @@ input.addEventListener("input", async (e) => {
       lastWindowHeight = WINDOW_MAX_HEIGHT;
     }
     resultsContainer.classList.remove("hidden");
-  } else {
-    if (!state.showRecents) {
-      await invoke("reset_window");
-      lastWindowHeight = 65;
-    }
-  }
-
-  state.selectedIndex = 0;
-
-  if (query.trim().length === 0) {
-    state.results = [];
-    render();
-    return;
   }
 
   if (query.trim() === "@" || query.trim() === "/" || query.trim() === "!") {
@@ -811,10 +906,6 @@ input.addEventListener("input", async (e) => {
   }
 
   state.results = results;
-
-  if (!settingsPanel.classList.contains("hidden")) {
-    toggleSettings();
-  }
 
   render();
   // }, 150);
@@ -963,16 +1054,40 @@ document.addEventListener('keydown', async (e) => {
       return;
     }
 
-    if (e.key === "ArrowDown" || e.key === "ArrowRight") {
+    if (e.key === "ArrowRight") {
       e.preventDefault();
       settingsIndex = (settingsIndex + 1) % focusables.length;
       renderSettingsFocus();
-    } else if (e.key === "ArrowUp" || e.key === "ArrowLeft") {
+    } else if (e.key === "ArrowLeft") {
       e.preventDefault();
       if (settingsIndex === -1) {
         settingsIndex = focusables.length - 1;
       } else {
         settingsIndex = (settingsIndex - 1 + focusables.length) % focusables.length;
+      }
+      renderSettingsFocus();
+    } else if (e.key === "ArrowDown") {
+      e.preventDefault();
+      if (settingsIndex >= 0 && settingsIndex <= 3) {
+        settingsIndex = (settingsIndex <= 1) ? 4 : 5;
+      } else if (settingsIndex === 4 || settingsIndex === 5) {
+        settingsIndex = (settingsIndex === 4) ? 6 : 7;
+      } else if (settingsIndex === 6 || settingsIndex === 7) {
+        settingsIndex = settingsIndex - 6;
+      } else {
+        settingsIndex = 0;
+      }
+      renderSettingsFocus();
+    } else if (e.key === "ArrowUp") {
+      e.preventDefault();
+      if (settingsIndex >= 0 && settingsIndex <= 3) {
+        settingsIndex = (settingsIndex <= 1) ? 6 : 7;
+      } else if (settingsIndex === 4 || settingsIndex === 5) {
+        settingsIndex = (settingsIndex === 4) ? 0 : 2;
+      } else if (settingsIndex === 6 || settingsIndex === 7) {
+        settingsIndex = (settingsIndex === 6) ? 4 : 5;
+      } else {
+        settingsIndex = focusables.length - 1;
       }
       renderSettingsFocus();
     } else if (e.key === "Enter" || e.key === " ") {
@@ -1255,7 +1370,6 @@ if (startupToggle) {
       }
     } catch (err) {
       console.error("Autostart toggle error:", err);
-      // Revert on error
       e.target.checked = !e.target.checked;
     }
   };
@@ -1263,7 +1377,6 @@ if (startupToggle) {
 
 initAutostart();
 
-const helpBtn = document.getElementById("help-btn");
 if (helpBtn) {
   helpBtn.onclick = async (e) => {
     e.stopPropagation();

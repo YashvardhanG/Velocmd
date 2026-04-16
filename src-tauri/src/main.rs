@@ -30,7 +30,7 @@ struct SearchResult {
     icon_data: Option<String>,
 }
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq, serde::Serialize)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
 #[serde(rename_all = "lowercase")]
 enum ItemKind {
     App,
@@ -52,18 +52,26 @@ impl ItemKind {
     }
 }
 
+#[derive(serde::Serialize, serde::Deserialize, Default)]
+struct FileIndexData {
+    items: Vec<IndexedItem>,
+    arena: String,
+}
+
+#[derive(serde::Serialize, serde::Deserialize)]
 struct IndexedItem {
-    path: Box<str>,
-    // path_lower: Box<str>,
-    name: Box<str>,
-    name_lower: Box<str>,
+    path_start: u32,
+    path_len: u16,
+    name_start: u32,
+    name_len: u16,
+    name_lower_start: u32,
+    name_lower_len: u16,
     kind: ItemKind,
 }
 
 static CURRENT_SHORTCUT: Lazy<Mutex<String>> =
     Lazy::new(|| Mutex::new("Super+Shift+.".to_string()));
-// static FILE_INDEX: Lazy<Mutex<Vec<IndexedItem>>> = Lazy::new(|| Mutex::new(Vec::new()));
-static FILE_INDEX: Lazy<RwLock<Vec<IndexedItem>>> = Lazy::new(|| RwLock::new(Vec::new()));
+static FILE_INDEX: Lazy<RwLock<FileIndexData>> = Lazy::new(|| RwLock::new(FileIndexData::default()));
 static SHOW_RECENTS: Lazy<Mutex<bool>> = Lazy::new(|| Mutex::new(true));
 static REFOCUS_ON_BLUR: AtomicBool = AtomicBool::new(false);
 static IS_INDEXING: AtomicBool = AtomicBool::new(false);
@@ -83,6 +91,13 @@ fn get_config_path(app: &AppHandle) -> std::path::PathBuf {
     let mut path = app.path().app_config_dir().unwrap_or_default();
     std::fs::create_dir_all(&path).unwrap_or_default();
     path.push("settings.json");
+    path
+}
+
+fn get_binfile_path(app: &AppHandle) -> std::path::PathBuf {
+    let mut path = app.path().app_cache_dir().unwrap_or_default();
+    std::fs::create_dir_all(&path).unwrap_or_default();
+    path.push("velocmd_binfile.bin");
     path
 }
 
@@ -257,8 +272,10 @@ fn check_shortcuts_availability(app: AppHandle, shortcuts: Vec<String>) -> Vec<b
 
 #[tauri::command]
 async fn search_files(query: String) -> Vec<SearchResult> {
-    // let index = FILE_INDEX.lock().unwrap();
-    let index = FILE_INDEX.read().unwrap();
+    tauri::async_runtime::spawn_blocking(move || {
+    let index_data = FILE_INDEX.read().unwrap_or_else(|poisoned| poisoned.into_inner());
+    let index = &index_data.items;
+    let arena = &index_data.arena;
     let query_trim = query.trim();
 
     if query_trim.is_empty() {
@@ -317,6 +334,8 @@ async fn search_files(query: String) -> Vec<SearchResult> {
             ("velo:refresh", "Velo: Refresh Index", 195),
             ("velo:show_desktop", "Show Desktop", 194),
             ("velo:active_tabs", "Active Tabs", 193),
+            ("velo:quit", "Quit Velocmd", 192),
+            ("velo:close_window", "Close Active Tab/Window", 191),
             ("velo:request_shutdown", "Shutdown", 190),
             ("velo:media_play", "Media: Play/Pause", 189),
             ("velo:media_next", "Media: Next Track", 188),
@@ -350,15 +369,19 @@ async fn search_files(query: String) -> Vec<SearchResult> {
         return settings_results;
     }
 
-    let mut results: Vec<SearchResult> = index
+    let mut matching_indices: Vec<(usize, u16)> = index
         .iter()
-        .filter_map(|item| {
+        .enumerate()
+        .filter_map(|(idx, item)| {
+            let path = &arena[item.path_start as usize..(item.path_start + item.path_len as u32) as usize];
+            let name_lower = &arena[item.name_lower_start as usize..(item.name_lower_start + item.name_lower_len as u32) as usize];
+
             for filter in &filters {
                 let f_content = &filter[1..];
                 match f_content {
                     "app" | "apps" | "application" | "applications" | "exe" | "lnk" => {
-                        let path_lower = item.path.to_ascii_lowercase();
-                        let is_exe = path_lower.ends_with(".exe") || path_lower.ends_with(".lnk");
+                        let bytes = path.as_bytes();
+                        let is_exe = bytes.len() >= 4 && (bytes[bytes.len()-4..].eq_ignore_ascii_case(b".exe") || bytes[bytes.len()-4..].eq_ignore_ascii_case(b".lnk"));
                         if item.kind != ItemKind::App && !is_exe {
                             return None;
                         }
@@ -381,9 +404,9 @@ async fn search_files(query: String) -> Vec<SearchResult> {
                     d if (d.len() == 1 && d.chars().next().unwrap().is_alphabetic())
                         || (d.len() == 2 && d.ends_with(':')) =>
                     {
-                        let letter = d.chars().next().unwrap().to_ascii_uppercase();
-                        let drive_prefix = format!("{}:", letter);
-                        if !item.path.to_ascii_uppercase().starts_with(&drive_prefix) {
+                        let drive_prefix = format!("{}:", d.chars().next().unwrap());
+                        let bytes = path.as_bytes();
+                        if !(bytes.len() >= 2 && bytes[0..2].eq_ignore_ascii_case(drive_prefix.as_bytes())) {
                             return None;
                         }
                     }
@@ -393,18 +416,18 @@ async fn search_files(query: String) -> Vec<SearchResult> {
                         }
                     }
                     ext => {
-                        if !item.path.to_ascii_lowercase().ends_with(&format!(".{}", ext)) {
+                        let ext_with_dot = format!(".{}", ext);
+                        let ext_bytes = ext_with_dot.as_bytes();
+                        let bytes = path.as_bytes();
+                        if !(bytes.len() >= ext_bytes.len() && bytes[bytes.len() - ext_bytes.len()..].eq_ignore_ascii_case(ext_bytes)) {
                             return None;
                         }
                     }
                 }
             }
 
-            let name = &item.name;
-            let name_lower = &item.name_lower;
-
             if !search_text.is_empty() {
-                if !name_lower.contains(&search_text) && !item.path.to_ascii_lowercase().contains(&search_text) {
+                if !name_lower.contains(&search_text) && !path.as_bytes().windows(search_text.len()).any(|w| w.eq_ignore_ascii_case(search_text.as_bytes())) {
                     return None;
                 }
             }
@@ -417,7 +440,7 @@ async fn search_files(query: String) -> Vec<SearchResult> {
                 score += 250;
             }
 
-            if item.path.starts_with("shell:") {
+            if path.starts_with("shell:") {
                 score -= 10;
             }
 
@@ -425,7 +448,7 @@ async fn search_files(query: String) -> Vec<SearchResult> {
                 score += 80;
             }
 
-            if name_lower.as_ref() == search_text {
+            if name_lower == search_text {
                 score += 50;
             } else if name_lower.starts_with(&search_text) {
                 score += 20;
@@ -433,40 +456,54 @@ async fn search_files(query: String) -> Vec<SearchResult> {
                 score += 10;
             }
 
-            if item.path.len() < 50 {
+            if path.len() < 50 {
                 score += 5;
             }
 
-            Some(SearchResult {
-                path: item.path.to_string(),
-                name: name.to_string(),
-                kind: item.kind.as_str().to_string(),
-                score,
-                icon_data: None,
-            })
+            Some((idx, score))
         })
         .collect();
 
-    results.sort_by(|a, b| b.score.cmp(&a.score));
+    matching_indices.sort_by(|a, b| b.1.cmp(&a.1));
 
     let mut unique_results = Vec::new();
     let mut seen_names = HashSet::new();
 
-    for mut res in results {
-        if res.kind == "app" {
-            if !seen_names.contains(&res.name) {
-                seen_names.insert(res.name.clone());
+    for (idx, score) in matching_indices {
+        let item = &index[idx];
+        let path = &arena[item.path_start as usize..(item.path_start + item.path_len as u32) as usize];
+        let name = &arena[item.name_start as usize..(item.name_start + item.name_len as u32) as usize];
+        let kind_str = item.kind.as_str();
 
-                if res.path.to_lowercase().ends_with(".exe")
-                    || res.path.to_lowercase().ends_with(".lnk")
-                {
-                    res.icon_data = get_file_icon_base64(&res.path);
-                }
+        if kind_str == "app" {
+            if !seen_names.contains(name) {
+                seen_names.insert(name.to_string());
 
-                unique_results.push(res);
+                let bytes = path.as_bytes();
+                let is_exec = bytes.len() >= 4 && (bytes[bytes.len()-4..].eq_ignore_ascii_case(b".exe") || bytes[bytes.len()-4..].eq_ignore_ascii_case(b".lnk"));
+                
+                let icon_data = if is_exec {
+                    get_file_icon_base64(path)
+                } else {
+                    None
+                };
+
+                unique_results.push(SearchResult {
+                    path: path.to_string(),
+                    name: name.to_string(),
+                    kind: kind_str.to_string(),
+                    score,
+                    icon_data,
+                });
             }
         } else {
-            unique_results.push(res);
+            unique_results.push(SearchResult {
+                path: path.to_string(),
+                name: name.to_string(),
+                kind: kind_str.to_string(),
+                score,
+                icon_data: None,
+            });
         }
 
         if unique_results.len() >= 50 {
@@ -475,6 +512,7 @@ async fn search_files(query: String) -> Vec<SearchResult> {
     }
 
     unique_results
+    }).await.unwrap_or_default()
 }
 
 #[tauri::command]
@@ -609,6 +647,36 @@ fn show_desktop(app: tauri::AppHandle) {
 }
 
 #[tauri::command]
+fn quit_app(app: tauri::AppHandle) {
+    if let Some(window) = app.get_webview_window("main") {
+        let _ = window.close();
+    }
+    app.exit(0);
+}
+
+#[tauri::command]
+fn close_active_window(app: tauri::AppHandle) {
+    if let Some(window) = app.get_webview_window("main") {
+        let _ = window.hide();
+    }
+
+    std::thread::sleep(std::time::Duration::from_millis(50));
+
+    #[cfg(target_os = "windows")]
+    {
+        use windows::Win32::UI::Input::KeyboardAndMouse::{
+            keybd_event, KEYEVENTF_KEYUP, VK_CONTROL
+        };
+        unsafe {
+            keybd_event(VK_CONTROL.0 as u8, 0, Default::default(), 0); 
+            keybd_event(0x57, 0, Default::default(), 0); 
+            keybd_event(0x57, 0, KEYEVENTF_KEYUP, 0);
+            keybd_event(VK_CONTROL.0 as u8, 0, KEYEVENTF_KEYUP, 0);
+        }
+    }
+}
+
+#[tauri::command]
 fn get_active_windows() -> Vec<SearchResult> {
     let mut windows_list: Vec<SearchResult> = Vec::new();
 
@@ -708,7 +776,7 @@ fn run_terminal_command(command: String) {
         .spawn();
 }
 
-fn scan_folder(path: &str, kind_override: Option<&str>, index: &mut Vec<IndexedItem>) {
+fn scan_folder(path: &str, kind_override: Option<&str>, index: &mut Vec<IndexedItem>, arena: &mut String) {
     let walker = WalkDir::new(path)
         .skip_hidden(true)
         .min_depth(1)
@@ -756,26 +824,18 @@ fn scan_folder(path: &str, kind_override: Option<&str>, index: &mut Vec<IndexedI
                         || file_name.contains("install")
                         || file_name.contains("helper")
                         || file_name.contains("bug")
-                        
-                        // Telemetry, Crash, & Maintenance
                         || file_name.contains("crash")
                         || file_name.contains("telemetry")
                         || file_name.contains("bugreport")
                         || file_name.contains("dump")
                         || file_name.contains("maintenance")
-                        
-                        // Background Services & Windows Cruft
                         || file_name.contains("service")
                         || file_name.contains("host")
                         || file_name.contains("daemon")
                         || file_name.contains("agent")
                         || file_name.contains("broker")
-                        
-                        // Privilege Elevation
                         || file_name.contains("elevate")
                         || file_name.contains("uac")
-                        
-                        // Dev Tools, LSPs, & Environments
                         || file_name.contains("language_server")
                         || file_name.contains("lsp")
                         || file_name.contains("esbuild")
@@ -785,8 +845,6 @@ fn scan_folder(path: &str, kind_override: Option<&str>, index: &mut Vec<IndexedI
                         || file_name.contains("pylint")
                         || file_name.contains("chromedriver")
                         || file_name.contains("geckodriver")
-                        
-                        // Specific Files
                         || file_name.ends_with("cli.exe")
                         || file_name == "buf.exe"
                         || file_name == "tsc.exe"
@@ -795,12 +853,13 @@ fn scan_folder(path: &str, kind_override: Option<&str>, index: &mut Vec<IndexedI
                         || file_name == "pip.exe";
 
                     if is_unwanted {
+                        // kind = ItemKind::File;
                         continue;
+                    } else {
+                        kind = ItemKind::App;
                     }
-
-                    kind = ItemKind::App;
                 } else {
-                    continue;
+                    kind = ItemKind::File;
                 }
             } else {
                 if is_dir {
@@ -827,11 +886,27 @@ fn scan_folder(path: &str, kind_override: Option<&str>, index: &mut Vec<IndexedI
                 }
             }
 
+            if path_str.len() > u16::MAX as usize || name.len() > u16::MAX as usize {
+                continue;
+            }
+
+            let path_start = arena.len() as u32;
+            arena.push_str(&path_str);
+            let path_len = path_str.len() as u16;
+
+            let name_start = arena.len() as u32;
+            arena.push_str(&name);
+            let name_len = name.len() as u16;
+
+            let name_lower_str = name.to_lowercase();
+            let name_lower_start = arena.len() as u32;
+            arena.push_str(&name_lower_str);
+            let name_lower_len = name_lower_str.len() as u16;
+
             let item = IndexedItem {
-                path: path_str.into_boxed_str(),
-                // path_lower: path_lower.into_boxed_str(),
-                name: name.clone().into_boxed_str(),
-                name_lower: name.to_lowercase().into_boxed_str(),
+                path_start, path_len,
+                name_start, name_len,
+                name_lower_start, name_lower_len,
                 kind,
             };
 
@@ -840,7 +915,7 @@ fn scan_folder(path: &str, kind_override: Option<&str>, index: &mut Vec<IndexedI
     }
 }
 
-fn index_system_settings(index: &mut Vec<IndexedItem>) {
+fn index_system_settings(index: &mut Vec<IndexedItem>, arena: &mut String) {
     let settings = vec![
         ("Startup Apps", "ms-settings:startupapps"),
         ("Uninstall Program", "ms-settings:appsfeatures"),
@@ -877,18 +952,33 @@ fn index_system_settings(index: &mut Vec<IndexedItem>) {
         ("Event Viewer", "cmd:eventvwr.msc"),
     ];
 
-    for (name, path) in settings {
+    for (name_str, path_str) in settings {
+        if path_str.len() > u16::MAX as usize || name_str.len() > u16::MAX as usize {
+            continue;
+        }
+        let path_start = arena.len() as u32;
+        arena.push_str(path_str);
+        let path_len = path_str.len() as u16;
+
+        let name_start = arena.len() as u32;
+        arena.push_str(name_str);
+        let name_len = name_str.len() as u16;
+
+        let name_lower_str = name_str.to_lowercase();
+        let name_lower_start = arena.len() as u32;
+        arena.push_str(&name_lower_str);
+        let name_lower_len = name_lower_str.len() as u16;
+
         index.push(IndexedItem {
-            path: path.into(),
-            // path_lower: path.to_lowercase().into_boxed_str(),
-            name: name.into(),
-            name_lower: name.to_lowercase().into_boxed_str(),
+            path_start, path_len,
+            name_start, name_len,
+            name_lower_start, name_lower_len,
             kind: ItemKind::Command,
         });
     }
 }
 
-fn index_windows_apps(index: &mut Vec<IndexedItem>) {
+fn index_windows_apps(index: &mut Vec<IndexedItem>, arena: &mut String) {
     let mut command = std::process::Command::new("powershell");
     command.args([
             "-NoProfile",
@@ -923,11 +1013,28 @@ fn index_windows_apps(index: &mut Vec<IndexedItem>) {
                     } else {
                         format!("shell:AppsFolder\\{}", app_id)
                     };
+                    
+                    if path.len() > u16::MAX as usize || name.len() > u16::MAX as usize {
+                        continue;
+                    }
+
+                    let path_start = arena.len() as u32;
+                    arena.push_str(&path);
+                    let path_len = path.len() as u16;
+
+                    let name_start = arena.len() as u32;
+                    arena.push_str(name);
+                    let name_len = name.len() as u16;
+
+                    let name_lower_str = name.to_lowercase();
+                    let name_lower_start = arena.len() as u32;
+                    arena.push_str(&name_lower_str);
+                    let name_lower_len = name_lower_str.len() as u16;
+
                     index.push(IndexedItem {
-                        path: path.clone().into_boxed_str(),
-                        // path_lower: path.to_lowercase().into_boxed_str(),
-                        name: name.into(),
-                        name_lower: name.to_lowercase().into_boxed_str(),
+                        path_start, path_len,
+                        name_start, name_len,
+                        name_lower_start, name_lower_len,
                         kind: ItemKind::App,
                     });
                 }
@@ -936,7 +1043,7 @@ fn index_windows_apps(index: &mut Vec<IndexedItem>) {
     }
 }
 
-fn index_velo_commands(index: &mut Vec<IndexedItem>) {
+fn index_velo_commands(index: &mut Vec<IndexedItem>, arena: &mut String) {
     let velo_commands = vec![
         ("Velo: Help", "velo:help"),
         ("Velo Settings", "velo:settings"),
@@ -953,12 +1060,27 @@ fn index_velo_commands(index: &mut Vec<IndexedItem>) {
         ("Restart", "velo:request_restart"),
     ];
 
-    for (name, path) in velo_commands {
+    for (name_str, path_str) in velo_commands {
+        if path_str.len() > u16::MAX as usize || name_str.len() > u16::MAX as usize {
+            continue;
+        }
+        let path_start = arena.len() as u32;
+        arena.push_str(path_str);
+        let path_len = path_str.len() as u16;
+
+        let name_start = arena.len() as u32;
+        arena.push_str(name_str);
+        let name_len = name_str.len() as u16;
+
+        let name_lower_str = name_str.to_lowercase();
+        let name_lower_start = arena.len() as u32;
+        arena.push_str(&name_lower_str);
+        let name_lower_len = name_lower_str.len() as u16;
+
         index.push(IndexedItem {
-            path: path.into(),
-            // path_lower: path.to_lowercase().into_boxed_str(),
-            name: name.into(),
-            name_lower: name.to_lowercase().into_boxed_str(),
+            path_start, path_len,
+            name_start, name_len,
+            name_lower_start, name_lower_len,
             kind: ItemKind::Command,
         });
     }
@@ -967,55 +1089,68 @@ fn index_velo_commands(index: &mut Vec<IndexedItem>) {
 #[tauri::command]
 fn trigger_index_refresh(app: tauri::AppHandle) {
     std::thread::spawn(move || {
-        build_index_internal();
-        let _ = app.emit("index_refreshed", ());
+        build_index_internal(&app, false);
     });
 }
 
-fn build_index_internal() {
-    IS_INDEXING.store(true, Ordering::SeqCst);
+fn build_index_internal(app: &tauri::AppHandle, silent: bool) {
+    #[cfg(target_os = "windows")]
+    {
+        use windows::Win32::System::Threading::{GetCurrentThread, SetThreadPriority, THREAD_PRIORITY_LOWEST};
+        unsafe {
+            let _ = SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_LOWEST);
+        }
+    }
+
+    if !silent {
+        IS_INDEXING.store(true, Ordering::SeqCst);
+    }
 
     let start = Instant::now();
-    println!("Indexing started...");
+    println!("\nIndexing started (silent: {})...", silent);
 
-    let mut new_index = Vec::new();
-    index_system_settings(&mut new_index);
-    index_velo_commands(&mut new_index);
-    index_windows_apps(&mut new_index);
+    let mut new_items = Vec::new();
+    let mut new_arena = String::with_capacity(75_000_000);
+    
+    index_system_settings(&mut new_items, &mut new_arena);
+    index_velo_commands(&mut new_items, &mut new_arena);
+    index_windows_apps(&mut new_items, &mut new_arena);
 
-    let app_paths = vec![
-        r"C:\ProgramData\Microsoft\Windows\Start Menu\Programs",
-        r"C:\Users\Default\AppData\Roaming\Microsoft\Windows\Start Menu\Programs",
-    ];
+    let mut app_paths = Vec::new();
+    if let Ok(prog_data) = std::env::var("ProgramData") {
+        app_paths.push(format!(r"{}\Microsoft\Windows\Start Menu\Programs", prog_data));
+    }
+    if let Ok(system_drive) = std::env::var("SystemDrive") {
+        app_paths.push(format!(r"{}\Users\Default\AppData\Roaming\Microsoft\Windows\Start Menu\Programs", system_drive));
+    }
 
     if let Ok(appdata) = std::env::var("APPDATA") {
         let user_start = format!(r"{}\Microsoft\Windows\Start Menu\Programs", appdata);
         if Path::new(&user_start).exists() {
-            scan_folder(&user_start, Some("app"), &mut new_index);
+            scan_folder(&user_start, Some("app"), &mut new_items, &mut new_arena);
         }
     }
 
     if let Ok(local_appdata) = std::env::var("LOCALAPPDATA") {
-        // Common store apps launcher
         let local_apps = format!(r"{}\Microsoft\WindowsApps", local_appdata);
         if Path::new(&local_apps).exists() {
-            scan_folder(&local_apps, Some("app"), &mut new_index);
+            scan_folder(&local_apps, Some("app"), &mut new_items, &mut new_arena);
         }
-        // Local start menu
+
         let local_start = format!(r"{}\Microsoft\Windows\Start Menu\Programs", local_appdata);
         if Path::new(&local_start).exists() {
-            scan_folder(&local_start, Some("app"), &mut new_index);
+            scan_folder(&local_start, Some("app"), &mut new_items, &mut new_arena);
         }
-        // User programs (VS Code, Discord, etc.)
+
         let user_progs = format!(r"{}\Programs", local_appdata);
         if Path::new(&user_progs).exists() {
-            scan_folder(&user_progs, Some("app"), &mut new_index);
+            scan_folder(&user_progs, Some("app"), &mut new_items, &mut new_arena);
         }
     }
 
     for path in app_paths {
-        if Path::new(path).exists() {
-            scan_folder(path, Some("app"), &mut new_index);
+        if Path::new(&path).exists() {
+            scan_folder(&path, Some("app"), &mut new_items, &mut new_arena);
         }
     }
 
@@ -1023,36 +1158,102 @@ fn build_index_internal() {
     for drive in drives {
         println!("Scanning drive: {}", drive);
 
+        let path_start = new_arena.len() as u32;
+        new_arena.push_str(&drive);
+        let path_len = drive.len() as u16;
+
+        let name_start = new_arena.len() as u32;
+        new_arena.push_str(&drive);
+        let name_len = drive.len() as u16;
+
+        let drive_lower = drive.to_lowercase();
+        let name_lower_start = new_arena.len() as u32;
+        new_arena.push_str(&drive_lower);
+        let name_lower_len = drive_lower.len() as u16;
+
         let drive_root = IndexedItem {
-            path: drive.clone().into_boxed_str(),
-            // path_lower: drive.to_lowercase().into_boxed_str(),
-            name: drive.clone().into_boxed_str(),
-            name_lower: drive.to_lowercase().into_boxed_str(),
+            path_start, path_len,
+            name_start, name_len,
+            name_lower_start, name_lower_len,
             kind: ItemKind::Drive,
         };
-        new_index.push(drive_root);
+        new_items.push(drive_root);
 
-        scan_folder(&drive, None, &mut new_index);
+        scan_folder(&drive, None, &mut new_items, &mut new_arena);
     }
 
     let duration = start.elapsed();
-    let count = new_index.len();
-    // *FILE_INDEX.lock().unwrap() = new_index;
-    *FILE_INDEX.write().unwrap() = new_index;
+    let count = new_items.len();
+    
+    let new_index = FileIndexData {
+        items: new_items,
+        arena: new_arena,
+    };
+
+    *FILE_INDEX.write().unwrap_or_else(|poisoned| poisoned.into_inner()) = new_index;
     println!(
-        "Indexing complete! Items: {} (Took: {:?})",
+        "\nIndexing complete (silent: {})! Items: {} (Took: {:?})",
+        silent,
         count,
         duration
     );
 
-    IS_INDEXING.store(false, Ordering::SeqCst);
+    if !silent {
+        IS_INDEXING.store(false, Ordering::SeqCst);
+        let _ = app.emit("index_refreshed", ());
+    }
+
+    let binfile_start = std::time::Instant::now();
+    if let Ok(file) = std::fs::File::create(get_binfile_path(app)) {
+        let mut writer = std::io::BufWriter::new(file);
+        let index_read = FILE_INDEX.read().unwrap_or_else(|poisoned| poisoned.into_inner());
+        if let Err(e) = bincode::serialize_into(&mut writer, &*index_read) {
+            eprintln!("Failed to serialize index to binfile: {}", e);
+        } else {
+            println!("Binfile stored to disk in {:?}", binfile_start.elapsed());
+        }
+    }
+
+    #[cfg(target_os = "windows")]
+    {
+        use windows::Win32::System::ProcessStatus::EmptyWorkingSet;
+        use windows::Win32::System::Threading::{GetCurrentProcess, GetCurrentThread, SetThreadPriority, THREAD_PRIORITY_NORMAL};
+        unsafe {
+            let _ = EmptyWorkingSet(GetCurrentProcess());
+            let _ = SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_NORMAL);
+            println!("Working set memory cleaned and thread priority restored to normal.");
+        }
+    }
 }
 
-fn start_periodic_indexing(app: tauri::AppHandle) {
+#[tauri::command]
+fn get_memory_usage() -> u64 {
+    #[cfg(target_os = "windows")]
+    {
+        use windows::Win32::System::ProcessStatus::{GetProcessMemoryInfo, PROCESS_MEMORY_COUNTERS};
+        use windows::Win32::System::Threading::GetCurrentProcess;
+
+        unsafe {
+            let mut counters = PROCESS_MEMORY_COUNTERS::default();
+            if GetProcessMemoryInfo(
+                GetCurrentProcess(),
+                &mut counters,
+                std::mem::size_of::<PROCESS_MEMORY_COUNTERS>() as u32,
+            )
+            .is_ok()
+            {
+                return counters.WorkingSetSize as u64;
+            }
+        }
+    }
+    0
+}
+
+fn start_periodic_indexing(app: tauri::AppHandle, mut has_binfile: bool) {
     std::thread::spawn(move || {
         loop {
-            build_index_internal();
-            let _ = app.emit("index_refreshed", ());
+            build_index_internal(&app, has_binfile);
+            has_binfile = true; 
             std::thread::sleep(std::time::Duration::from_secs(15 * 60));
         }
     });
@@ -1102,10 +1303,25 @@ fn main() {
             show_desktop,
             get_active_windows,
             focus_window,
-            get_indexing_state
+            get_indexing_state,
+            get_memory_usage,
+            quit_app,
+            close_active_window
         ])
         .setup(|app| {
-            start_periodic_indexing(app.handle().clone());
+            let mut has_binfile = false;
+            
+            if let Ok(file) = std::fs::File::open(get_binfile_path(app.handle())) {
+                let load_start = std::time::Instant::now();
+                let mut reader = std::io::BufReader::new(file);
+                if let Ok(index) = bincode::deserialize_from(&mut reader) {
+                    *FILE_INDEX.write().unwrap_or_else(|p| p.into_inner()) = index;
+                    println!("Loaded index from binfile in {:?}.", load_start.elapsed());
+                    has_binfile = true;
+                }
+            }
+
+            start_periodic_indexing(app.handle().clone(), has_binfile);
 
             let window = app.get_webview_window("main").unwrap();
             let w_clone = window.clone();

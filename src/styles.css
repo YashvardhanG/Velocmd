@@ -344,6 +344,10 @@ input:checked+.slider:before {
   padding: 4px 0;
 }
 
+.toggle-red input:checked + .slider {
+  background-color: #e25555;
+}
+
 .footer {
   display: flex;
   justify-content: space-between;
@@ -359,6 +363,26 @@ input:checked+.slider:before {
   display: flex !important;
   border-bottom-left-radius: 10px;
   border-bottom-right-radius: 10px;
+}
+
+.memory-stats {
+  font-family: var(--font-family);
+  font-size: 10px;
+  color: #888;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  transition: all 0.3s ease;
+}
+
+.memory-stats::before {
+  content: "📊";
+  margin-right: 4px;
+  font-size: 10px;
+}
+
+.memory-stats.hidden {
+  display: none !important;
 }
 
 .credits {
@@ -567,6 +591,10 @@ input:checked+.slider:before {
 
 .margin-left-auto {
   margin-left: auto;
+}
+
+.no-margin-right {
+  margin-right: 0 !important;
 }
 
 .hidden,

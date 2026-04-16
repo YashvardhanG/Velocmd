@@ -12,18 +12,31 @@ After extensive development and optimization, I am incredibly excited to announc
 
 This release brings the lightning-fast, in-memory indexer to its most stable form yet, alongside a suite of deep system integrations.
 
-Whether you are navigating thousands of local files or executing rapid-fire terminal scripts, v0.1.2 acts as the ultimate Windows power tool. Here is a look at what is packed into this release:
+Whether you are navigating thousands of local files or executing rapid-fire terminal scripts, **v0.1.3** (Latest) acts as the ultimate Windows power tool. Here is a look at what is packed into this release:
 
-### 🚀 Core Highlights in v0.1.0
+### 🚀 Core Highlights in v0.1.3 (Performance & Stat Mode)
 
-* **Sub-Millisecond Search:** Powered by Rust, the in-memory indexer delivers results the exact moment your finger leaves the keyboard.
-* **Smart Chip Filtering:** Instantly narrow your search by typing `/apps`, `/folders`, `/C:`, or `/settings`. You can even chain them together for laser-focused precision.
-* **Instant Terminal (`/cmd`):** Bypass the Windows Run prompt entirely. Type `/cmd ping google.com` to spawn a terminal instantly.
-* **Deep OS Integration:** Launch over 30 deeply buried Windows settings, from *Environment Variables* to *Registry Editor*, without touching a mouse.
-* **Intelligent Recents:** Hit <kbd>Win</kbd> + <kbd>Shift</kbd> + <kbd>.</kbd> to instantly view your 10 most recently accessed files and commands.
+* **Realtime RAM Analytics (Stat Mode):** Toggle the new Stat Mode in Settings to view Velocmd's live memory footprint directly in the footer.
+* **New Velo Commands:** Now you can also `Velo:quit` to quit Velocmd and `Velo:close_window` to close the active window (`ctrl + w`).
+* **Flawless Search UX:** Eliminated search result flickering and layout shifts. Implemented smart request sequencing and batched lazy-loading for file icons, guaranteeing perfectly smooth rendering.
+* **Zero-Leak Indexing:** Resolved a memory leak during index refresh using a new Arena-based memory architecture. RAM usage no longer spirals during heavy disk scanning.
+* **Instant Wake-Up:** Switched to a smarter background suspension strategy. Velocmd now wakes up instantly without the stuttering experienced in older versions.
+* **Structured FAQs:** Organized and expanded our FAQ section so you can get up and running smoothly.
 
-!!! success "Strictly Local. Absolutely Free."
-    Velocmd operates with zero telemetry, zero cloud syncing, and zero bloat. Your index is wiped from RAM the moment the application closes.
+!!! tip "Stat Mode"
+    **Stat Mode** is a lightweight, opt-in feature that displays Velocmd's current physical memory (RAM) usage in the footer of the launcher. Go to settings, click on "Stat Mode" and toggle it on to see it in action.
+
+### 🚀 Core Highlights in v0.1.2 (Minor Fixes)
+
+* **New Windows App Indexing:** Velocmd also now indexes complex windows bundled apps such as Whatsapp/Spotify, etc.
+* **Velocmd commands Prioritised:** Velocmd commands and windows settings are now priortized in the search results.
+* **Check for updates:** Now by default, Velocmd checks for updates on startup - with an added button to check for updates manually from the settings panel.
+* **Speed and RAM:** The search results are now more consistent and faster, and it consumes less ram in the background.
+* **Minor Bug Fixes:** Minor UI tweaks and bug fixes.
+
+!!! tip "Check for updates on startup"
+    Now by default, Velocmd checks for updates on startup - with an added button to `check for updates` manually from the settings panel.
+
 
 ### 🚀 Core Highlights in v0.1.1 (Minor Fixes)
 
@@ -36,16 +49,16 @@ Whether you are navigating thousands of local files or executing rapid-fire term
 !!! tip "Now switch between tabs the easy wasy"
     Just go to `/velo` "active tabs" and you will see the new tabs. You can switch between them using the arrow keys.
 
-### 🚀 Core Highlights in v0.1.2 (Minor Fixes)
+### 🚀 Core Highlights in v0.1.0
 
-* **New Windows App Indexing:** Velocmd also now indexes complex windows bundled apps such as Whatsapp/Spotify, etc.
-* **Velocmd commands Prioritised:** Velocmd commands and windows settings are now priortized in the search results.
-* **Check for updates:** Now by default, Velocmd checks for updates on startup - with an added button to check for updates manually from the settings panel.
-* **Speed and RAM:** The search results are now more consistent and faster, and it consumes less ram in the background.
-* **Minor Bug Fixes:** Minor UI tweaks and bug fixes.
+* **Sub-Millisecond Search:** Powered by Rust, the in-memory indexer delivers results the exact moment your finger leaves the keyboard.
+* **Smart Chip Filtering:** Instantly narrow your search by typing `/apps`, `/folders`, `/C:`, or `/settings`. You can even chain them together for laser-focused precision.
+* **Instant Terminal (`/cmd`):** Bypass the Windows Run prompt entirely. Type `/cmd ping google.com` to spawn a terminal instantly.
+* **Deep OS Integration:** Launch over 30 deeply buried Windows settings, from *Environment Variables* to *Registry Editor*, without touching a mouse.
+* **Intelligent Recents:** Hit <kbd>Win</kbd> + <kbd>Shift</kbd> + <kbd>.</kbd> to instantly view your 10 most recently accessed files and commands.
 
-!!! tip "Check for updates on startup"
-    Now by default, Velocmd checks for updates on startup - with an added button to `check for updates` manually from the settings panel.
+!!! success "Strictly Local. Absolutely Free."
+    Velocmd operates with zero telemetry, zero cloud syncing, and zero bloat. Your index is wiped from RAM the moment the application closes.
 
 
 ### How to get it
