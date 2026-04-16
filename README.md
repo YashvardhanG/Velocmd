@@ -111,7 +111,7 @@ To summon the palette from anywhere:
 
 ### Download (Recommended)
 1. Go to the [Latest Release](https://github.com/YashvardhanG/velocmd/releases/latest).
-2. Download `Velocmd_Installer.exe`.
+2. Download `Velocmd.Explorer_[version]_x64-setup.exe`.
 3. Run the installer and launch from your Start Menu.
 
 ## Development Setup
