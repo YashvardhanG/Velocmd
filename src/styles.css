@@ -475,7 +475,7 @@ input:checked+.slider:before {
   width: 32px;
   height: 32px;
   margin-right: 10px;
-  font-size: 14px;
+  font-size: 24px;
   display: flex;
   align-items: center;
   justify-content: center;

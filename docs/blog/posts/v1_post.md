@@ -14,6 +14,17 @@ This release brings the lightning-fast, in-memory indexer to its most stable for
 
 Whether you are navigating thousands of local files or executing rapid-fire terminal scripts, **v0.1.3** (Latest) acts as the ultimate Windows power tool. Here is a look at what is packed into this release:
 
+### 🚀 Core Highlights in v0.1.4 (Easier PC Folders Access)
+
+* **Quick Access to Native PC Folders:** Typing `/pc` or `/thispc` or `/computer` immediately shows direct PC Folders (Documents, Downloads, etc.) as the top result.
+* **Private Mode (Beta):** Triggered by typing the `/p` chip into the search bar supports: Incognito Web Browsing (Opens in default browser).
+* **Common Websites List (/Web):** Triggered by typing the `/web` gives a list of common websites to open in your default browser or you can type out a link to open as well.
+* **Native Icons:** Added more support on native Windows icons for files and folders, making it easier to identify them at a glance.
+* **Minor Fixes:** Minor UI tweaks and bug fixes.
+
+!!! tip "PC Folders"
+    The `/pc` filter now acts as a high-priority shortcut for your core Windows locations, bypassing the need to search through thousands of indexed files: **Desktop**, **Documents**, **Downloads**, **Music**, **Pictures** and **Videos**
+
 ### 🚀 Core Highlights in v0.1.3 (Performance & Stat Mode)
 
 * **Realtime RAM Analytics (Stat Mode):** Toggle the new Stat Mode in Settings to view Velocmd's live memory footprint directly in the footer.

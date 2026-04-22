@@ -28,7 +28,7 @@ const loaderHtml = `
   </div>`;
 searchWrapper.insertAdjacentHTML('beforeend', loaderHtml);
 const searchLoader = document.getElementById("search-loader");
-const CURRENT_VERSION = "0.1.3";
+const CURRENT_VERSION = "0.1.4";
 let isUpdateAvailable = false;
 let latestReleaseUrl = "https://github.com/YashvardhanG/Velocmd/releases/latest";
 
@@ -331,10 +331,25 @@ if (updateBtn) {
 }
 
 function getFileIcon(path, kind) {
+  const tpath = path.toLowerCase().replace(/\//g, '\\');
+  const isUserProfile = /^c:\\users\\[^\\]+\\[^\\]+$/.test(tpath) || /^c:\\users\\[^\\]+$/.test(tpath) || /^c:\\documents and settings\\[^\\]+\\[^\\]+$/.test(tpath);
+
+  if (isUserProfile) {
+    if (tpath.endsWith("\\downloads")) return "📥";
+    if (tpath.endsWith("\\pictures") || tpath.endsWith("\\gallery")) return "🏞️";
+    if (tpath.endsWith("\\documents")) return "📝";
+    if (tpath.endsWith("\\music")) return "🎵";
+    if (tpath.endsWith("\\videos")) return "🎬";
+    if (tpath.endsWith("\\desktop")) return "🖥️";
+  }
+
+  if (tpath.includes("recyclebinfolder")) return "🗑️";
+
   if (kind === "app") return "🚀";
   if (kind === "folder") return "📁";
   if (kind === "drive") return "💽";
   if (kind === "command") return "⚙️";
+  if (kind === "website") return "🌐";
   if (kind === "filter") return "🔍";
   if (kind === "terminal_command") return "💻";
 
@@ -387,6 +402,13 @@ function renderChips() {
 
     chipsArea.appendChild(chip);
   });
+
+  const hasPrivate = state.activeFilters.some(f => f.toLowerCase() === "/p" || f.toLowerCase() === "@p");
+  if (hasPrivate) {
+    input.placeholder = "🕶️ Private mode | Browsing Incognito";
+  } else if (input.placeholder.includes("Private mode") || input.placeholder.includes("🕶")) {
+    input.placeholder = "⚡Velocmd running...";
+  }
 }
 
 function removeFilter(index) {
@@ -405,12 +427,19 @@ async function openWeb(query, engine) {
     url = `https://duckduckgo.com/?q=${encodeURIComponent(query)}`;
   }
 
-  await invoke("open_file", { path: url });
+  const isPrivate = state.activeFilters.some(f => f.toLowerCase() === "/p" || f.toLowerCase() === "@p");
+
+  if (isPrivate) {
+    await invoke("open_url_private", { url });
+  } else {
+    await invoke("open_file", { path: url });
+  }
 }
 
 async function render() {
   const rawInput = input.value.trim();
-  const fullQuery = [...state.activeFilters, rawInput].join(" ").trim();
+  const nonPrivateFilters = state.activeFilters.filter(f => f.toLowerCase() !== "/p" && f.toLowerCase() !== "@p");
+  const fullQuery = [...nonPrivateFilters, rawInput].join(" ").trim();
   const hasChips = state.activeFilters.length > 0;
   const isInputEmpty = rawInput.length === 0;
 
@@ -424,6 +453,8 @@ async function render() {
 
   resultsList.innerHTML = "";
   let items = [];
+
+  const isPrivateMode = state.activeFilters.some(f => f.toLowerCase() === "/p" || f.toLowerCase() === "@p");
 
   const webTriggers = ["@google", "@duck", "@duckduckgo", "@bing", "@search", "/google", "/duck", "/duckduckgo", "/bing", "/search"];
   const questionWords = ["how", "what", "why", "when", "who"];
@@ -490,10 +521,13 @@ async function render() {
       engineName = activeEngine.substring(1).charAt(0).toUpperCase() + activeEngine.substring(2);
     }
 
+    const searchIcon = isPrivateMode ? "🕶️" : "🌍";
+    const searchLabel = isPrivateMode ? `Search Incognito` : `Search ${engineName}`;
+
     webItem.innerHTML = `
-        <span class="result-icon">🌍</span> 
+        <span class="result-icon">${searchIcon}</span> 
         <div class="result-content">
-          <span class="result-name">Search ${engineName}</span>
+          <span class="result-name">${searchLabel}</span>
           <span class="result-path">"${webQuery}"</span>
         </div>`;
 
@@ -614,11 +648,15 @@ function renderStyles() {
 }
 
 async function openFile(path, kind, name) {
-  const validName = name || path.split('\\').pop();
-  const newItem = { path, kind, name: validName };
-  const filtered = state.recentFiles.filter(p => (typeof p === 'string' ? p : p.path) !== path);
-  state.recentFiles = [newItem, ...filtered].slice(0, 10);
-  localStorage.setItem("recentFiles", JSON.stringify(state.recentFiles));
+  const isPrivateMode = state.activeFilters.some(f => f.toLowerCase() === "/p" || f.toLowerCase() === "@p");
+
+  if (!isPrivateMode) {
+    const validName = name || path.split('\\').pop();
+    const newItem = { path, kind, name: validName };
+    const filtered = state.recentFiles.filter(p => (typeof p === 'string' ? p : p.path) !== path);
+    state.recentFiles = [newItem, ...filtered].slice(0, 10);
+    localStorage.setItem("recentFiles", JSON.stringify(state.recentFiles));
+  }
 
   if (path === "velo:request_shutdown") {
     input.value = "";
@@ -802,7 +840,13 @@ async function openFile(path, kind, name) {
     return;
   }
 
-  await invoke("open_file", { path });
+  const isPrivate = state.activeFilters.some(f => f.toLowerCase() === "/p" || f.toLowerCase() === "@p");
+
+  if (isPrivate && (path.startsWith("http://") || path.startsWith("https://"))) {
+    await invoke("open_url_private", { url: path });
+  } else {
+    await invoke("open_file", { path });
+  }
   input.value = "";
   render();
 }
@@ -835,13 +879,15 @@ input.addEventListener("input", async (e) => {
   // clearTimeout(debounceTimeout);
 
   // debounceTimeout = setTimeout(async () => {
-  const query = [...state.activeFilters, val].join(" ").trim();
+  const query = [...state.activeFilters.filter(f => f.toLowerCase() !== "/p" && f.toLowerCase() !== "@p"), val].join(" ").trim();
 
   currentSearchId++;
   const thisSearchId = currentSearchId;
   state.selectedIndex = 0;
 
-  if (query.trim().length === 0) {
+  const hasPrivateChip = state.activeFilters.some(f => f.toLowerCase() === "/p" || f.toLowerCase() === "@p");
+
+  if (query.trim().length === 0 && !hasPrivateChip) {
     state.results = [];
     lastRenderedSearchId = thisSearchId;
     searchLoader.classList.add("hidden");
@@ -878,9 +924,11 @@ input.addEventListener("input", async (e) => {
       { name: "Files", path: `${prefix}files `, kind: "filter", score: 98 },
       ...driveItems,
       { name: "Velo Commands", path: `${prefix}velo `, kind: "filter", score: 95 },
-      { name: "Settings", path: `${prefix}settings`, kind: "filter", score: 94 },
-      { name: "Run Command", path: `${prefix}cmd `, kind: "filter", score: 94 },
-      { name: "Web Search", path: `${prefix}google `, kind: "filter", score: 93 }
+      { name: "This PC", path: `${prefix}pc `, kind: "filter", score: 94 },
+      { name: "Websites", path: `${prefix}web `, kind: "filter", score: 93 },
+      { name: "Settings", path: `${prefix}settings`, kind: "filter", score: 92 },
+      { name: "Run Command", path: `${prefix}cmd `, kind: "filter", score: 91 },
+      { name: "Web Search", path: `${prefix}google `, kind: "filter", score: 90 }
     ];
     render();
     return;
@@ -893,7 +941,8 @@ input.addEventListener("input", async (e) => {
   }
 
   searchLoader.classList.remove("hidden");
-  const results = await invoke("search_files", { query });
+  const searchQuery = [...state.activeFilters, val].join(" ").trim();
+  const results = await invoke("search_files", { query: searchQuery || "/p" });
 
   if (thisSearchId < lastRenderedSearchId) {
     return;

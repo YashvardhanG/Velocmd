@@ -92,6 +92,18 @@ Force a search query to a specific engine using these chips:
 | `/bing` | Microsoft Bing |
 | `/search` | Default System Search Engine |
 
+Additionally, you can type `/web` to get a list of common websites to open in your default browser or you can type out a link to open as well.
+
+### Private Web Browsing (Beta)
+Triggered by typing the `/p` chip into the search bar supports: Incognito Web Browsing (Opens in default browser). This `/p` chip can also be added after a `/search` or `/web` tag to search that query or open that link in your default browser in incognito mode.
+
+Anything searched on Private Mode (`/p`) will by default not be saved in the recents.
+
+!!! example "Usage Examples"
+    * `/search /p google.com` – Searches Google in incognito mode.
+    * `/web /p youtube.com` – Opens YouTube in incognito mode.
+    * `/p` – Lists all the common websites to open in incognito mode.
+
 ### Natural Language Detection
 Velocmd automatically detects if you are asking a question. If your query starts with any of the following words, it will automatically suggest a Web Search as the top result:
 **how**, **what**, **why**, **when**, or **who**.
@@ -139,6 +151,23 @@ You can control Velocmd's behavior directly from the search bar. Typing `/velo` 
 <div align="center" markdown>
 ![Terminal Command Execution](assets/velo.png){ width="750" }
 </div>
+
+
+---
+
+## System Hub   
+
+Typing `/pc` or `/thispc` or `/computer` gives a list of all the common Windows default folders/locations.
+
+* **Desktop**
+* **Downloads**
+* **Documents**
+* **Pictures**
+* **Videos**
+* **Music**
+* **This PC**
+* **Network**
+* **Recycle Bin**
 
 ---
 

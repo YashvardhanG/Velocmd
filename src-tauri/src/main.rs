@@ -369,6 +369,147 @@ async fn search_files(query: String) -> Vec<SearchResult> {
         return settings_results;
     }
 
+    let has_web_filter = filters.iter().any(|f| {
+        let content = &f[1..];
+        content == "web" || content == "website" || content == "websites" || content == "site" || content == "sites" || content == "url"
+    });
+
+    let has_p_only = filters.iter().any(|f| &f[1..] == "p")
+        && !has_web_filter
+        && !filters.iter().any(|f| {
+            let c = &f[1..];
+            c == "velo" || c == "settings" || c == "pc" || c == "thispc" || c == "computer"
+                || c == "tabs" || c == "active" || c == "window" || c == "windows"
+                || c == "app" || c == "apps" || c == "folder" || c == "folders"
+                || c == "file" || c == "files" || c == "drive" || c == "drives"
+        });
+
+    if has_web_filter
+        || has_p_only
+        || query_trim.to_lowercase().starts_with("@web")
+        || query_trim.to_lowercase().starts_with("/web")
+    {
+        let all_websites = vec![
+            ("https://www.google.com", "Google", 200u16),
+            ("https://www.youtube.com", "YouTube", 199),
+            ("https://claude.ai", "Claude", 198),
+            ("https://gemini.google.com", "Gemini", 197),
+            ("https://chatgpt.com", "ChatGPT", 196),
+            ("https://github.com", "GitHub", 195),
+            ("https://www.reddit.com", "Reddit", 194),
+            ("https://twitter.com", "X (Twitter)", 193),
+            ("https://www.instagram.com", "Instagram", 192),
+            ("https://www.linkedin.com", "LinkedIn", 191),
+            ("https://stackoverflow.com", "Stack Overflow", 190),
+            ("https://mail.google.com", "Gmail", 189),
+            ("https://drive.google.com", "Google Drive", 188),
+            ("https://www.notion.so", "Notion", 187),
+            ("https://discord.com", "Discord", 186),
+            ("https://open.spotify.com", "Spotify", 185),
+            ("https://www.amazon.com", "Amazon", 184),
+            ("https://www.wikipedia.org", "Wikipedia", 183),
+            ("https://yashvardhang.github.io/Velocmd/", "Velocmd Docs", 182),
+            ("https://yashvardhang.dev", "YashvardhanG", 181),
+        ];
+
+        let mut web_results: Vec<SearchResult> = all_websites
+            .into_iter()
+            .filter(|(_, name, _)| {
+                if search_text.is_empty() {
+                    true
+                } else {
+                    name.to_lowercase().contains(&search_text)
+                }
+            })
+            .map(|(url, name, score)| SearchResult {
+                path: url.to_string(),
+                name: name.to_string(),
+                kind: "website".to_string(),
+                score,
+                icon_data: None,
+            })
+            .collect();
+
+        if !search_text.is_empty() && (search_text.contains('.') || search_text.starts_with("http")) {
+            let url = if search_text.starts_with("http://") || search_text.starts_with("https://") {
+                search_text.clone()
+            } else {
+                format!("https://{}", search_text)
+            };
+            web_results.insert(0, SearchResult {
+                path: url,
+                name: format!("Open {}", search_text),
+                kind: "website".to_string(),
+                score: 300,
+                icon_data: None,
+            });
+        }
+
+        return web_results;
+    }
+
+    let filters: Vec<String> = filters.into_iter().filter(|f| {
+        let content = &f[1..];
+        content != "p"
+    }).collect();
+
+    let has_pc_filter = filters.iter().any(|f| {
+        let content = &f[1..];
+        content == "pc" || content == "thispc" || content == "computer"
+    });
+
+    if has_pc_filter
+        || query_trim.to_lowercase().starts_with("@pc")
+        || query_trim.to_lowercase().starts_with("/pc")
+    {
+        let mut pc_results = Vec::new();
+        let this_pc_icon = get_file_icon_base64("C:\\Windows\\explorer.exe");
+        pc_results.push(SearchResult {
+            path: "cmd:explorer shell:::{20D04FE0-3AEA-1069-A2D8-08002B30309D}".to_string(),
+            name: "This PC".to_string(),
+            kind: "app".to_string(),
+            score: 2000,
+            icon_data: this_pc_icon,
+        });
+
+        pc_results.push(SearchResult {
+            path: "cmd:explorer shell:RecycleBinFolder".to_string(),
+            name: "Recycle Bin".to_string(),
+            kind: "app".to_string(),
+            score: 1950,
+            icon_data: None,
+        });
+
+        if let Ok(up) = std::env::var("USERPROFILE") {
+            let targets = vec![
+                ("Downloads", format!("{}\\Downloads", up)),
+                ("Pictures", format!("{}\\Pictures", up)),
+                ("Documents", format!("{}\\Documents", up)),
+                ("Music", format!("{}\\Music", up)),
+                ("Videos", format!("{}\\Videos", up)),
+                ("Desktop", format!("{}\\Desktop", up)),
+            ];
+
+            for (name, path) in targets {
+                if std::path::Path::new(&path).exists() {
+                    pc_results.push(SearchResult {
+                        path: path.clone(),
+                        name: name.to_string(),
+                        kind: "folder".to_string(),
+                        score: 1900,
+                        icon_data: None,
+                    });
+                }
+            }
+        }
+
+        if !search_text.is_empty() {
+            pc_results.retain(|r| r.name.to_lowercase().contains(&search_text));
+        }
+
+        return pc_results;
+    }
+
     let mut matching_indices: Vec<(usize, u16)> = index
         .iter()
         .enumerate()
@@ -460,6 +601,21 @@ async fn search_files(query: String) -> Vec<SearchResult> {
                 score += 5;
             }
 
+            if item.kind == ItemKind::Folder {
+                if let Ok(up) = std::env::var("USERPROFILE") {
+                    let up_bytes = up.as_bytes();
+                    let path_bytes = path.as_bytes();
+                    if path_bytes.len() > up_bytes.len() && path_bytes[..up_bytes.len()].eq_ignore_ascii_case(up_bytes) {
+                        let rel = &path_bytes[up_bytes.len()..];
+                        if rel.eq_ignore_ascii_case(b"\\downloads") || rel.eq_ignore_ascii_case(b"\\pictures")
+                        || rel.eq_ignore_ascii_case(b"\\documents") || rel.eq_ignore_ascii_case(b"\\music")
+                        || rel.eq_ignore_ascii_case(b"\\videos") || rel.eq_ignore_ascii_case(b"\\desktop") {
+                            score += 1500;
+                        }
+                    }
+                }
+            }
+
             Some((idx, score))
         })
         .collect();
@@ -468,6 +624,37 @@ async fn search_files(query: String) -> Vec<SearchResult> {
 
     let mut unique_results = Vec::new();
     let mut seen_names = HashSet::new();
+
+    let search_text_lower = search_terms.join(" ").to_lowercase();
+    if !search_text_lower.is_empty() {
+        if "this pc".contains(&search_text_lower) || "pc".contains(&search_text_lower) || search_text_lower == "my computer" {
+            let this_pc_icon = get_file_icon_base64("C:\\Windows\\explorer.exe");
+            unique_results.push(SearchResult {
+                path: "cmd:explorer shell:::{20D04FE0-3AEA-1069-A2D8-08002B30309D}".to_string(),
+                name: "This PC".to_string(),
+                kind: "app".to_string(),
+                score: 2000,
+                icon_data: this_pc_icon,
+            });
+            seen_names.insert("This PC".to_string());
+        }
+
+        if let Ok(up) = std::env::var("USERPROFILE") {
+            if "gallery".contains(&search_text_lower) {
+                let pics_path = format!("{}\\Pictures", up);
+                if std::path::Path::new(&pics_path).exists() {
+                    unique_results.push(SearchResult {
+                        path: pics_path.clone(),
+                        name: "Gallery".to_string(),
+                        kind: "folder".to_string(),
+                        score: 2000,
+                        icon_data: None,
+                    });
+                    seen_names.insert("Gallery".to_string());
+                }
+            }
+        }
+    }
 
     for (idx, score) in matching_indices {
         let item = &index[idx];
@@ -497,12 +684,18 @@ async fn search_files(query: String) -> Vec<SearchResult> {
                 });
             }
         } else {
+            let icon_data = None;
+            if kind_str == "folder" && score >= 1500 {
+                if seen_names.contains(name) { continue; }
+                seen_names.insert(name.to_string());
+            }
+
             unique_results.push(SearchResult {
                 path: path.to_string(),
                 name: name.to_string(),
                 kind: kind_str.to_string(),
                 score,
-                icon_data: None,
+                icon_data,
             });
         }
 
@@ -519,11 +712,23 @@ async fn search_files(query: String) -> Vec<SearchResult> {
 fn open_file(app: tauri::AppHandle, path: String) {
     let mut success = false;
 
-    if path.starts_with("http://")
-        || path.starts_with("https://")
-        || path.starts_with("ms-settings:")
-        || path.starts_with("shell:")
-    {
+    if path.starts_with("http://") || path.starts_with("https://") {
+        #[cfg(target_os = "windows")]
+        {
+            let mut command = std::process::Command::new("cmd.exe");
+            command.args(["/C", "start", "", &path])
+                .creation_flags(CREATE_NO_WINDOW);
+            if command.spawn().is_ok() {
+                success = true;
+            }
+        }
+        #[cfg(not(target_os = "windows"))]
+        {
+            if tauri_plugin_opener::open_path(&path, None::<&str>).is_ok() {
+                success = true;
+            }
+        }
+    } else if path.starts_with("ms-settings:") || path.starts_with("shell:") {
         #[cfg(target_os = "windows")]
         {
             if std::process::Command::new("explorer.exe")
@@ -558,6 +763,77 @@ fn open_file(app: tauri::AppHandle, path: String) {
         if let Err(e) = tauri_plugin_opener::open_path(&path, None::<&str>) {
             eprintln!("Failed to open item: {}", e);
         } else {
+            success = true;
+        }
+    }
+
+    if success {
+        if let Some(window) = app.get_webview_window("main") {
+            let _ = window.hide();
+        }
+    }
+}
+
+#[tauri::command]
+fn open_url_private(app: tauri::AppHandle, url: String) {
+    let mut success = false;
+
+    #[cfg(target_os = "windows")]
+    {
+        let local_app = std::env::var("LOCALAPPDATA").unwrap_or_default();
+        let program_files = std::env::var("PROGRAMFILES").unwrap_or_else(|_| "C:\\Program Files".to_string());
+
+        let mut browsers: Vec<(String, &str)> = vec![
+            (format!("{}\\BraveSoftware\\Brave-Browser\\Application\\brave.exe", program_files), "--incognito"),
+            (format!("{}\\BraveSoftware\\Brave-Browser\\Application\\brave.exe", local_app), "--incognito"),
+            (format!("{}\\Google\\Chrome\\Application\\chrome.exe", program_files), "--incognito"),
+            (format!("{}\\Google\\Chrome\\Application\\chrome.exe", local_app), "--incognito"),
+            ("msedge.exe".to_string(), "--inprivate"),
+            (format!("{}\\Mozilla Firefox\\firefox.exe", program_files), "-private-window"),
+        ];
+
+        if let Ok(output) = std::process::Command::new("reg")
+            .args(["query", "HKCU\\Software\\Microsoft\\Windows\\Shell\\Associations\\UrlAssociations\\https\\UserChoice", "/v", "ProgId"])
+            .creation_flags(CREATE_NO_WINDOW)
+            .output()
+        {
+            let reg_out = String::from_utf8_lossy(&output.stdout).to_lowercase();
+            if reg_out.contains("brave") {
+            } else if reg_out.contains("chrome") {
+                browsers.retain(|b| !b.0.to_lowercase().contains("chrome"));
+                browsers.insert(0, (format!("{}\\Google\\Chrome\\Application\\chrome.exe", local_app), "--incognito"));
+                browsers.insert(0, (format!("{}\\Google\\Chrome\\Application\\chrome.exe", program_files), "--incognito"));
+            } else if reg_out.contains("firefox") {
+                browsers.insert(0, (format!("{}\\Mozilla Firefox\\firefox.exe", program_files), "-private-window"));
+            } else if reg_out.contains("edge") {
+                browsers.insert(0, ("msedge.exe".to_string(), "--inprivate"));
+            }
+        }
+
+        for (browser, flag) in &browsers {
+            if std::process::Command::new(browser)
+                .args([flag.to_owned(), url.as_str()])
+                .spawn()
+                .is_ok()
+            {
+                success = true;
+                break;
+            }
+        }
+
+        if !success {
+            let mut command = std::process::Command::new("cmd.exe");
+            command.args(["/C", "start", "", &url])
+                .creation_flags(CREATE_NO_WINDOW);
+            if command.spawn().is_ok() {
+                success = true;
+            }
+        }
+    }
+
+    #[cfg(not(target_os = "windows"))]
+    {
+        if tauri_plugin_opener::open_path(&url, None::<&str>).is_ok() {
             success = true;
         }
     }
@@ -1306,7 +1582,8 @@ fn main() {
             get_indexing_state,
             get_memory_usage,
             quit_app,
-            close_active_window
+            close_active_window,
+            open_url_private
         ])
         .setup(|app| {
             let mut has_binfile = false;
