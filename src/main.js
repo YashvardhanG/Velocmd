@@ -537,12 +537,18 @@ async function render() {
     if (!isCmdIntent) resultsList.appendChild(webItem);
   }
 
-  if (items.length === 0 && !isWebIntent && !isCmdIntent && !isInputEmpty) {
+  if (items.length === 0 && !isWebIntent && !isCmdIntent && (!isInputEmpty || hasChips)) {
     const noResults = document.createElement("div");
     noResults.className = "empty-state";
-    noResults.innerHTML = `
-      <span>No results found for "${rawInput}"</span>
-    `;
+    if (hasChips && isInputEmpty) {
+      noResults.innerHTML = `
+        <span>Nothing found with these filters, try changing your chips</span>
+      `;
+    } else {
+      noResults.innerHTML = `
+        <span>No results found for "${rawInput}"</span>
+      `;
+    }
     resultsList.appendChild(noResults);
     updateContainerMinimalState();
     return;
