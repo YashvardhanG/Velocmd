@@ -80,14 +80,14 @@ Velocmd automatically refreshes the index after 15-mins intervals, and also chec
 
 ## Indexing Performance
 
-All tests were performed on a cold start, dropping file system caches between runs, and indexing across all connected drives.
+All tests were performed on a modern _NVMe SSD,_ indexing across all connected drives.
 
 | Dataset Scope | Item Count | Windows Indexer | Velocmd |
 | :--- | :--- | :--- | :--- |
-| **Full System (All Drives)** | ~1 Million Items | Hours | **~3.97 seconds** |
-| **Re-indexing (Warm)** | ~1 Million Items | Background | **~4.10 seconds** |
+| **Initial Indexing** | ~1 Million Items | Hours | **~3.97 seconds** |
+| **Re-indexing (Full Rescan)** | ~1 Million Items | Real-time (USN Journal) | **~4.10 seconds** |
 
-*Note: Velocmd utilizes maximum available threads to build an in-memory index instantly.*
+*Note: Velocmd utilizes maximum available threads for instant manual indexing, but automatically drops to the lowest OS thread priority during background scans to ensure zero impact on games or heavy workloads.*
 
 ---
 
