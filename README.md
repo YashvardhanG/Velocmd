@@ -7,7 +7,7 @@
   </a>
   <h3 align="center">Velocmd Explorer</h3>
   <p align="center">
-    A lightning-fast system launcher powered by a native Rust index. Search files, run commands, and navigate your system seamlessly.
+    ⚡A lightning-fast system launcher powered by a native Rust index. Search files, run commands, and navigate your system seamlessly.
   </p>
 </p>
 
