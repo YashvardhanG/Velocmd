@@ -78,15 +78,18 @@ For a deep dive into every feature, chip alias, and advanced system command, ple
 
 | Feature | Windows Search | PowerToys Run | Velocmd |
 | :--- | :---: | :---: | :---: |
-| **Indexing Speed** | Hours (initial) | Depends on plugins | **~4 seconds** |
+| **Indexing Speed** | Hours (initial) | Relies on Windows Search | **~4 seconds** (1M items) |
 | **Web Result Bloat** | ✅ Yes | ❌ No | ❌ No |
 | **In-Memory Index** | ❌ No | ❌ No | ✅ Yes |
-| **Deep System Settings** | Limited | Via plugins | ✅ 32 built-in |
+| **Deep System Settings** | ✅ Built-In | Via plugins | ✅ 32 Built-in |
+| **Global Call / UI** | Start-Menu | Basic Floating Bar | Raycast-like Overlay |
 | **Terminal Execution** | ❌ No | ✅ Yes | ✅ Yes |
-| **Smart Chip Filtering** | ❌ No | ❌ No | ✅ Yes |
-| **Active Window Switching** | ❌ No | Via plugins | ✅ Built-in |
+| **Smart Chip Filtering** | ❌ No | ✅ Basic (plugin prefixes) | ✅ Yes |
+| **Active Window Switching** | ❌ No | ✅ Window Walker | ✅ Built-in |
 | **RAM Usage** | 100MB+ | ~80MB | **~30MB (Idle)** |
-| **Backend** | .NET/WinUI | .NET/C# | **Rust/Tauri** |
+| **App Size** | In-Built | Heavy (Requires .NET) | **10MB** |
+| **Portability** | OS Bound | Requires Installer | ✅ **Standalone/Installer** |
+| **Backend** | Legacy C++/WinUI | .NET/C# | **Rust/Tauri** |
 | **Telemetry** | ✅ Sends data | Optional | ❌ None |
 
 ---
