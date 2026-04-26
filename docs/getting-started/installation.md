@@ -5,7 +5,7 @@ description: "Download and install Velocmd on Windows 10 or 11. Get the pre-buil
 
 # Installation
 
-Velocmd is packaged as a lightweight, standalone Windows executable. It is designed specifically for Windows 10/11 
+Velocmd is packaged as a lightweight, standalone Windows executable. It is designed specifically for Windows 10/11 with zero external dependencies.
 
 ---
 
@@ -24,7 +24,7 @@ The easiest way to get Velocmd is by downloading the pre-compiled binary from ou
 
 ## Launching & Autostart
 
-Once installed, simply launch Velocmd from your Start Menu. It will immediately begin indexing your system in the background (this usually takes less than a second).
+Once installed, simply launch Velocmd from your Start Menu. It will immediately begin indexing your system in the background (this typically takes a few seconds on the first launch, and is near-instant on subsequent launches thanks to a cached index).
 
 By default, Velocmd will minimize to your System Tray. 
 

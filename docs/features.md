@@ -140,14 +140,18 @@ You can control Velocmd's behavior directly from the search bar. Typing `/velo` 
 
 | Command Name | Action |
 | ------------ | ------ |
+| **Velo: Help** | Opens the Velocmd documentation site. |
 | **Velo Settings** | Opens the inline configuration panel. |
 | **Velo: Toggle Recents** | Turns the intelligent "Recent Files" view on or off. |
 | **Velo: Clear Recents** | Wipes your local history from the interface immediately. |
-| **Velo: Reset Settings** | Resets all settings to default. |
-| **Velo: Quit** | Quits Velocmd |
-| **Velo: Close Window** | Closes the active window |
+| **Velo: Refresh Index** | Forces an immediate rescan of all drives. |
+| **Velo: Quit** | Quits Velocmd. |
+| **Velo: Close Window** | Closes the active window. |
 | **Active Tabs** | Lists all currently open applications and windows. |
 | **Show Desktop** | Minimizes all windows to instantly reveal your desktop (equivalent to `Win+D`). |
+| **Shutdown / Restart** | Prompts a confirmation before executing a system power action. |
+| **Media: Play/Pause** | Toggles media playback via the Windows API. |
+| **Media: Next / Previous Track** | Skips to the next or previous track. |
 
 <div align="center" markdown>
 ![Velocmd internal commands list showing settings and system controls](assets/velo.png){ width="750" }
@@ -167,7 +171,6 @@ Typing `/pc` or `/thispc` or `/computer` gives a list of all the common Windows 
 * **Videos**
 * **Music**
 * **This PC**
-* **Network**
 * **Recycle Bin**
 
 ---
@@ -212,7 +215,7 @@ Press <kbd>Tab</kbd> while the launcher is open to flip down the inline Settings
 ### Interface Sizing & Minimalist Mode
 By default, Velocmd doesn't display recently accessed items below the search bar. However, you can control the launcher's physical footprint directly from the settings:
 
-* **Toggle Recents:** Turning this on instantly expands Velocmd from its standard shrinked view down to a recents-pane search bar. Perfect for accessing recents on-the-go.
+* **Toggle Recents:** Turning this on instantly expands Velocmd from its standard compact view into a recents-pane search bar. Perfect for accessing recents on-the-go.
 
 <div align="center" markdown>
 ![Velocmd recent files view showing recently accessed items](assets/recents.png){ width="750" }

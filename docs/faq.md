@@ -26,7 +26,7 @@ The default Windows search bar often includes web results, causing lag and clutt
 Yes, Velocmd is fully optimized for both Windows 10 and Windows 11. It specifically targets the bloated web integration of the native Windows 11 search bar, bypassing it entirely to bring back the instant, locally-focused search experience that power users expect.
 
 ### How do I install Velocmd?
-You can download Velocmd by visiting the [Releases](https://github.com/YashvardhanG/Velocmd/releases) page on GitHub and downloading the latest release. To know more about the installation process, you can head on to the [Installation & Setup guide](../getting-started/installation/).
+You can download Velocmd by visiting the [Releases](https://github.com/YashvardhanG/Velocmd/releases) page on GitHub and downloading the latest release. For details on the installation process, head to the [Installation & Setup guide](../getting-started/installation/).
 
 ### What is the minimum system requirement to run Velocmd?
 Velocmd is built to be lightweight and efficient. It requires:
@@ -54,7 +54,7 @@ Velocmd is designed to be your central hub. It instantly indexes and launches ex
 Yes! To help you refine your search instantly, Velocmd features an intelligent filtering system using smart chips. By typing specific prefixes or syntax, you can instantly narrow down your search results exclusively to applications, folders, or specific file extensions without digging through global, unorganized results.
 
 ### What other advanced features does Velocmd offer?
-Velocmd is packed with features designed for power users. It supports direct terminal execution, allowing you to run commands directly from the search bar. Additionally, it includes native system state controls, enabling you to toggle system-wide settings like Dark Mode, Bluetooth, and Wi-Fi with simple keyboard shortcuts. To know more about the features, you can head on to the [Feature Deep Dive](../features/).
+Velocmd is packed with features designed for power users. It supports direct terminal execution, allowing you to run commands directly from the search bar. Additionally, it provides instant access to deeply buried Windows settings pages — like Sound, Display, Bluetooth, and Wi-Fi — directly from the search bar, without navigating through menus. For the full breakdown, head to the [Feature Deep Dive](../features/).
 
 ### Does Velocmd collect my search data or telemetry?
 Never! Velocmd is built with absolute privacy in mind. All indexing and searching happen 100% locally on your machine. We do not collect telemetry, track your search queries, or send any of your data to the cloud.
@@ -96,7 +96,7 @@ Yes, Velocmd is completely free and open-source. You can view the source code on
       "name": "What is Velocmd?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Velocmd is a lightning-fast command palette and native launcher built specifically for Windows. It is designed to be a lightweight, highly optimized replacement for the default Windows search bar, indexing millions of files in seconds and giving users a seamless \"Mac Spotlight for Windows\" experience."
+        "text": "Velocmd is a lightning-fast system launcher powered by a native Rust indexer built specifically for Windows. It is designed to be a lightweight, highly optimized replacement for the default Windows search bar, indexing millions of files in seconds and giving users a seamless \"Mac Spotlight for Windows\" experience."
       }
     },
     {
@@ -184,7 +184,7 @@ Yes, Velocmd is completely free and open-source. You can view the source code on
       "name": "What other advanced features does Velocmd offer?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Velocmd supports direct terminal execution and includes native system state controls for toggling settings like Dark Mode, Bluetooth, and Wi-Fi with keyboard shortcuts."
+        "text": "Velocmd supports direct terminal execution and provides instant access to deeply buried Windows settings pages like Sound, Display, Bluetooth, and Wi-Fi directly from the search bar."
       }
     },
     {

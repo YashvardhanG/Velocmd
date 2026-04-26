@@ -45,14 +45,14 @@ Need to look something up or run a script? Velocmd routes your queries seamlessl
 
 ## Indexing Performance
 
-All tests were performed on a cold start, dropping file system caches between runs, and indexing across all connected drives.
+All tests were performed on a *modern NVMe SSD*, indexing across all connected drives.
 
 | Dataset Scope | Item Count | Windows Indexer | Velocmd |
 | :--- | :--- | :--- | :--- |
-| **Full System (All Drives)** | ~1M Items | Hours | **~3.97 seconds** |
-| **Re-indexing (Warm)** | ~1M Items | Background | **~4.10 seconds** |
+| **Initial Indexing** | ~1M Items | Hours | **~3.97 seconds** |
+| **Re-indexing (Full Rescan)** | ~1M Items | Real-time (USN Journal) | **~4.10 seconds** |
 
-*Note: Velocmd utilizes maximum available threads to build an in-memory index instantly.*
+*Note: Velocmd utilizes maximum available threads for instant manual indexing, but automatically drops to the lowest OS thread priority during background scans to ensure zero impact on games or heavy workloads.*
 
 ## **Under the Hood**
 Velocmd is engineered for performance, keeping its footprint incredibly small while maximizing speed.
