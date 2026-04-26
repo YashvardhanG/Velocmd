@@ -47,7 +47,7 @@ You will need [Node.js](https://nodejs.org/), [Rust](https://rustup.rs/), and th
 **1. Clone the repository**
 First, grab the source code from GitHub and navigate into the project directory.
 ```bash
-git clone [https://github.com/yashvardhang/velocmd.git](https://github.com/yashvardhang/velocmd.git)
+git clone https://github.com/yashvardhang/velocmd.git
 cd velocmd
 ```
 
