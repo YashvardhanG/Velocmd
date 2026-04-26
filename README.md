@@ -86,7 +86,7 @@ For a deep dive into every feature, chip alias, and advanced system command, ple
 | **Terminal Execution** | ❌ No | ✅ Yes | ✅ Yes |
 | **Smart Chip Filtering** | ❌ No | ✅ Basic (plugin prefixes) | ✅ Yes |
 | **Active Window Switching** | ❌ No | ✅ Window Walker | ✅ Built-in |
-| **RAM Usage** | 100MB+ | ~80MB | **~30MB (Idle)** |
+| **RAM Usage** | 100MB+ | ~80MB | **~30MB (Idle-After Indexing)** |
 | **App Size** | In-Built | Heavy (Requires .NET) | **10MB** |
 | **Portability** | OS Bound | Requires Installer | ✅ **Standalone/Installer** |
 | **Backend** | Legacy C++/WinUI | .NET/C# | **Rust/Tauri** |
