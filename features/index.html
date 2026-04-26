@@ -813,6 +813,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#native-nox-dimmer-support" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Native Nox-Dimmer Support
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#system-tray-background-process" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1394,6 +1405,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#native-nox-dimmer-support" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Native Nox-Dimmer Support
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#system-tray-background-process" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1552,6 +1574,30 @@
 <td><code>@velo</code></td>
 <td>Exclusively shows internal Velocmd commands</td>
 <td><code>/velo recents</code></td>
+</tr>
+<tr>
+<td><code>/pc</code></td>
+<td><code>/thispc</code>, <code>/computer</code></td>
+<td>Access default Windows folders</td>
+<td><code>/pc downloads</code></td>
+</tr>
+<tr>
+<td><code>/web</code></td>
+<td><code>@web</code></td>
+<td>Browse preset websites</td>
+<td><code>/web youtube</code></td>
+</tr>
+<tr>
+<td><code>/nox</code></td>
+<td><code>@nox</code>, <code>/nox-dimmer</code></td>
+<td>Control Nox Dimmer settings</td>
+<td><code>/nox open</code></td>
+</tr>
+<tr>
+<td><code>/p</code></td>
+<td><code>@p</code></td>
+<td>Browse in Private/Incognito mode</td>
+<td><code>/search /p Rust</code></td>
 </tr>
 </tbody>
 </table>
@@ -1762,6 +1808,52 @@ You can filter by <em>any</em> specific file extension natively by typing <code>
 <li><code>✅ Yes, I am sure</code></li>
 <li><code>❌ No, Cancel</code></li>
 </ul>
+<hr />
+<h2 id="native-nox-dimmer-support">Native Nox-Dimmer Support</h2>
+<p>Velocmd comes with built-in native integration for the <a href="https://github.com/YashvardhanG/Nox-Dimmer/releases/latest">Nox-Dimmer</a> application, allowing you to instantly control screen dimming and overlay modes without ever leaving your keyboard.</p>
+<p>By typing <code>/nox</code> or <code>@nox</code>, Velocmd communicates directly with Nox-Dimmer's local TCP socket for seamless, zero-flash background control.</p>
+<table>
+<thead>
+<tr>
+<th>Command Name</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Nox: Open</strong></td>
+<td>Instantly launches or wakes the Nox-Dimmer application.</td>
+</tr>
+<tr>
+<td><strong>Nox: Quit</strong></td>
+<td>Terminates the Nox-Dimmer background process.</td>
+</tr>
+<tr>
+<td><strong>Nox: Toggle Hyper Mode</strong></td>
+<td>Switches Nox's Hyper Mode overlay on or off dynamically.</td>
+</tr>
+<tr>
+<td><strong>Nox: Increase Dimness (+10%)</strong></td>
+<td>Increases the screen dim level.</td>
+</tr>
+<tr>
+<td><strong>Nox: Decrease Dimness (-10%)</strong></td>
+<td>Decreases the screen dim level seamlessly.</td>
+</tr>
+<tr>
+<td><strong>Nox: Check for Updates</strong></td>
+<td>Triggers an update check for your installed version.</td>
+</tr>
+<tr>
+<td><strong>Nox: Help</strong></td>
+<td>Opens the Nox-Dimmer GitHub repository.</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition info">
+<p class="admonition-title">What is Nox Dimmer?</p>
+<p>Nox is a lightweight, portable Windows utility designed to solve a common problem: monitors are often too bright, even at their lowest setting. Velocmd automatically detects if Nox is installed on your system!</p>
+</div>
 <hr />
 <h2 id="system-tray-background-process">System Tray Background Process</h2>
 <p>Velocmd runs silently in the background to ensure instantaneous response times. You will find the Velocmd monkey icon sitting in your Windows System Tray (bottom right corner).</p>
