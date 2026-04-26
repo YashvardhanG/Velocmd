@@ -13,7 +13,7 @@ description: "Frequently asked questions about Velocmd — installation, system 
 </div>
 
 ## What is Velocmd?
-Velocmd is a lightning-fast command palette and native launcher built specifically for Windows. It is designed to be a lightweight, highly optimized replacement for the default Windows search bar, indexing millions of files in seconds and giving users a seamless "Mac Spotlight for Windows" experience.
+Velocmd is a lightning-fast system launcher powered by a native Rust indexer built specifically for Windows. It is designed to be a lightweight, highly optimized replacement for the default Windows search bar, indexing millions of files in seconds and giving users a seamless "Mac Spotlight for Windows" experience.
 
 Windows power users have long suffered through a native search experience that is notoriously slow, bloated with web results, and visually cumbersome. Velocmd was built with a single philosophy: Zero latency, zero bloat, and total keyboard control.
 
