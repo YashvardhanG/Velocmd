@@ -255,3 +255,7 @@ Toggle the new **Stat Mode** to display a live footprint footer across your laun
 
 !!! tip "Stat Mode"
     **Stat Mode** is a lightweight, opt-in feature that displays Velocmd's current physical memory (RAM) usage in the footer of the launcher. Go to settings, click on "Stat Mode" and toggle it on to see it in action.
+
+<div align="center" markdown>
+![Velocmd stat-mode on launch demo](assets/stat-mode.png){ width="750" }
+</div>
