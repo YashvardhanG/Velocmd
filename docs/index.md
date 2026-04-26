@@ -1,5 +1,6 @@
 ---
 template: home.html
+description: "Velocmd is a lightning-fast Windows system launcher powered by Rust. Index a million files in under 4 seconds. Free, open-source Spotlight alternative for Windows."
 ---
 
 <video autoplay loop muted playsinline width="750" style="clip-path: inset(3px 0 1px 0); display: block; margin: 0;">

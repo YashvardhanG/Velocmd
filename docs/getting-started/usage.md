@@ -1,5 +1,6 @@
 ---
 icon: material/keyboard-outline
+description: "Learn how to use Velocmd — keyboard shortcuts, smart chip filtering, terminal commands, web search routing, and built-in Windows system controls."
 ---
 
 # How to Use
@@ -17,7 +18,7 @@ To summon the Velocmd palette from anywhere in Windows, use the global shortcut:
 If this shortcut conflicts with another app, you can easily change it. Simply hit <kbd>Tab</kbd> to open the settings panel and select a new preset (like <kbd>Alt</kbd> + <kbd>Space</kbd> or <kbd>Ctrl</kbd> + <kbd>Space</kbd>).
 
 <div align="center" markdown>
-![Terminal Command Execution](../assets/launch.png){ width="750" }
+![Velocmd launcher open on Windows desktop showing search results](../assets/launch.png){ width="750" }
 </div>
 
 !!! note "Fallback Shortcuts"
@@ -53,7 +54,7 @@ To narrow down thousands of files instantly, type an `/` or `@` followed by a ca
 | `/tabs` | Currently open windows and browser tabs | `/tabs` github |
 
 <div align="center" markdown>
-![Terminal Command Execution](../assets/file%20search.png){ width="750" }
+![Velocmd file search with smart chip filter narrowing results](../assets/file%20search.png){ width="750" }
 </div>
 
 
@@ -75,7 +76,7 @@ Use the `!cmd` tag to instantly pass a command to the Windows command prompt.
 * *Example:* Type `!cmd ping google.com` and hit Enter. A terminal window will pop up executing the ping.
 
 <div align="center" markdown>
-![Terminal Command Execution](../assets/cmd.png){ width="750" }
+![Velocmd running a terminal command via the cmd chip](../assets/cmd.png){ width="750" }
 </div>
 
 
@@ -110,7 +111,7 @@ Velocmd integrates directly with Windows, giving you instant access to system-le
 * `Media: Next Track` : Skips to the next song.
 
 <div align="center" markdown>
-![Terminal Command Execution](../assets/velo.png){ width="750" }
+![Velocmd internal commands and system controls list](../assets/velo.png){ width="750" }
 </div>
 
 ## Check for Updates

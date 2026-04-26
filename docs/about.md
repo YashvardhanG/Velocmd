@@ -1,6 +1,7 @@
 ---
 authors:
   - yashvardhang
+description: "About Velocmd and its creator Yashvardhan Gupta. Learn about the engineering philosophy behind this Rust-powered Windows launcher."
 ---
 
 <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem; margin-top: 0rem;">

@@ -1,6 +1,7 @@
 ---
 authors:
   - yashvardhang
+description: "Frequently asked questions about Velocmd — installation, system requirements, privacy, performance, and how it compares to PowerToys Run, Flow Launcher, Everything, and Mac Spotlight."
 ---
 
 <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem; margin-top: 0rem;">

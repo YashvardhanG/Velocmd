@@ -1,5 +1,52 @@
 {% extends "main.html" %}
 
+{% block extrahead %}
+<title>Velocmd | Lightning-Fast System Launcher</title>
+<meta name="description"
+    content="A lightning-fast system launcher powered by a native Rust indexer. Bypass Windows Search to find files and run commands with zero latency.">
+<link rel="canonical" href="https://yashvardhang.github.io/Velocmd/">
+
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://yashvardhang.github.io/Velocmd/">
+<meta property="og:title" content="Velocmd | Lightning-Fast System Launcher">
+<meta property="og:description"
+    content="A lightning-fast system launcher powered by a native Rust indexer. Bypass Windows Search to find files and run commands with zero latency.">
+<meta property="og:image" content="https://yashvardhang.github.io/Velocmd/assets/logo.png">
+
+<meta property="twitter:card" content="summary_large_image">
+<meta property="twitter:url" content="https://yashvardhang.github.io/Velocmd/">
+<meta property="twitter:title" content="Velocmd | Lightning-Fast System Launcher">
+<meta property="twitter:description"
+    content="A lightning-fast system launcher powered by a native Rust indexer. Bypass Windows Search to find files and run commands with zero latency.">
+<meta property="twitter:image" content="https://yashvardhang.github.io/Velocmd/assets/logo.png">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Velocmd",
+  "url": "https://yashvardhang.github.io/Velocmd/",
+  "downloadUrl": "https://github.com/YashvardhanG/Velocmd/releases/latest",
+  "operatingSystem": "Windows 10, Windows 11",
+  "applicationCategory": "UtilitiesApplication",
+  "description": "A lightning-fast system launcher powered by a native Rust indexer. Bypass Windows Search to find files and run commands with zero latency.",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "author": {
+    "@type": "Person",
+    "name": "Yashvardhan Gupta",
+    "url": "https://www.yashvardhang.dev/"
+  },
+  "image": "https://yashvardhang.github.io/Velocmd/assets/logo.png",
+  "softwareVersion": "0.1.4",
+  "license": "https://github.com/YashvardhanG/Velocmd/blob/main/LICENSE"
+}
+</script>
+{% endblock %}
+
 {% block tabs %}
 {{ super() }}
 <style>

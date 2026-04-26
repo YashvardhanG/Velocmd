@@ -1,5 +1,6 @@
 ---
 icon: material/download-box-outline
+description: "Download and install Velocmd on Windows 10 or 11. Get the pre-built installer or build from source with Rust and Tauri."
 ---
 
 # Installation
@@ -28,7 +29,7 @@ Once installed, simply launch Velocmd from your Start Menu. It will immediately 
 By default, Velocmd will minimize to your System Tray. 
 
 <div align="center" markdown>
-![Terminal Command Execution](../assets/launch.png){ width="750" }
+![Velocmd launcher after installation on Windows](../assets/launch.png){ width="750" }
 </div>
 
 !!! tip "Run at Startup"
