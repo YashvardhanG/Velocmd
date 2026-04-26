@@ -170,6 +170,8 @@ You can also manually pick any of these presets from the settings panel (press <
 | `/web` | Browse preset websites |
 | `/tabs` | Switch between open windows |
 | `/velo` | Access internal Velocmd commands |
+| `/pc` | Access default Windows folders |
+| `/nox` | Control Nox Dimmer settings |
 
 ---
 
