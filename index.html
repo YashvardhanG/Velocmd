@@ -1208,7 +1208,7 @@
 <li><strong>Web:</strong> Prefix queries with <code>/google</code>, <code>/duck</code>, or <code>/bing</code> to instantly open your default browser to the search results.</li>
 </ul>
 <h2 id="indexing-performance">Indexing Performance</h2>
-<p>All tests were performed on a cold start, dropping file system caches between runs, and indexing across all connected drives.</p>
+<p>All tests were performed on a <em>modern NVMe SSD</em>, indexing across all connected drives.</p>
 <table>
 <thead>
 <tr>
@@ -1220,20 +1220,20 @@
 </thead>
 <tbody>
 <tr>
-<td style="text-align: left;"><strong>Full System (All Drives)</strong></td>
+<td style="text-align: left;"><strong>Initial Indexing</strong></td>
 <td style="text-align: left;">~1M Items</td>
 <td style="text-align: left;">Hours</td>
 <td style="text-align: left;"><strong>~3.97 seconds</strong></td>
 </tr>
 <tr>
-<td style="text-align: left;"><strong>Re-indexing (Warm)</strong></td>
+<td style="text-align: left;"><strong>Re-indexing (Full Rescan)</strong></td>
 <td style="text-align: left;">~1M Items</td>
-<td style="text-align: left;">Background</td>
+<td style="text-align: left;">Real-time (USN Journal)</td>
 <td style="text-align: left;"><strong>~4.10 seconds</strong></td>
 </tr>
 </tbody>
 </table>
-<p><em>Note: Velocmd utilizes maximum available threads to build an in-memory index instantly.</em></p>
+<p><em>Note: Velocmd utilizes maximum available threads for instant manual indexing, but automatically drops to the lowest OS thread priority during background scans to ensure zero impact on games or heavy workloads.</em></p>
 <h2 id="under-the-hood"><strong>Under the Hood</strong></h2>
 <p>Velocmd is engineered for performance, keeping its footprint incredibly small while maximizing speed.</p>
 <ul>
