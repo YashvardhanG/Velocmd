@@ -32,6 +32,10 @@ Velocmd supports multiple aliases for the same filter, allowing you to type what
 | `/drives` | `/drive`, `/disk` | Filters for top-level mounted drives | `/disk` |
 | `/settings` | `/setting`, `/config`, `/setup` | Searches Windows system settings | `/settings display` |
 | `/velo` | `@velo` | Exclusively shows internal Velocmd commands | `/velo recents` |
+| `/pc` | `/thispc`, `/computer` | Access default Windows folders | `/pc downloads` |
+| `/web` | `@web` | Browse preset websites | `/web youtube` |
+| `/nox` | `@nox`, `/nox-dimmer` | Control Nox Dimmer settings | `/nox open` |
+| `/p` | `@p` | Browse in Private/Incognito mode | `/search /p Rust` |
 
 <div align="center" markdown>
 ![Velocmd smart chip filtering for files with search results](assets/file%20search.png){ width="750" }
@@ -191,6 +195,27 @@ Type `Shutdown` or `Restart`. Velocmd provides a built-in safety net: when you h
 
 * `✅ Yes, I am sure`
 * `❌ No, Cancel`
+
+---
+
+## Native Nox-Dimmer Support
+
+Velocmd comes with built-in native integration for the [Nox-Dimmer](https://github.com/YashvardhanG/Nox-Dimmer/releases/latest) application, allowing you to instantly control screen dimming and overlay modes without ever leaving your keyboard.
+
+By typing `/nox` or `@nox`, Velocmd communicates directly with Nox-Dimmer's local TCP socket for seamless, zero-flash background control.
+
+| Command Name | Action |
+| ------------ | ------ |
+| **Nox: Open** | Instantly launches or wakes the Nox-Dimmer application. |
+| **Nox: Quit** | Terminates the Nox-Dimmer background process. |
+| **Nox: Toggle Hyper Mode** | Switches Nox's Hyper Mode overlay on or off dynamically. |
+| **Nox: Increase Dimness (+10%)** | Increases the screen dim level. |
+| **Nox: Decrease Dimness (-10%)** | Decreases the screen dim level seamlessly. |
+| **Nox: Check for Updates** | Triggers an update check for your installed version. |
+| **Nox: Help** | Opens the Nox-Dimmer GitHub repository. |
+
+!!! info "What is Nox Dimmer?"
+    Nox is a lightweight, portable Windows utility designed to solve a common problem: monitors are often too bright, even at their lowest setting. Velocmd automatically detects if Nox is installed on your system!
 
 ---
 

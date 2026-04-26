@@ -369,6 +369,58 @@ async fn search_files(query: String) -> Vec<SearchResult> {
         return settings_results;
     }
 
+    let has_nox_filter = filters.iter().any(|f| {
+        let content = &f[1..];
+        content == "nox" || content == "nox-dimmer"
+    });
+
+    if has_nox_filter
+        || query_trim.to_lowercase().starts_with("@nox")
+        || query_trim.to_lowercase().starts_with("/nox")
+    {
+        let nox_installed = is_nox_installed();
+
+        if nox_installed {
+            let all_nox_commands = vec![
+                ("nox:open", "Nox: Open", 210u16),
+                ("nox:quit", "Nox: Quit", 200),
+                ("nox:hyper_toggle", "Nox: Toggle Hyper Mode", 199),
+                ("nox:brightness_up", "Nox: Increase Dimness (+10%)", 198),
+                ("nox:brightness_down", "Nox: Decrease Dimness (-10%)", 197),
+                ("nox:check_updates", "Nox: Check for Updates", 195),
+                ("nox:help", "Nox: Help (GitHub)", 194),
+            ];
+
+            let nox_results: Vec<SearchResult> = all_nox_commands
+                .into_iter()
+                .filter(|(_, name, _)| {
+                    if search_text.is_empty() {
+                        true
+                    } else {
+                        name.to_lowercase().contains(&search_text)
+                    }
+                })
+                .map(|(path, name, score)| SearchResult {
+                    path: path.to_string(),
+                    name: name.to_string(),
+                    kind: "command".to_string(),
+                    score,
+                    icon_data: None,
+                })
+                .collect();
+            
+            return nox_results;
+        } else {
+            return vec![SearchResult {
+                path: "nox:install".to_string(),
+                name: "Nox: Install Nox Dimmer".to_string(),
+                kind: "command".to_string(),
+                score: 200,
+                icon_data: None,
+            }];
+        }
+    }
+
     let has_web_filter = filters.iter().any(|f| {
         let content = &f[1..];
         content == "web" || content == "website" || content == "websites" || content == "site" || content == "sites" || content == "url"
@@ -382,6 +434,7 @@ async fn search_files(query: String) -> Vec<SearchResult> {
                 || c == "tabs" || c == "active" || c == "window" || c == "windows"
                 || c == "app" || c == "apps" || c == "folder" || c == "folders"
                 || c == "file" || c == "files" || c == "drive" || c == "drives"
+                || c == "nox" || c == "nox-dimmer"
         });
 
     if has_web_filter
@@ -1045,6 +1098,101 @@ fn focus_window(app: tauri::AppHandle, hwnd_val: isize) {
     }
 }
 
+fn is_nox_installed() -> bool {
+    #[cfg(target_os = "windows")]
+    {
+        if let Ok(output) = std::process::Command::new("tasklist")
+            .args(["/FI", "IMAGENAME eq Nox Dimmer.exe", "/NH", "/FO", "CSV"])
+            .creation_flags(CREATE_NO_WINDOW)
+            .output()
+        {
+            let stdout = String::from_utf8_lossy(&output.stdout);
+            if stdout.to_lowercase().contains("nox dimmer.exe") {
+                return true;
+            }
+        }
+    }
+    if let Ok(appdata) = std::env::var("APPDATA") {
+        let nox_dir = std::path::PathBuf::from(appdata).join("NoxDimmer");
+        if nox_dir.exists() {
+            return true;
+        }
+    }
+    false
+}
+
+fn get_nox_path() -> Option<String> {
+    #[cfg(target_os = "windows")]
+    {
+        if let Ok(output) = std::process::Command::new("reg")
+            .args(["query", "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Run", "/v", "Nox Dimmer"])
+            .creation_flags(CREATE_NO_WINDOW)
+            .output()
+        {
+            let stdout = String::from_utf8_lossy(&output.stdout);
+            for line in stdout.lines() {
+                if line.contains("REG_SZ") {
+                    let parts: Vec<&str> = line.split("REG_SZ").collect();
+                    if parts.len() == 2 {
+                        let path = parts[1].trim();
+                        let clean_path = path.trim_matches('"');
+                        if !clean_path.is_empty() {
+                            return Some(clean_path.to_string());
+                        }
+                    }
+                }
+            }
+        }
+    }
+    None
+}
+
+fn send_nox_command(cmd: &[u8]) -> bool {
+    use std::io::Write;
+    if let Ok(mut stream) = std::net::TcpStream::connect("127.0.0.1:50291") {
+        let _ = stream.write_all(cmd);
+        true
+    } else {
+        false
+    }
+}
+
+
+
+
+
+#[tauri::command]
+fn execute_nox_command(action: String, _value: Option<i32>) {
+    match action.as_str() {
+        "open" => {
+            if !send_nox_command(b"NOX_DIMMER_WAKE") {
+            #[cfg(target_os = "windows")]
+            {
+                use std::os::windows::process::CommandExt;
+                if let Some(exe_path) = get_nox_path() {
+                    let _ = std::process::Command::new(exe_path)
+                        .creation_flags(0x08000000)
+                        .spawn();
+                }
+            }
+        }
+        }
+        "quit" => {
+            send_nox_command(b"NOX_DIMMER_QUIT");
+        }
+        "hyper_toggle" => {
+            send_nox_command(b"NOX_HYPER_TOGGLE");
+        }
+        "brightness_up" => {
+            send_nox_command(b"NOX_DIM_UP");
+        }
+        "brightness_down" => {
+            send_nox_command(b"NOX_DIM_DOWN");
+        }
+        _ => {}
+    }
+}
+
 #[tauri::command]
 fn run_terminal_command(command: String) {
     let _ = std::process::Command::new("cmd")
@@ -1583,7 +1731,8 @@ fn main() {
             get_memory_usage,
             quit_app,
             close_active_window,
-            open_url_private
+            open_url_private,
+            execute_nox_command
         ])
         .setup(|app| {
             let mut has_binfile = false;

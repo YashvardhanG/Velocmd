@@ -25,7 +25,8 @@ Filter through thousands of files instantly without touching your mouse. By typi
 
 - **Types:** `/apps`, `/folders`, `/files`, `/settings`
 - **Drives:** `/C:`, `/D:`
-- **Actions:** `/cmd` (Terminal execution), `/search` (Web)
+- **Actions:** `/cmd` (Terminal execution), `/search` (Web), `/web` (Websites), `/nox` (Nox Dimmer)
+- **Hubs & Modes:** `/pc` (This PC), `/p` (Private Mode)
 
 **⚙️ Deep System Integration**
 

@@ -28,7 +28,7 @@ const loaderHtml = `
   </div>`;
 searchWrapper.insertAdjacentHTML('beforeend', loaderHtml);
 const searchLoader = document.getElementById("search-loader");
-const CURRENT_VERSION = "0.1.4";
+const CURRENT_VERSION = "0.1.5";
 let isUpdateAvailable = false;
 let latestReleaseUrl = "https://github.com/YashvardhanG/Velocmd/releases/latest";
 
@@ -654,6 +654,29 @@ function renderStyles() {
 }
 
 async function openFile(path, kind, name) {
+  if (path.startsWith("nox:")) {
+    const action = path.replace("nox:", "");
+    if (action === "install" || action === "check_updates") {
+      await invoke("open_file", { path: "https://github.com/YashvardhanG/Nox-Dimmer/releases/latest" });
+    } else if (action === "help") {
+      await invoke("open_file", { path: "https://github.com/YashvardhanG/Nox-Dimmer" });
+    } else {
+      await invoke("execute_nox_command", { action, value: null });
+    }
+
+    input.value = "";
+    state.activeFilters = [];
+    renderChips();
+    state.results = [];
+
+    if (!state.showRecents) {
+      await invoke("reset_window");
+      lastWindowHeight = 65;
+    }
+    render();
+    return;
+  }
+
   const isPrivateMode = state.activeFilters.some(f => f.toLowerCase() === "/p" || f.toLowerCase() === "@p");
 
   if (!isPrivateMode) {
@@ -914,9 +937,14 @@ input.addEventListener("input", async (e) => {
     resultsContainer.classList.remove("hidden");
   }
 
-  if (query.trim() === "@" || query.trim() === "/" || query.trim() === "!") {
+  const valTrimmed = val.trim();
+  const isFilterTrigger = valTrimmed.startsWith("@") || valTrimmed.startsWith("/") || valTrimmed.startsWith("!");
+
+  if (isFilterTrigger && valTrimmed.indexOf(" ") === -1) {
     const drives = await invoke("get_available_drives");
-    const prefix = query.trim();
+    const prefix = valTrimmed[0];
+    const searchTerm = valTrimmed.substring(1).toLowerCase();
+
     const driveItems = drives.map(d => ({
       name: `Drive ${d}`,
       path: `${prefix}${d[0].toLowerCase()}:`,
@@ -924,20 +952,35 @@ input.addEventListener("input", async (e) => {
       score: 97
     }));
 
-    state.results = [
+    const allFilters = [
       { name: "Applications", path: `${prefix}apps `, kind: "filter", score: 100 },
       { name: "Folders", path: `${prefix}folders `, kind: "filter", score: 99 },
       { name: "Files", path: `${prefix}files `, kind: "filter", score: 98 },
       ...driveItems,
-      { name: "Velo Commands", path: `${prefix}velo `, kind: "filter", score: 95 },
-      { name: "This PC", path: `${prefix}pc `, kind: "filter", score: 94 },
-      { name: "Websites", path: `${prefix}web `, kind: "filter", score: 93 },
-      { name: "Settings", path: `${prefix}settings`, kind: "filter", score: 92 },
-      { name: "Run Command", path: `${prefix}cmd `, kind: "filter", score: 91 },
-      { name: "Web Search", path: `${prefix}google `, kind: "filter", score: 90 }
+      { name: "Active Tabs", path: `${prefix}tabs `, kind: "filter", score: 95 },
+      { name: "Velo Commands", path: `${prefix}velo `, kind: "filter", score: 94 },
+      { name: "This PC", path: `${prefix}pc `, kind: "filter", score: 93 },
+      { name: "Websites", path: `${prefix}web `, kind: "filter", score: 92 },
+      { name: "Settings", path: `${prefix}settings`, kind: "filter", score: 91 },
+      { name: "Run Command", path: `${prefix}cmd `, kind: "filter", score: 90 },
+      { name: "Web Search", path: `${prefix}search `, kind: "filter", score: 89 }
     ];
-    render();
-    return;
+
+    const matchedFilters = allFilters.filter(f => {
+      const cleanPath = f.path.toLowerCase().substring(1).trim();
+      return cleanPath.startsWith(searchTerm) || f.name.toLowerCase().includes(searchTerm);
+    });
+
+    if (matchedFilters.length > 0) {
+      state.results = matchedFilters.sort((a, b) => b.score - a.score);
+      if (resultsContainer.classList.contains("hidden")) {
+        invoke("resize_window", { height: WINDOW_MAX_HEIGHT });
+        lastWindowHeight = WINDOW_MAX_HEIGHT;
+        resultsContainer.classList.remove("hidden");
+      }
+      render();
+      return;
+    }
   }
 
   if (resultsContainer.classList.contains("hidden") || (!state.showRecents && state.results.length === 0)) {

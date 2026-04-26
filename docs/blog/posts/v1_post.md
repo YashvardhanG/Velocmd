@@ -12,7 +12,23 @@ After extensive development and optimization, I am incredibly excited to announc
 
 This release brings the lightning-fast, in-memory indexer to its most stable form yet, alongside a suite of deep system integrations.
 
-Whether you are navigating thousands of local files or executing rapid-fire terminal scripts, **v0.1.3** (Latest) acts as the ultimate Windows power tool. Here is a look at what is packed into this release:
+Whether you are navigating thousands of local files or executing rapid-fire terminal scripts, **v0.1.5** (Latest) acts as the ultimate Windows power tool. Here is a look at what is packed into this release:
+
+### 🚀 Core Highlights in v0.1.5 (Nox-Dimmer)
+
+* **Built-In Nox Support:** Now with the `Nox` command, there is a built in support for Nox-Dimmer app and it's controls. 
+    * `Nox:brightness_up`: Increases the brightness of the screen.
+    * `Nox:brightness_down`: Decreases the brightness of the screen.
+    * `Nox:hyper_toggle`: Toggles the hyper-mode of Nox-Dimmer.
+    * `Nox:quit`: Quits the Nox-Dimmer app.
+    * `Nox:open`: Opens the Nox-Dimmer app.
+* **Velocmd Internal Commands Update:** Modified the `/velo` commands based on the latest internal commands.
+* **Filter Debounce:** Fixed the filter typing debounce.
+* **Minor Fixes:** Minor UI tweaks and bug fixes.
+
+!!! info "What is Nox Dimmer?"
+    Nox is a lightweight utility designed to solve a common problem: Monitors are often too bright, even at their lowest setting. Velocmd now natively supports Nox-Dimmer and its controls. Download Here: 🔗[Nox-Dimmer](https://github.com/YashvardhanG/Nox-Dimmer/releases/latest)
+
 
 ### 🚀 Core Highlights in v0.1.4 (Easier PC Folders Access)
 
