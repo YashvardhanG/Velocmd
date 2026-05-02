@@ -1,6 +1,6 @@
 [package]
 name = "velocmd-explorer"
-version = "0.1.5"
+version = "0.1.6"
 description = "⚡ A lightning-fast system launcher powered by a native Rust indexer."
 authors = ["Yashvardhan Gupta"]
 edition = "2021"

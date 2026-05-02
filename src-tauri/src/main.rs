@@ -1432,7 +1432,7 @@ fn index_windows_apps(index: &mut Vec<IndexedItem>, arena: &mut String) {
                 let app_id = app.get("AppID").or(app.get("AppId")).or(app.get("appid")).and_then(|v| v.as_str()).unwrap_or("");
 
                 if !name.is_empty() && !app_id.is_empty() {
-                    let path = if app_id.contains(':') || app_id.contains('\\') {
+                    let path = if app_id.contains(':') {
                         app_id.to_string()
                     } else {
                         format!("shell:AppsFolder\\{}", app_id)

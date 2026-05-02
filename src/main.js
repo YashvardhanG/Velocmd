@@ -28,7 +28,7 @@ const loaderHtml = `
   </div>`;
 searchWrapper.insertAdjacentHTML('beforeend', loaderHtml);
 const searchLoader = document.getElementById("search-loader");
-const CURRENT_VERSION = "0.1.5";
+const CURRENT_VERSION = "0.1.6";
 let isUpdateAvailable = false;
 let latestReleaseUrl = "https://github.com/YashvardhanG/Velocmd/releases/latest";
 
@@ -443,7 +443,7 @@ async function render() {
   const hasChips = state.activeFilters.length > 0;
   const isInputEmpty = rawInput.length === 0;
 
-  if (isInputEmpty && !hasChips && !state.showRecents) {
+  if (isInputEmpty && !hasChips && !state.showRecents && state.results.length === 0) {
     resultsContainer.classList.add("hidden");
     searchLoader.classList.add("hidden");
     resultsList.innerHTML = "";
@@ -689,6 +689,8 @@ async function openFile(path, kind, name) {
 
   if (path === "velo:request_shutdown") {
     input.value = "";
+    state.activeFilters = [];
+    renderChips();
 
     state.results = [
       { name: "✅ Yes, I am sure (Shutdown)", path: "cmd:shutdown /s /t 0", kind: "command", score: 10 },
@@ -702,6 +704,8 @@ async function openFile(path, kind, name) {
 
   if (path === "velo:request_restart") {
     input.value = "";
+    state.activeFilters = [];
+    renderChips();
 
     state.results = [
       { name: "✅ Yes, I am sure (Restart)", path: "cmd:shutdown /r /t 0", kind: "command", score: 10 },
@@ -714,6 +718,8 @@ async function openFile(path, kind, name) {
 
   if (path === "velo:cancel_power") {
     input.value = "";
+    state.activeFilters = [];
+    renderChips();
     state.results = [];
 
     if (!state.showRecents) {
@@ -739,6 +745,14 @@ async function openFile(path, kind, name) {
     state.recentFiles = [];
     localStorage.setItem("recentFiles", JSON.stringify([]));
     input.value = "";
+    state.activeFilters = [];
+    renderChips();
+
+    if (!state.showRecents) {
+      await invoke("reset_window");
+      lastWindowHeight = 65;
+    }
+
     render();
     return;
   }
@@ -784,6 +798,14 @@ async function openFile(path, kind, name) {
   if (path === "velo:close_window") {
     await invoke("close_active_window");
     input.value = "";
+    state.activeFilters = [];
+    renderChips();
+
+    if (!state.showRecents) {
+      await invoke("reset_window");
+      lastWindowHeight = 65;
+    }
+
     render();
     return;
   }
@@ -791,6 +813,8 @@ async function openFile(path, kind, name) {
   if (path === "velo:show_desktop") {
     await invoke("show_desktop");
     input.value = "";
+    state.activeFilters = [];
+    renderChips();
     render();
     return;
   }
@@ -808,6 +832,8 @@ async function openFile(path, kind, name) {
     const hwndVal = parseInt(path.split(":")[1].split("|")[0]);
     await invoke("focus_window", { hwndVal });
     input.value = "";
+    state.activeFilters = [];
+    renderChips();
     render();
     return;
   }
@@ -856,6 +882,12 @@ async function openFile(path, kind, name) {
     state.activeFilters = [];
     renderChips();
     state.results = [];
+
+    if (!state.showRecents) {
+      await invoke("reset_window");
+      lastWindowHeight = 65;
+    }
+
     render();
 
     return;
@@ -865,6 +897,12 @@ async function openFile(path, kind, name) {
     await invoke("run_terminal_command", { command: path });
     input.value = "";
     state.results = [];
+
+    if (!state.showRecents) {
+      await invoke("reset_window");
+      lastWindowHeight = 65;
+    }
+
     render();
     return;
   }
@@ -877,6 +915,13 @@ async function openFile(path, kind, name) {
     await invoke("open_file", { path });
   }
   input.value = "";
+  state.activeFilters = [];
+  renderChips();
+
+  if (!state.showRecents) {
+    await invoke("reset_window");
+    lastWindowHeight = 65;
+  }
   render();
 }
 

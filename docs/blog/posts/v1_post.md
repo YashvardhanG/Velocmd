@@ -12,7 +12,11 @@ After extensive development and optimization, I am incredibly excited to announc
 
 This release brings the lightning-fast, in-memory indexer to its most stable form yet, alongside a suite of deep system integrations.
 
-Whether you are navigating thousands of local files or executing rapid-fire terminal scripts, **v0.1.5** (Latest) acts as the ultimate Windows power tool. Here is a look at what is packed into this release:
+Whether you are navigating thousands of local files or executing rapid-fire terminal scripts, **v0.1.6** (Latest) acts as the ultimate Windows power tool. Here is a look at what is packed into this release:
+
+### 🚀 Core Highlights in v0.1.6 (Bug-Fixes)
+
+* **Minor Fixes:** Minor UI tweaks and bug fixes (Velo Commands Panel + App Launch).
 
 ### 🚀 Core Highlights in v0.1.5 (Nox-Dimmer)
 
