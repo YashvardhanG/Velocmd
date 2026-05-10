@@ -12,7 +12,13 @@ After extensive development and optimization, I am incredibly excited to announc
 
 This release brings the lightning-fast, in-memory indexer to its most stable form yet, alongside a suite of deep system integrations.
 
-Whether you are navigating thousands of local files or executing rapid-fire terminal scripts, **v0.1.6** (Latest) acts as the ultimate Windows power tool. Here is a look at what is packed into this release:
+Whether you are navigating thousands of local files or executing rapid-fire terminal scripts, **v0.1.7** (Latest) acts as the ultimate Windows power tool. Here is a look at what is packed into this release:
+
+### 🚀 Core Highlights in v0.1.7 (Focus-Fix)
+
+* **Instant Dismiss:** Clicking anywhere outside the launcher now correctly dismisses it in a single click.
+* **Startup Focus Guard:** The window now auto-hides if another app steals focus during launch, preventing it from lingering in the background.
+* **Minor Fixes:** Internal link fixes and UI polish.
 
 ### 🚀 Core Highlights in v0.1.6 (Bug-Fixes)
 

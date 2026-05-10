@@ -4,6 +4,12 @@
   box-sizing: border-box;
 }
 
+html {
+  background-color: #252526;
+  overflow: hidden;
+  border-radius: 10px;
+}
+
 :root {
   --bg-color: #1e1e1e;
   --header-bg: #252526;

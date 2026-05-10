@@ -28,7 +28,7 @@ const loaderHtml = `
   </div>`;
 searchWrapper.insertAdjacentHTML('beforeend', loaderHtml);
 const searchLoader = document.getElementById("search-loader");
-const CURRENT_VERSION = "0.1.6";
+const CURRENT_VERSION = "0.1.7";
 let isUpdateAvailable = false;
 let latestReleaseUrl = "https://github.com/YashvardhanG/Velocmd/releases/latest";
 

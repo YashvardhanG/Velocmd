@@ -199,8 +199,6 @@ fn show_main_window(app: &AppHandle) {
         let _ = window.show();
         let _ = window.set_focus();
         let _ = window.emit("reset_state", ());
-
-        REFOCUS_ON_BLUR.store(true, Ordering::SeqCst);
     }
 }
 
@@ -1756,6 +1754,13 @@ fn main() {
                 if let tauri::WindowEvent::Focused(false) = event {
                     if REFOCUS_ON_BLUR.compare_exchange(true, false, Ordering::SeqCst, Ordering::SeqCst).is_ok() {
                         let _ = w_clone.set_focus();
+                        let w_check = w_clone.clone();
+                        std::thread::spawn(move || {
+                            std::thread::sleep(std::time::Duration::from_millis(150));
+                            if !w_check.is_focused().unwrap_or(false) {
+                                let _ = w_check.hide();
+                            }
+                        });
                     } else {
                         let _ = w_clone.hide();
                     }
@@ -1825,6 +1830,7 @@ fn main() {
             }
 
             show_main_window(app.handle());
+            REFOCUS_ON_BLUR.store(true, Ordering::SeqCst);
 
             Ok(())
         })
